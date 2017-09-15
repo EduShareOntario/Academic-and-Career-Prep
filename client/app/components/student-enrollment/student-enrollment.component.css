@@ -1,0 +1,19 @@
+.checkbox-large {
+  width: 20px;
+  height: 20px;
+}
+
+.enroll {
+  width: 79px;
+}
+
+.remove {
+  width: 79px;
+  right: -250px;
+  position: relative;
+}
+
+.courseComplete {
+  right: -245px;
+  position: relative;
+}

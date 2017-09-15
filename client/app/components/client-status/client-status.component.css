@@ -1,0 +1,123 @@
+.clients {
+  font-family: Avenir, Calibri, Minion;
+}
+
+.addClient {
+  position:absolute;
+  top: 25;
+  right: 15;
+  float: right;
+  min-width: 0px
+}
+
+.deleteClient>a {
+  color: red;
+}
+
+.booleanBtn {
+    min-width:45px;
+}
+
+.sectionButtons {
+    display: inline;
+    padding: 5 10 5 10;
+    margin: 0 2 0 2;
+    background-color: #dddddd;
+    color: #333f48;
+    float: left;
+    font-weight: bold;
+    box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.1);
+}
+
+.sectionBtnGroup {
+    margin-bottom: 40px;
+}
+
+.sectionBtnGroup>li:focus, .sectionBtnGroup>li:hover {
+    background-color: #333f48;
+    color: #fff;
+    cursor: pointer;
+    transition: .6s;
+}
+
+.active {
+    background-color: #333f48;
+    color: white;
+}
+
+#actionMenu {
+  cursor:pointer;
+}
+
+.actionMenu {
+  position: relative !important;
+  min-width: 0px !important;
+}
+
+th:first-of-type, th:last-of-type {
+  text-align: center;
+}
+
+h2 {
+    margin-bottom: 25;
+}
+
+.inline {
+    display: inline;
+}
+
+.btn-group {
+    white-space: nowrap;
+}
+.btn-group .btn {
+    float: none;
+    display: inline-block;
+}
+ .btn + .dropdown-toggle {
+    margin-left: -4px;
+}
+
+.actionColumn {
+    width: 24%;
+}
+
+.middle {
+    text-align: center;
+}
+
+.statusStage1 {
+  vertical-align: middle;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+  background-color: #EB3700;
+  margin: 0 auto;
+}
+
+.statusStage2 {
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+  background-color: #F8E903;
+  margin: 0 auto;
+}
+
+.statusStage3 {
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+  background-color: #309EFF;
+  margin: 0 auto;
+}
+
+.statusStage4 {
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+  background-color: #21C700;
+  margin: 0 auto;
+}
+
+.infoPanel {
+  margin-left: 50px;
+}
