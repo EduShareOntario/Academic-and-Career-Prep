@@ -1,0 +1,28 @@
+<nav class="georgianBlue" role="navigation">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menu-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a href="/dashboard"><img class="navbar-brand" alt="{{ title }}" src="./app/assets/images/georgian-college-logo.svg"/></a>
+	</div>
+	<div *ngIf="currentUser" class="collapse navbar-collapse navbar-menu-collapse">
+		<ul class="nav navbar-nav navbar-right">
+			<li><a class="navbarItem" routerLink="/dashboard" routerLinkActive="active"><i class="fa fa-th" aria-hidden="true"></i> Dashboard</a></li>
+		  <li class="dropdown-toggle active" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<ul class="nav navbar-nav">
+			    <li><a class="navbarItem"><i class="fa fa-user fa-3" aria-hidden="true"></i> {{ currentUser }} <span class="caret"></span></a></li>
+				</ul>
+		  </li>
+		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+				<li><a href="#">Profile</a></li>
+		    <li><a routerLink="/login" routerLinkActive="active"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+		  </ul>
+		</ul>
+	</div>
+</nav>
+<div class="margin">
+	<router-outlet></router-outlet>
+</div>

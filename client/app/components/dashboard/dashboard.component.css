@@ -1,0 +1,43 @@
+h1, h2, h3, h4, h5, h6 {
+  font-family: Avenir, Calibri, Minion;
+  color: #333f48;
+}
+
+.dashboard {
+    color: #333f48;
+}
+
+.dashboardItem {
+    text-align: center;
+    padding: 10px;
+    white-space: nowrap;
+}
+
+.dashboardItemText {
+    color: #333f48;
+}
+
+.fa-lg-icon {
+    font-size: 6em;
+    color: #333f48;
+}
+
+.itemBorder {
+    cursor: pointer;
+    padding: 10px;
+    padding-top: 40px;
+    border: 1px solid rgba(0, 0, 0, .3);
+    box-shadow: 5px 5px 5px #888888;
+}
+
+.itemBorder a {
+    text-decoration: none;
+}
+
+.itemBorder:hover {
+   -moz-transform: scale(1.1);
+   -webkit-transform: scale(1.1);
+   -o-transform: scale(1.1);
+   transform: scale(1.02);
+   transition: 0.1s;
+}
