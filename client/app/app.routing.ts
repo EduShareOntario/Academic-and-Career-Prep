@@ -11,7 +11,7 @@ import { SharedGuard } from './guards/shared.guard';
 import { LoginComponent }   from './components/login/login.component';
 import { DashboardComponent }   from './components/dashboard/dashboard.component';
 import { StaffManageComponent } from './components/staff-manage/staff-manage.component';
-import { StaffEditComponent }  from './components/staff-edit/staff-edit.component';
+import { StaffDetailsComponent }  from './components/staff-details/staff-details.component';
 import { StudentManageComponent } from './components/student-manage/student-manage.component';
 import { StudentEditComponent }  from './components/student-edit/student-edit.component';
 import { ClientStatusComponent }  from './components/client-status/client-status.component';
@@ -26,6 +26,10 @@ import { StudentEnrollmentComponent } from './components/student-enrollment/stud
 import { TimetableComponent } from './components/timetable/timetable.component';
 import { AttendanceListComponent } from './components/attendance-list/attendance-list.component';
 import { AttendanceReportComponent } from './components/attendance-report/attendance-report.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { FilesComponent } from './components/files/files.component';
+import { HelpComponent } from './components/help/help.component';
 
 const appRoutes: Routes = [
     {
@@ -63,8 +67,8 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard, AdminGuard]
     },
     {
-        path: 'staff-edit/:id',
-        component: StaffEditComponent,
+        path: 'staff-details/:id',
+        component: StaffDetailsComponent,
         canActivate: [AuthGuard, AdminGuard]
     },
     {
@@ -100,7 +104,7 @@ const appRoutes: Routes = [
     {
         path: 'learning-style',
         component: LearningStyleComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, ClientGuard]
     },
     {
         path: 'timetable',
@@ -121,7 +125,28 @@ const appRoutes: Routes = [
         path: 'attendance-report',
         component: AttendanceReportComponent,
         canActivate: [AuthGuard, SharedGuard]
+    },
+    {
+        path: 'reset-password',
+        component: ResetPasswordComponent,
+        canActivate: []
+    },
+    {
+        path: 'file-upload',
+        component: FileUploadComponent,
+        canActivate: [AuthGuard, StaffGuard]
+    },
+    {
+        path: 'files',
+        component: FilesComponent,
+        canActivate: [AuthGuard, StaffGuard]
+    },
+    {
+        path: 'help',
+        component: HelpComponent,
+        canActivate: [AuthGuard]
     }
+
 
 ];
 

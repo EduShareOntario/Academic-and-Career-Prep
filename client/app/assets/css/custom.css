@@ -4,7 +4,7 @@ html, body {
 }
 
 .alert {
- margin-bottom: 0px; 
+ margin-bottom: 0px;
 }
 
 .btn {
@@ -153,8 +153,8 @@ html, body {
 
 .submitForm {
   cursor:pointer;
-  background-color: #fff;
-  color: #64a70b;
+  background-color: #64a70b;
+  color: #fff;
   display: inline;
   padding: 0 10 0 10;
   border: 0px solid;
@@ -162,8 +162,8 @@ html, body {
 }
 
 .submitForm:hover {
-  background-color: #64a70b;
-  color: #fff;
+  background-color: #fff;
+  color: #64a70b;
   border: 0px solid;
   transition: .2s;
 }

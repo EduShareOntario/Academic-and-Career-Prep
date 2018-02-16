@@ -1,18 +1,10 @@
 const schedule = require('node-schedule');
 const MailService = require("./MailService");
 var sql = require('mssql');
-const config = {
-    user: '',
-    password: '',
-    server: '', // You can use 'localhost\\instance' to connect to named instance
-    database: '',
-    options: {
-        encrypt: true // Use this if you're on Windows Azure
-    }
-}
+var config = require('../config');
 
 //runs every night at 10pm
-var attendanceCheck = schedule.scheduleJob('0 22 * * *', function(){
+var attendanceCheck = schedule.scheduleJob('0 15 15 * * *', function(){
   var date = new Date();
   var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
   console.log("Checking student attendance... " + str);
@@ -20,7 +12,7 @@ var attendanceCheck = schedule.scheduleJob('0 22 * * *', function(){
   var student;
 
   try {
-    sql.connect(config)
+    sql.connect(config.db)
         .then(function(connection) {
             new sql.Request(connection)
                 .query("SELECT * FROM Attendance ORDER BY date DESC")
@@ -50,13 +42,13 @@ var attendanceCheck = schedule.scheduleJob('0 22 * * *', function(){
                               //new MailService().scheduledMessage(mailOptions);
                             }
                             let mailOptionsAdmin = {
-                              from: '"Test" <ghost@test.com>', // sender address
+                              from: '"Test" <academic.career.prep@gmail.com>', // sender address
                               to: 'nicholasrowlandson@gmail.com', // list of receivers
                               subject: 'SCHEDULER ✔', // Subject line
                               text: '', // plain text body
                               html: '<b> Hi admin!</b><br  />There were ' + missedClasses.length + ' emails sent out due to missed classes.' // html body
                             };
-                            new MailService().scheduledMessage(mailOptionsAdmin);
+                            new MailService().sendMessage("Scheduled Message", mailOptionsAdmin);
                             console.log("TOTAL EMAILS SENT: " + missedClasses.length);
                           } else {
                             console.log("No missed classes");

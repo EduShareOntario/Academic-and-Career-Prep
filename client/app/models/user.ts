@@ -1,4 +1,5 @@
 export class User {
+    active: boolean;
     staffID: string;
     userID: string;
     username: string;

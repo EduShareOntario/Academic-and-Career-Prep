@@ -16,85 +16,125 @@ export class ConsentFormComponent {
   @Input() consentForm: ConsentForm;
   error: any;
   date: any;
-  phoneNumber: any;
-  clientName: any;
+  clientName: string = '';
+  completeConsentForm: boolean;
+  currentUser: any;
+  otherChecked: boolean = false;
+  loading: boolean = true;
 
   constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
-      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      var userID = currentUser.userID;
-
-      this.clientService
-      .getClient(userID)
-      .then(result => {
-        this.phoneNumber = result.client[0].phone;
-        this.clientName = result.client[0].firstName + " " + result.client[0].lastName;
-      })
-      .catch(err => this.error = err);
-
-      this.consentForm = new ConsentForm();
+      this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      var userID = this.currentUser.userID;
       this.date = new Date();
-      this.consentForm.allowDetailedMessage = false;
-      this.consentForm.ontarioWorks = true;
-      this.consentForm.ontarioDisabilityProgram = true;
-      this.consentForm.employmentInsurance = true;
-      this.consentForm.employmentServices = true;
-      this.consentForm.other = true;
+      this.consentForm = new ConsentForm();
+
+      if (this.currentUser.userType !== "Client") {
+        this.completeConsentForm = true;
+        this.loading = false;
+        swal(
+            'Read Only',
+            "You are logged in as '" + this.currentUser.userType + "'. Only clients can submit this form.",
+            'warning'
+        );
+      } else {
+        this.clientService
+        .getClient(userID)
+        .then(result => {
+          this.clientName = result.client[0].firstName + " " + result.client[0].lastName;
+          this.completeConsentForm = result.client[0].consent;
+          if (!result.client[0].consent) {
+            this.clientService
+            .getConsentById()
+            .then(result => {
+              this.consentForm = result[0];
+              this.loading = false;
+              swal(
+                  'Read Only',
+                  "You have already submitted this form. Select 'Request to Edit' if you would like to make changes.",
+                  'warning'
+              );
+              console.log(this.completeConsentForm);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+            if (this.consentForm.other == null || this.consentForm.other === '') {
+              this.otherChecked = false;
+            } else {
+              this.otherChecked = true;
+            }
+          } else {
+            this.consentForm.ontarioWorks = false;
+            this.consentForm.ontarioDisabilityProgram = false;
+            this.consentForm.employmentInsurance = false;
+            this.consentForm.employmentServices = false;
+            this.consentForm.wsib = false;
+            this.loading = false;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      }
   }
 
   saveConsent() {
-    // allowDetailedMessage: boolean;
-    // alternativeNumber: string;
-    // ontarioWorks: string;
-    // ontarioDisabilityProgram: string;
-    // employmentInsurance: string;
-    // employmentServices: string;
-    // other: string;
-    // contactName: string;
-    // contactNum: string;
-    if (!this.consentForm.allowDetailedMessage) {
-      if (!this.consentForm.alternateNumber) {
-        swal(
-            'Whoops!',
-            'Please enter an alternate phone number.',
-            'warning'
-        );
-      } else {
-        if (!this.consentForm.contactName || !this.consentForm.contactNum ) {
-          swal(
-              'Whoops!',
-              'Please fill out all form fields.',
-              'warning'
-          );
-        } else {
-          this.consentForm.date = this.date;
-          this.clientService
-              .saveConsent(this.consentForm)
-              .then(client => {
-                  this.router.navigate(['/dashboard']);
-              })
-              .catch(error => this.error = error);
-        }
-      }
-    } else {
-      if (!this.consentForm.contactName || !this.consentForm.contactNum ) {
-        swal(
-            'Whoops!',
-            'Please fill out all form fields.',
-            'warning'
-        );
-      } else {
-        this.consentForm.date = this.date;
-        this.clientService
-            .saveConsent(this.consentForm)
-            .then(client => {
-                this.router.navigate(['/dashboard']);
-            })
-            .catch(error => this.error = error);
-      }
-    }
+    // if (!this.consentForm.allowDetailedMessage) {
+    //   if (!this.consentForm.alternateNumber) {
+    //     swal(
+    //         'Whoops!',
+    //         'Please enter an alternate phone number.',
+    //         'warning'
+    //     );
+    //   } else {
+    //     if (!this.consentForm.contactName || !this.consentForm.contactNum ) {
+    //       swal(
+    //           'Whoops!',
+    //           'Please fill out all form fields.',
+    //           'warning'
+    //       );
+    //     } else {
+    //       this.consentForm.date = this.date;
+    //       this.clientService
+    //           .saveConsent(this.consentForm)
+    //           .then(client => {
+    //               this.router.navigate(['/dashboard']);
+    //           })
+    //           .catch(error => this.error = error);
+    //     }
+    //   }
+    // } else {
+    //   if (!this.consentForm.contactName || !this.consentForm.contactNum ) {
+    //     swal(
+    //         'Whoops!',
+    //         'Please fill out all form fields.',
+    //         'warning'
+    //     );
+    //   } else {
+    //     this.consentForm.date = this.date;
+    //     this.clientService
+    //         .saveConsent(this.consentForm)
+    //         .then(client => {
+    //             this.router.navigate(['/dashboard']);
+    //         })
+    //         .catch(error => this.error = error);
+    //   }
+    // }
+    this.consentForm.date = this.date;
+    this.clientService
+        .saveConsent(this.consentForm)
+        .then(client => {
+            this.router.navigate(['/dashboard']);
+        })
+        .catch(error => this.error = error);
+  }
+
+  requestEdit() {
+
   }
 
   goBack() {
       window.history.back();
   }
+
 }

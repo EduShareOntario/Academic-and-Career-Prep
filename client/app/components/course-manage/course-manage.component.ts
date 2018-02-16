@@ -56,13 +56,13 @@ export class CourseManageComponent implements OnInit {
         this.CourseService
             .getCourses()
             .then(result => {
-                if (result.status === "403") {
+                if ((result as any).status === "403") {
                     this.courses = null;
                 } else {
                     //format datetime
                     result.forEach((item) => {
-                        item.courseStart = moment(item.courseStart).format('YYYY-MM-DD');
-                        item.courseEnd = moment(item.courseEnd).format('YYYY-MM-DD');
+                        item.courseStart = moment(item.courseStart).utcOffset(60).format('YYYY-MM-DD');
+                        item.courseEnd = moment(item.courseEnd).utcOffset(60).format('YYYY-MM-DD');
                     });
                     this.courses = result;
 
@@ -82,11 +82,13 @@ export class CourseManageComponent implements OnInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirm => {
-            if (isConfirm) {
-                this.deleteCourse(course, event);
-            }
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
+            this.deleteCourse(course, event);
+          }
         }).catch(error => {
-            //console.log("Canceled");
+            console.log(error);
         });
     }
 

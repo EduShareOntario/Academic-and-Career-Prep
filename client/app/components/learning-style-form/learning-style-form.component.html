@@ -1,6 +1,5 @@
 <div class="learningStyle">
   <div class="row">
-
     <hr class="col-md-4">
     <div class="col-md-4" style="text-align:center">
       <h1 style="position: relative;top: 50%;transform: translateY(-50%);"><strong>Learning Style</strong></h1>
@@ -67,7 +66,7 @@
             <div style="float: left;">
                 <button (click)="goBack()" class="btn btn-default">Back</button>
             </div>
-            <div style="float: right;">
+            <div style="float: right;" *ngIf="currentUser.userType === 'Client'">
                 <button (click)="saveLearningStyle()" class="submitForm" title="Save client"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
             </div>
         </div>

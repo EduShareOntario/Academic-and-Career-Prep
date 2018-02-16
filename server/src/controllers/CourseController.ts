@@ -6,6 +6,7 @@ const sql = require('mssql');
 var auth = ["Admin"];
 
 var config = require('../config');
+config = config.db;
 
 class CourseController {
 

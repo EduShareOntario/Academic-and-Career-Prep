@@ -11,15 +11,18 @@
 	<div *ngIf="currentUser" class="collapse navbar-collapse navbar-menu-collapse">
 		<ul class="nav navbar-nav navbar-right">
 			<li><a class="navbarItem" routerLink="/dashboard" routerLinkActive="active"><i class="fa fa-th" aria-hidden="true"></i> Dashboard</a></li>
-		  <li class="dropdown-toggle active" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				<ul class="nav navbar-nav">
-			    <li><a class="navbarItem"><i class="fa fa-user fa-3" aria-hidden="true"></i> {{ currentUser }} <span class="caret"></span></a></li>
-				</ul>
-		  </li>
-		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-				<li><a href="#">Profile</a></li>
-		    <li><a routerLink="/login" routerLinkActive="active"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
-		  </ul>
+			<div class="dropdown-container">
+			  <li class="dropdown-toggle active" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					<ul class="nav navbar-nav">
+				    <li><a class="navbarItem"><i class="fa fa-user fa-3" aria-hidden="true"></i> {{ currentUser }} <span class="caret"></span></a></li>
+					</ul>
+			  </li>
+			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+			    <li><a routerLink="/login" routerLinkActive="active"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+					<li><a routerLink="/help" routerLinkActive="active"><i class="fa fa-question-circle"></i> Help</a></li>
+			  </ul>
+			</div>
 		</ul>
 	</div>
 </nav>

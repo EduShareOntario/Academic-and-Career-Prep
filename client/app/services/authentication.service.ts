@@ -57,4 +57,36 @@ export class AuthService {
         localStorage.removeItem('currentUser');
         this.loggedUser.next(null);
     }
+
+    resetPassword(userID: number, password: string) {
+      let headers = new Headers({'Content-Type': 'application/json'});
+      var credentials = JSON.stringify({ userID: userID, password: password });
+      return this.http.put('/api/resetPassword', credentials, {headers:headers})
+      .toPromise()
+      .then((response: Response) => {
+        if (response.status === 200) {
+          return true;
+        } else {
+          return false;
+        }
+      }).catch((err) => {
+        console.log("Reset password " + err);
+      });
+    }
+
+    requestReset(email: string) {
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let url = `api/requestReset/${email}`;
+      return this.http.get(url, {headers:headers})
+      .toPromise()
+      .then((response: Response) => {
+        if (response.status === 200) {
+          return true;
+        } else {
+          return false;
+        }
+      }).catch((err) => {
+        console.log("Request reset " + err);
+      });
+    }
 }

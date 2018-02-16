@@ -16,12 +16,14 @@ import { ToggleButtonModule } from 'primeng/primeng';
 import { DialogModule } from 'primeng/primeng';
 import { SplitButtonModule } from 'primeng/primeng';
 import { InputMaskModule } from 'primeng/primeng';
+import { MultiSelectModule } from 'primeng/primeng';
+import { FileUploadModule } from "ng2-file-upload/file-upload/file-upload.module";
 
 //Import components
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { StaffManageComponent } from './components/staff-manage/staff-manage.component';
-import { StaffEditComponent } from './components/staff-edit/staff-edit.component';
+import { StaffDetailsComponent } from './components/staff-details/staff-details.component';
 import { StudentManageComponent } from './components/student-manage/student-manage.component';
 import { StudentEditComponent } from './components/student-edit/student-edit.component';
 import { ClientStatusComponent } from './components/client-status/client-status.component';
@@ -36,6 +38,10 @@ import { StudentEnrollmentComponent } from './components/student-enrollment/stud
 import { TimetableComponent } from './components/timetable/timetable.component';
 import { AttendanceListComponent } from './components/attendance-list/attendance-list.component';
 import { AttendanceReportComponent } from './components/attendance-report/attendance-report.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { FilesComponent } from './components/files/files.component';
+import { HelpComponent } from './components/help/help.component';
 
 //Import pipes
 import { UserFilterPipe } from "./pipes/user-filter.pipe";
@@ -55,7 +61,7 @@ import { StudentService } from './services/student.service';
 import { ClientService } from './services/client.service';
 import { StaffService } from './services/staff.service';
 import { CourseService } from './services/course.service';
-
+import { FilesService } from "./services/files.service";
 
 @NgModule({
   imports: [
@@ -74,14 +80,16 @@ import { CourseService } from './services/course.service';
     ToggleButtonModule,
     DialogModule,
     SplitButtonModule,
-    InputMaskModule
+    InputMaskModule,
+    MultiSelectModule,
+    FileUploadModule
     ],
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
     StaffManageComponent,
-    StaffEditComponent,
+    StaffDetailsComponent,
     StudentManageComponent,
     StudentEditComponent,
     ClientStatusComponent,
@@ -98,7 +106,11 @@ import { CourseService } from './services/course.service';
     CourseFilterPipe,
     CampusFilterPipe,
     AttendanceListComponent,
-    AttendanceReportComponent
+    AttendanceReportComponent,
+    ResetPasswordComponent,
+    FileUploadComponent,
+    FilesComponent,
+    HelpComponent
   ],
   providers: [
     AuthGuard,
@@ -112,7 +124,8 @@ import { CourseService } from './services/course.service';
     StudentService,
     StaffService,
     ClientService,
-    CourseService
+    CourseService,
+    FilesService
   ],
   bootstrap: [AppComponent]
 })

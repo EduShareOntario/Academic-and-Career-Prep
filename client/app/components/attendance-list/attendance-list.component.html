@@ -1,7 +1,7 @@
 <div class="attendanceList">
+  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Take Attendance</strong></h1>
+  <hr>
     <div *ngIf="!data">
-        <h1><strong>Take Attendance</strong></h1>
-        <hr>
         <div class="cs-loader">
             <div class="cs-loader-inner">
                 <label>	L</label>
@@ -18,29 +18,19 @@
         </div>
     </div>
     <div class="row" *ngIf="data">
-      <h1><strong>Take Attendance</strong></h1>
-      <hr>
         <div class="col-md-3">
-          <div class="wrapper4">
-            <h2>My Courses</h2>
-            <hr>
-            <input placeholder="Filter by course name" class="form-control" [(ngModel)]="courseQuery" />
-            <p-dataTable [value]="data | courseFilter : courseQuery" [responsive]="true">
-                <p-column field="courseName" header="Name" [sortable]="true"></p-column>
-                <p-column header="Action" [style]="{'width': '140px'}">
-                  <template let-data="rowData" pTemplate="body">
-                    <button type="button" (click)="doAttendance(data)" class="btn btn-info">Attendance</button>
-                  </template>
-                </p-column>
-            </p-dataTable>
-            <div class="push"></div>
+          <h2>My Courses</h2>
+          <hr>
+          <input placeholder="Filter by course name" class="form-control" [(ngModel)]="courseQuery" />
+          <p-dataTable [value]="data | courseFilter : courseQuery" [responsive]="true">
+              <p-column field="courseName" header="Name" [sortable]="true"></p-column>
+              <p-column header="Action" [style]="{'width': '140px'}">
+                <template let-data="rowData" pTemplate="body">
+                  <button type="button" (click)="doAttendance(data)" class="btn btn-info">Attendance</button>
+                </template>
+              </p-column>
+          </p-dataTable>
         </div>
-        <div class="footer">
-            <div>
-                <button (click)="goBack()" class="btn btn-default">Back</button>
-            </div>
-        </div>
-      </div>
         <div *ngIf="!attendanceView" class="col-md-9">
             <h2>Status Report</h2>
             <hr>

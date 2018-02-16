@@ -58,6 +58,21 @@ export class ClientService {
           .catch(this.handleError);
     }
 
+    getConsentById(): Promise<ConsentForm>  {
+      // get current user id from web token
+      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      var currentUserID = currentUser.userID;
+      let url = `api/clientForms/consent/${currentUserID}`;
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
+      return this.http
+          .get(url, options)
+          .toPromise()
+          .then(response => response.json())
+          .catch(this.handleError);
+    }
+
     saveLearningStyle(learningStyleForm: LearningStyleForm): Promise<Client> {
       // get current user id from web token
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -120,6 +135,22 @@ export class ClientService {
             .catch(this.handleError);
     }
 
+    updateBannerCamBool(client: Client): Promise<Client> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+
+        var url = 'api/bannerCamBool-update';
+
+        return this.http
+            .put(url, client, options)
+            .toPromise()
+            .then(response => {
+              return response.json();
+            })
+            .catch(this.handleError);
+    }
+
     private put(client: Client, suitabilityForm: SuitabilityForm) {
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
@@ -134,6 +165,7 @@ export class ClientService {
     }
 
     delete(client) {
+      console.log(client.userID);
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
@@ -143,6 +175,9 @@ export class ClientService {
         return this.http
             .delete(url, options)
             .toPromise()
+            .then(result => {
+              console.log(result);
+            })
             .catch(this.handleError);
     }
 

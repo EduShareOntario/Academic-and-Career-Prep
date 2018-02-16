@@ -66,7 +66,7 @@ export class AttendanceReportComponent implements OnInit {
         this.studentService
             .getStudents()
             .then(students => {
-                if (students.status === "403") {
+                if ((students as any).status === "403") {
                     this.students = null;
                 } else {
                     this.students = students;
@@ -83,7 +83,7 @@ export class AttendanceReportComponent implements OnInit {
         this.courseService
             .getCourses()
             .then(result => {
-                if (result.status === "403") {
+                if ((result as any).status === "403") {
                     this.courses = null;
                 } else {
                     //format datetime

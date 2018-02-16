@@ -256,9 +256,8 @@ export class CourseEditComponent implements OnInit {
                         item.courseEnd = moment(item.courseEnd).isValid() ? moment(item.courseEnd).add(1 , 'day').format('YYYY-MM-DD') : '';
                     });
                     this.course = result[0];
-                    console.log(this.course);
                   if (this.course.classTimeStr !== null) {
-this.events = this.detachCourseStr(this.course.classTimeStr);
+                    this.events = this.detachCourseStr(this.course.classTimeStr);
                   }
                 });
             }
@@ -270,16 +269,18 @@ this.events = this.detachCourseStr(this.course.classTimeStr);
         let strArry = str.split(',');
         strArry.forEach(element => {
             let myEvent = new MyEvent();
-            myEvent.title = element.split(' ')[0];
+            myEvent.title = '-  ' + element.split(' ')[1].split('-')[1];
             myEvent.id = this.idGen++;
             myEvent.weekday = this.weekDays[moment(myEvent.title).isoWeekday() - 1];
             myEvent.dayStart_correct = element.split(' ')[1].split('-')[0];
             myEvent.dayEnd_correct = element.split(' ')[1].split('-')[1];
-            myEvent.start = myEvent.title + ' ' + myEvent.dayStart_correct;
-            myEvent.end = myEvent.title + ' ' + myEvent.dayEnd_correct;
+            myEvent.start = element.split(' ')[0] + ' ' + myEvent.dayStart_correct;
+            myEvent.end = element.split(' ')[0] + ' ' + myEvent.dayEnd_correct;
             myEvent.dayStart = moment(myEvent.start).isValid() ? moment(myEvent.start).format() : '';
             myEvent.dayEnd = moment(myEvent.end).isValid() ? moment(myEvent.end).format() : '';
+            myEvent.allDay = false;
             myEvents.push(myEvent);
+            console.log(myEvent);
         });
         return myEvents;
     }
@@ -336,4 +337,5 @@ export class MyEvent {
     start: string;
     end: string;
     weekday: string;
+    allDay: boolean;
 }

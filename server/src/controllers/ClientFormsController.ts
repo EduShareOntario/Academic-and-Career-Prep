@@ -9,6 +9,7 @@ var sql = require('mssql');
 var auth = ["Admin", "Staff", "Client"];
 
 var config = require('../config');
+config = config.db;
 
 class ClientFormsController {
     consentForm(req: express.Request, res: express.Response): void {
@@ -21,12 +22,24 @@ class ClientFormsController {
                         .then(function(connection) {
                             var consentQuery = "'" + _id + "', '" +
                                 consentForm.date + "', '" +
-                                consentForm.alternateNumber + "', '" +
-                                consentForm.allowDetailedMessage + "', '" +
                                 consentForm.ontarioWorks + "', '" +
+                                consentForm.owCaseWorkerName + "', '" +
+                                consentForm.owCaseWorkerPhone + "', '" +
+                                consentForm.owCaseWorkerEmail + "', '" +
                                 consentForm.ontarioDisabilityProgram + "', '" +
+                                consentForm.odspAgencyName + "', '" +
+                                consentForm.odspContactName + "', '" +
+                                consentForm.odspPhone + "', '" +
+                                consentForm.odspEmail + "', '" +
                                 consentForm.employmentInsurance + "', '" +
                                 consentForm.employmentServices + "', '" +
+                                consentForm.esAgencyName + "', '" +
+                                consentForm.esContactName + "', '" +
+                                consentForm.esPhone + "', '" +
+                                consentForm.esEmail + "', '" +
+                                consentForm.wsib + "', '" +
+                                consentForm.wsibWtsName + "', '" +
+                                consentForm.wsibWtsPhone + "', '" +
                                 consentForm.other + "', '" +
                                 consentForm.contactName + "', '" +
                                 consentForm.contactNum + "', '" +
@@ -56,6 +69,30 @@ class ClientFormsController {
         }
     }
 
+    getConsentById(req: express.Request, res: express.Response) {
+      try {
+          new AuthController().authUser(req, res, {
+              requiredAuth: auth, done: function() {
+                  var _id: string = req.params._id;
+                  sql.connect(config)
+                      .then(function(connection) {
+                          new sql.Request(connection)
+                              .query('SELECT * FROM Consent WHERE userID = ' + _id + '')
+                              .then(function(consentForm) {
+                                res.send(consentForm);
+                              }).catch(function(err) {
+                                  res.send({ "error": "error" });
+                                  console.log("Get consent by id " + err);
+                              });
+                      });
+              }
+          });
+      } catch (e) {
+          console.log(e);
+          res.send({ "error": "error in your request" });
+      }
+    }
+
     learningStyleForm(req: express.Request, res: express.Response): void {
         try {
             new AuthController().authUser(req, res, {
@@ -77,7 +114,8 @@ class ClientFormsController {
                                         .then(function() {
                                             res.send({ "success": "success" });
                                         }).catch(function(err) {
-                                            res.send({ "error": "error" }); console.log("Update client " + err);
+                                            res.send({ "error": "error" });
+                                            console.log("Update client " + err);
                                         });
                                 }).catch(function(err) {
                                     console.log("Save learning style form " + err);
@@ -114,13 +152,16 @@ class ClientFormsController {
                                                         learningStyleForm: learningStyleForm
                                                     });
                                                 }).catch(function(err) {
-                                                    res.send({ "error": "error" }); console.log("Get learningStyleForms " + err);
+                                                    res.send({ "error": "error" });
+                                                    console.log("Get learningStyleForms " + err);
                                                 });
                                         }).catch(function(err) {
-                                            res.send({ "error": "error" }); console.log("Get consentForms " + err);
+                                            res.send({ "error": "error" });
+                                            console.log("Get consentForms " + err);
                                         });
                                 }).catch(function(err) {
-                                    res.send({ "error": "error" }); console.log("Get suitabilityForms " + err);
+                                    res.send({ "error": "error" });
+                                    console.log("Get suitabilityForms " + err);
                                 });
                         });
                 }

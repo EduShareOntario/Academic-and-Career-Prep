@@ -12,6 +12,8 @@ class AuthRoutes {
         var controller = this._authController;
 
         router.post("/auth/", controller.auth);
+        router.put("/resetPassword/", controller.resetPassword);
+        router.get("/requestReset/:_email", controller.requestReset);
 
         return router;
     }

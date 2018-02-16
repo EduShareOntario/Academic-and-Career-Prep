@@ -19,9 +19,19 @@ export class LearningStyleComponent {
   totalDoingPoints: number;
   learnBy: any;
   multiChoice: any;
+  currentUser: any;
 
   constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.learningStyleForm = new LearningStyleForm();
+
+    if (this.currentUser.userType !== "Client") {
+      swal(
+          'Read Only',
+          "You are logged in as '" + this.currentUser.userType + "'. Only clients can submit this form.",
+          'warning'
+      );
+    }
   }
 
   saveLearningStyle() {
@@ -42,7 +52,9 @@ export class LearningStyleComponent {
           allowOutsideClick: false,
           confirmButtonText: 'Yes!'
       }).then(isConfirm => {
-        if (isConfirm) {
+        if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+          console.log(isConfirm.dismiss);
+        } else if (isConfirm) {
           swal({
               title: 'Tie!',
               text: "Please pick one that suits you better",
@@ -74,7 +86,7 @@ export class LearningStyleComponent {
           });
         }
       }).catch(error => {
-
+        console.log(error);
       });
     } else {
       swal({
@@ -87,7 +99,9 @@ export class LearningStyleComponent {
           cancelButtonText: 'No',
           confirmButtonText: 'Yes!'
       }).then(isConfirm => {
-        if (isConfirm) {
+        if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+          console.log(isConfirm.dismiss);
+        } else if (isConfirm) {
           this.learningStyleForm.learnBy  = this.learnBy;
           this.clientService
               .saveLearningStyle(this.learningStyleForm)
@@ -97,7 +111,7 @@ export class LearningStyleComponent {
               .catch(error => this.error = error); // TODO: Display error message
         }
       }).catch(error => {
-        //console.log("Canceled");
+        console.log(error);
       });
     }
 

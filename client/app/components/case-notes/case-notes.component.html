@@ -1,5 +1,5 @@
 <div class="caseNotes">
-  <h1><strong>Case Notes</strong></h1>
+  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Case Notes</strong></h1>
   <hr>
   <div *ngIf="!data">
     <div class="cs-loader">
@@ -19,7 +19,6 @@
   </div>
   <div class="row" *ngIf="data">
     <div class="col-md-6">
-      <div class="wrapper">
       <h2>Students</h2>
       <hr>
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
@@ -32,13 +31,6 @@
             </template>
           </p-column>
       </p-dataTable>
-      <div class="push"></div>
-    </div>
-    <div class="footer">
-      <div>
-        <button (click)="goBack()" class="btn btn-default">Back</button>
-      </div>
-    </div>
     </div>
 
     <div *ngIf="notesView" class="col-md-6">

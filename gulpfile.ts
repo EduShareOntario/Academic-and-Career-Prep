@@ -57,6 +57,7 @@ gulp.task('tslint', () => {
  * Compile TypeScript sources and create sourcemaps in build directory.
  */
 gulp.task("compile", ["tslint"], () => {
+  console.log("COMPILING TYPESCRIPT...");
     let tsResult = gulp.src("client/**/*.ts")
         .pipe(sourcemaps.init())
         .pipe(tsProject());
@@ -69,6 +70,7 @@ gulp.task("compile", ["tslint"], () => {
  * Copy all resources that are not TypeScript files into build directory. e.g. index.html, css, images
  */
 gulp.task("clientResources", () => {
+  console.log("COMPILING RESOURCES...");
     return gulp.src(["client/**/*", "bower_components", "!**/*.ts", "!client/typings", "!client/typings/**", "!client/*.json"])
         .pipe(gulp.dest("dist/client"));
 });
@@ -82,11 +84,16 @@ gulp.task("bower_components", () => {
 });
 
 /**
- * Copy bin directory for www
+ * Copy bin directory for www, and pdf for uploads
  */
-gulp.task("serverResources", () => {
-    return gulp.src(["server/src/bin/**"])
+gulp.task("serverBin", () => {
+    return gulp.src("server/src/bin/*")
         .pipe(gulp.dest("dist/server/bin"));
+});
+
+gulp.task("serverUploads", () => {
+    return gulp.src("server/src/pdf/*")
+        .pipe(gulp.dest("dist/server/pdf"));
 });
 
 /**
@@ -137,7 +144,7 @@ gulp.task('start', function () {
  */
 
 gulp.task("build", function (callback) {
-    runSequence('clean', 'build:server', 'build:client', 'clientResources', 'bower_components', 'serverResources', 'libs', callback);
+    runSequence('clean', 'build:server', 'build:client', 'clientResources', 'bower_components', 'serverBin', 'serverUploads', 'libs', callback);
 });
 
 /**

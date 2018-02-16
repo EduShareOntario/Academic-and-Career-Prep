@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
     timetable = false;
     attendanceList = false;
     attendanceReport = false;
+    files = false;
 
     userType: any;
 
@@ -38,14 +39,20 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        var userType = currentUser.userType;
-        var userID = currentUser.userID;
-        this.checkAuth(userType, userID);
+        if (!currentUser.active) {
+          this.router.navigate(['/reset-password']);
+        } else {
+          var userType = currentUser.userType;
+          var userID = currentUser.userID;
+          this.checkAuth(userType, userID);
+          this.consentForm = true;
+          this.learningStyleForm = true;
+        }
     }
 
     checkAuth(userType, userID) {
         this.userType = userType;
-        if (userType === 'Admin') {
+        if (userType.indexOf('Admin') >= 0) {
             this.clientStatus = true;
             this.manageStudents = true;
             this.manageStaff = true;
@@ -53,24 +60,36 @@ export class DashboardComponent implements OnInit {
             this.caseNotes = true;
             this.manageCourses = true;
             this.attendanceReport = true;
-        } else if (userType === 'Staff') {
+            this.attendanceList = true;
+            this.timetable = true;
+            this.consent = true;
+            this.learningStyle = true;
+            this.files = true;
+        }
+        if (userType.indexOf('Staff') >= 0) {
             this.clientStatus = true;
             this.manageStudents = true;
             this.suitability = true;
+            this.timetable = true;
             this.caseNotes = true;
             this.manageCourses = true;
             this.attendanceReport = true;
-        } else if (userType === 'Student') {
-            this.timetable = true;
-        } else if (userType === 'Client') {
-            this.consent = true;
-            this.learningStyle = true;
-            this.maesdprf = true;
-            this.checkFormStatus(userID);
-        } else if (userType === 'Instructor') {
+            this.files = true;
+        }
+        if (userType.indexOf('Instructor') >= 0) {
             this.attendanceList = true;
             this.attendanceReport = true;
+            this.timetable = true;
             this.caseNotes = true;
+        }
+        if (userType === 'Student') {
+            this.timetable = true;
+        }
+        if (userType === 'Client') {
+            this.consent = true;
+            this.learningStyle = true;
+            //this.maesdprf = true;
+            this.checkFormStatus(userID);
         }
     }
 

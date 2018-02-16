@@ -40,7 +40,7 @@ export class StudentEnrollmentComponent implements OnInit {
         this.studentService
             .getStudents()
             .then(result => {
-                if (result.error === 'error') {
+                if ((result as any).error === 'error') {
                     this.students = null;
                 } else {
                     this.students = result;
@@ -86,11 +86,13 @@ export class StudentEnrollmentComponent implements OnInit {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, remove!'
             }).then(isConfirm => {
-                if (isConfirm) {
-                    this.drop(student);
-                }
+              if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+                console.log(isConfirm.dismiss);
+              } else if (isConfirm) {
+                this.drop(student);
+              }
             }).catch(error => {
-                //console.log("Canceled");
+                console.log(error);
             });
         } else {
             this.enroll(student);

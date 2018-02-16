@@ -36,12 +36,11 @@ export class ClientStatusComponent implements OnInit {
     addSuitability: boolean = false;
     @Input() suitabilityForm: SuitabilityForm;
     clientSuitability: Client[];
-    partAWarning = false;
-    partBWarning = false;
+    warning: boolean = false;
+    calculated: boolean = false;
     partAPoints = 0;
     partBPoints = 0;
     totalPoints = 0;
-    calculated: boolean = false;
 
     statusReport: boolean = true;
     showGeneral: boolean = true;
@@ -81,7 +80,7 @@ export class ClientStatusComponent implements OnInit {
         this.clientService
             .getClients()
             .then(objects => {
-                if (objects.status === "403") {
+                if ((objects as any).status === "403") {
                     this.data = null;
                 } else {
                     this.setData(objects);
@@ -98,8 +97,13 @@ export class ClientStatusComponent implements OnInit {
         this.data = objects.clients;
         for (let client of this.data) {
           client.fullName = client.firstName + " " + client.lastName;
+          if (client.banner == null) {
+            client.banner = false;
+          }
+          if (client.cam == null) {
+            client.cam = false;
+          }
         }
-        console.log(this.data);
         this.allClients = objects.clients;
         this.clientTotal = objects.clients.length;
         this.suitabilityForms = objects.suitabilityForms;
@@ -114,6 +118,7 @@ export class ClientStatusComponent implements OnInit {
         this.doughnutChartType = 'doughnut';
         this.addSuitability = false;
         this.statusReport = true;
+
     }
 
     addClient() {
@@ -130,7 +135,9 @@ export class ClientStatusComponent implements OnInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirm => {
-          if (isConfirm) {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
             this.deleteClient(client);
           }
         }).catch(error => {
@@ -143,7 +150,14 @@ export class ClientStatusComponent implements OnInit {
         this.clientService
             .delete(client)
             .then(res => {
+                this.showStatusReport();
                 this.data = this.data.filter(h => h !== client);
+                this.allClients = this.allClients.filter(h => h !== client);
+                this.stage1 = this.data.filter(x => x.suitability);
+                this.stage2 = this.data.filter(x => !x.suitability && x.consent && x.learningStyle);
+                this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
+                this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+                this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
                 swal(
                     'Deleted!',
                     'Client record has been deleted.',
@@ -200,7 +214,7 @@ export class ClientStatusComponent implements OnInit {
         }
     }
 
-    showStatusReport(event) {
+    showStatusReport() {
         this.showSuitabilityEdit = false;
         this.addSuitability = false;
         this.statusReport = true;
@@ -230,8 +244,33 @@ export class ClientStatusComponent implements OnInit {
 
     }
 
-    createAsStudent(client: Student) {
-      this.studentNumber(client);
+    createAsStudent(client: Client) {
+      if (client.studentNumber === 'TBD') {
+        this.studentNumber(client);
+      } else {
+        swal({
+            title: 'Student Number',
+            type: 'info',
+            text: 'Previously attended georgian: ' + client.studentNumber,
+            input: "text",
+            inputPlaceholder: 'Please re-enter student number displayed above',
+            showCancelButton: true,
+            animation: "slide-from-top",
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Save'
+        }).then(isConfirm => {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
+            client.studentNumber = isConfirm.value;
+            this.removeAlert(client);
+          }
+        }).catch(error => {
+          console.log(error); // TODO: Display error message
+        });
+      }
+
     }
 
     studentNumber(client) {
@@ -246,37 +285,45 @@ export class ClientStatusComponent implements OnInit {
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
           confirmButtonText: 'Save'
-      }).then(inputValue => {
-        if (inputValue) {
-          client.studentNumber = inputValue;
+      }).then(isConfirm => {
+        if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+          console.log(isConfirm.dismiss);
+        } else if (isConfirm) {
+          client.studentNumber = isConfirm.value;
           this.removeAlert(client);
         }
       }).catch(error => {
-        console.log("Canceled " + error); // TODO: Display error message
+        console.log(error); // TODO: Display error message
       });
     }
 
     removeAlert(client) {
-      swal({
-          title: 'Transfer client (' + client.firstName + ' ' + client.lastName + ')?',
-          text: 'Are you sure you want to create as student with #' + client.studentNumber + '?',
-          type: 'question',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, transfer!'
-      }).then(isConfirm => {
-        if (isConfirm) {
-          this.studentService
-              .postNew(client)
-              .then(result => {
-                this.removeFromClientTable(client.userID);
-              })
-              .catch(error => this.error = error); // TODO: Display error message
-        }
-      }).catch(error => {
-        console.log("Canceled"); // TODO: Display error message
-      });
+      if (client.studentNumber == null || client.studentNumber === '') {
+        this.studentNumber(client);
+      } else {
+        swal({
+            title: 'Transfer client (' + client.firstName + ' ' + client.lastName + ')?',
+            text: 'Are you sure you want to create as student with #' + client.studentNumber + '?',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, transfer!'
+        }).then(isConfirm => {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
+            this.studentService
+                .postNew(client)
+                .then(result => {
+                  this.removeFromClientTable(client.userID);
+                })
+                .catch(error => this.error = error); // TODO: Display error message
+          }
+        }).catch(error => {
+          console.log(error); // TODO: Display error message
+        });
+      }
     }
 
     removeFromClientTable(userID): void {
@@ -329,6 +376,19 @@ export class ClientStatusComponent implements OnInit {
       this.addSuitability = false;
       this.showSuitabilityEdit = true;
       this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
+
+      var keys = Object.keys(this.suitabilityForm);
+      for (var i = 0; i < keys.length; i++) {
+          if (typeof this.suitabilityForm[keys[i]] === "string") {
+              if (this.suitabilityForm[keys[i]] === "true") {
+                  this.suitabilityForm[keys[i]] = true;
+              } else if (this.suitabilityForm[keys[i]] === "false") {
+                  this.suitabilityForm[keys[i]] = false;
+              } else if (this.suitabilityForm[keys[i]] == null) {
+                  this.suitabilityForm[keys[i]] = false;
+              }
+          }
+      }
       this.clientSuitability = client;
     }
 
@@ -363,73 +423,88 @@ export class ClientStatusComponent implements OnInit {
     }
 
     tallyPoints() {
-        var factorPoints = 0;
-        this.partAPoints = 0;
-        this.partBPoints = 0;
-        this.totalPoints = 0;
-        this.partAWarning = false;
-        this.partBWarning = false;
-        // PART A
-        if (this.suitabilityForm.offerStartDate === 'Less than one year') { this.partAPoints += 3; } else if
-        (this.suitabilityForm.offerStartDate === 'In one year') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.offerStartDate === 'More than a Year') { this.partAPoints += 1; }
+      var factorPoints = 0;
+      this.partAPoints = 0;
+      this.partBPoints = 0;
+      this.totalPoints = 0;
+      this.warning = false;
+      // PART A
+      if (this.suitabilityForm.offerStartDate === 'Less than one year') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.offerStartDate === 'In one year') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.offerStartDate === 'More than a Year') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.meetsGoal === 'No') { this.partAPoints += 3; } else if
-        (this.suitabilityForm.meetsGoal === 'Yes but lacks skills/high enough marks') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.meetsGoal === 'Yes') { this.partAPoints += 1; }
+      if (this.suitabilityForm.meetsGoal === 'No') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.meetsGoal === 'Yes but lacks skills/high enough marks') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.meetsGoal === 'Yes') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.timeOutOfSchool === '6 or more years') { this.partAPoints += 3; } else if
-        (this.suitabilityForm.timeOutOfSchool === '1-6 years') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.timeOutOfSchool === 'Less than 1 year') { this.partAPoints += 1; }
+      if (this.suitabilityForm.timeOutOfSchool === '6 or more years') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.timeOutOfSchool === '1-6 years') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.timeOutOfSchool === 'Less than 1 year') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.inProgramBefore === 'No/Left with appropriate reasons') { this.partAPoints += 3; } else if
-        (this.suitabilityForm.inProgramBefore === 'Yes - Appropriate progress') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.inProgramBefore === 'Yes – No progress') { this.partAPoints += 1; }
+      if (this.suitabilityForm.inProgramBefore === 'No/Left with appropriate reasons') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.inProgramBefore === 'Yes - Appropriate progress') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.inProgramBefore === 'Yes – No progress') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.employment === 'Not working') { this.partAPoints += 3; } else if
-        (this.suitabilityForm.employment === 'Working part time') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.employment === 'Working full time') { this.partAPoints += 1; }
+      if (this.suitabilityForm.employment === 'Not working') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.employment === 'Working part time') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.employment === 'Working full time') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.incomeSource === 'OW  ODSP  EI  SC') { this.partAPoints += 3; } else if
-        (this.suitabilityForm.incomeSource === 'No income') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.incomeSource === 'Employed') { this.partAPoints += 1; }
+      if (this.suitabilityForm.incomeSource === 'EI') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.incomeSource === 'OW') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.incomeSource === 'ODSP') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.incomeSource === 'Crown Ward') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.incomeSource === 'Self-employed') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.incomeSource === 'Second Career') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.incomeSource === 'No income') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.incomeSource === 'Dependent of OW/ODSP') { this.partAPoints += 1; } else if
+      (this.suitabilityForm.incomeSource === 'Employed') { this.partAPoints += 1; } else if
+      (this.suitabilityForm.incomeSource === 'International Student') { this.partAPoints += 0; } else if
+      (this.suitabilityForm.incomeSource === 'WSIB') { this.partAPoints += 0; }
 
-        if (this.suitabilityForm.ageRange === '19-29 years old') { this.partAPoints += 1; } else if
-        (this.suitabilityForm.ageRange === '30-44 years old') { this.partAPoints += 2; } else if
-        (this.suitabilityForm.ageRange === '45-65 years old') { this.partAPoints += 3; }
+      if (this.suitabilityForm.ageRange === '45-65 years old') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.ageRange === '16-18 years old') { this.partAPoints += 0; } else if
+      (this.suitabilityForm.ageRange === '19-29 years old') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.ageRange === '65+ years old') { this.partAPoints += 0; } else if
+      (this.suitabilityForm.ageRange === '30-44 years old') { this.partAPoints += 1; }
 
-        //PART B
-        if (this.suitabilityForm.hoursPerWeek === '1Less than 5') { this.partBPoints += 1; } else if
-        (this.suitabilityForm.hoursPerWeek === '5-10') { this.partBPoints += 2; } else if
-        (this.suitabilityForm.hoursPerWeek === '10-20') { this.partBPoints += 3; }
+      //PART B
+      if (this.suitabilityForm.hoursPerWeek === '10-20') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.hoursPerWeek === '5-10') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.hoursPerWeek === 'Less than 5') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.workHistory === 'Less than 1 year experience in the field') { this.partBPoints += 3; } else if
-        (this.suitabilityForm.workHistory === '1-4 years experience in the field') { this.partBPoints += 2; } else if
-        (this.suitabilityForm.workHistory === '4+ years experience in the field') { this.partBPoints += 1; }
+      if (this.suitabilityForm.workHistory === 'Less than 1 year experience') { this.partAPoints += 3; } else if
+      (this.suitabilityForm.workHistory === '1-4 years experience') { this.partAPoints += 2; } else if
+      (this.suitabilityForm.workHistory === '4+ years experience') { this.partAPoints += 1; }
 
-        if (this.suitabilityForm.factorHealth) { factorPoints++; }
-        if (this.suitabilityForm.factorInstructions) { factorPoints++; }
-        if (this.suitabilityForm.factorCommunication) { factorPoints++; }
-        if (this.suitabilityForm.factorLanguage) { factorPoints++; }
-        if (this.suitabilityForm.factorComputer) { factorPoints++; }
-        if (this.suitabilityForm.factorHousing) { factorPoints++; }
-        if (this.suitabilityForm.factorTransportation) { factorPoints++; }
-        if (this.suitabilityForm.factorDaycare) { factorPoints++; }
-        if (this.suitabilityForm.factorInternet) { factorPoints++; }
-        if (this.suitabilityForm.factorPersonal) { factorPoints++; }
+      if (this.suitabilityForm.factorHealth === true) { factorPoints++; }
+      if (this.suitabilityForm.factorInstructions === true) { factorPoints++; }
+      if (this.suitabilityForm.factorCommunication === true) { factorPoints++; }
+      if (this.suitabilityForm.factorLanguage === true) { factorPoints++; }
+      if (this.suitabilityForm.factorComputer === true) { factorPoints++; }
+      if (this.suitabilityForm.factorHousing === true) { factorPoints++; }
+      if (this.suitabilityForm.factorTransportation === true) { factorPoints++; }
+      if (this.suitabilityForm.factorDaycare === true) { factorPoints++; }
+      if (this.suitabilityForm.factorInternet === true) { factorPoints++; }
+      if (this.suitabilityForm.factorPersonal === true) { factorPoints++; }
 
-        if (factorPoints >= 0 && factorPoints <= 4) { this.partBPoints += 3; } else if
-        (factorPoints > 4 && factorPoints <= 8) { this.partBPoints += 2; } else if
-        (factorPoints > 8) { this.partBPoints += 1; }
+      if (factorPoints >= 0 && factorPoints <= 4) { this.partBPoints = 3; } else if
+      (factorPoints >= 5 && factorPoints <= 8) { this.partBPoints = 2; } else if
+      (factorPoints >= 9) { this.partBPoints = 1; }
 
-        this.totalPoints = this.partAPoints - this.partBPoints;
+      this.totalPoints = this.partAPoints + this.partBPoints;
 
-        if (this.partAPoints < 14) { this.partAWarning = true; }
-        if (this.partBPoints < 4) { this.partBWarning = true; }
+      if (this.totalPoints < 18) { this.warning = true; }
     }
 
 
     checkboxChange(client) {
+      this.clientService
+        .updateBannerCamBool(client)
+        .then( res => {
+          this.ngOnInit();
+        })
+        .catch();
+
       if (client.banner && client.cam) {
         this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && !x.banner && !x.cam);
         this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);

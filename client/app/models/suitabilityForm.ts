@@ -38,4 +38,5 @@ export class SuitabilityForm {
   summaryHealth: string;
   summaryOther: string;
   dbTotalPoints: any;
+  generalInfoComments: string;
 }

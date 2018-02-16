@@ -11,7 +11,7 @@ export class StudentGuard implements CanActivate {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         var userType = currentUser.userType;
 
-        if (userType === "Student") {
+        if (userType === "Student" || userType.indexOf('Admin') >= 0 || userType.indexOf('Instructor') >= 0 || userType.indexOf('Staff') >= 0) {
           return true;
         } else {
           // not logged in so redirect to login page

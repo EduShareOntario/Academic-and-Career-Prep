@@ -11,7 +11,7 @@ export class StaffGuard implements CanActivate {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         var userType = currentUser.userType;
 
-        if (userType === "Staff" || userType === "Admin") {
+        if (userType.indexOf('Staff') >= 0 || userType.indexOf('Admin') >= 0) {
           return true;
         } else {
           // not logged in so redirect to login page

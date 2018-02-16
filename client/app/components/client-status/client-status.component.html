@@ -1,594 +1,646 @@
 <div class="clients">
-    <div *ngIf="!data">
-        <h1><strong>Manage Clients</strong></h1>
+  <div *ngIf="!data">
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Clients</strong></h1>
+    <hr>
+    <div class="cs-loader">
+      <div class="cs-loader-inner">
+        <label>	L</label>
+        <label>	O</label>
+        <label>	A</label>
+        <label>	D</label>
+        <label>	I</label>
+        <label>	N</label>
+        <label>	G</label>
+        <label>	.</label>
+        <label>	.</label>
+        <label>	.</label>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="data">
+    <div class="col-md-11">
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Clients</strong></h1>
+      <hr>
+    </div>
+    <div class="col-md-1">
+      <button class="addClient btn btn-success" (click)="addClient()" title="Add new client"><i class="fa fa-plus"></i> New Client</button>
+    </div>
+    <div class="col-md-6">
+        <h2>Clients</h2>
         <hr>
-        <div class="cs-loader">
-            <div class="cs-loader-inner">
-                <label>	L</label>
-                <label>	O</label>
-                <label>	A</label>
-                <label>	D</label>
-                <label>	I</label>
-                <label>	N</label>
-                <label>	G</label>
-                <label>	.</label>
-                <label>	.</label>
-                <label>	.</label>
-            </div>
+        <div class="error" *ngIf="error">{{error}}</div>
+        <input placeholder="Filter by client name" class="form-control" [(ngModel)]="filterQuery" />
+        <div style="overflow:visible; position:relative;">
+          <p-dataTable [value]="data | userFilter : filterQuery" [responsive]="true">
+            <p-column field="status" header="Status" [sortable]="true" [style]="{'width': '60px'}">
+              <template let-data="rowData" pTemplate="body">
+                  <div [class.statusStage1]="data.suitability" [class.statusStage2]="!data.suitability" [class.statusStage3]="!data.suitability && !data.consent && !data.learningStyle" [class.statusStage4]="!data.suitability && !data.consent && !data.learningStyle && data.banner && data.cam"></div>
+              </template>
+            </p-column>
+            <p-column field="fullName" header="Name" [sortable]="true"></p-column>
+            <p-column field="email" header="Email" [sortable]="true"></p-column>
+            <p-column field="banner" header="Banner" [sortable]="true" [style]="{'width': '95px'}">
+              <template let-data="rowData" pTemplate="body">
+                <div *ngIf="!data.suitability && !data.consent && !data.learningStyle">
+                    <p-checkbox [(ngModel)]="data.banner" binary="true" (onChange)="checkboxChange(data)"></p-checkbox>
+                </div>
+                <div *ngIf="data.suitability && data.consent && data.learningStyle">
+                    <p>N/A</p>
+                </div>
+              </template>
+            </p-column>
+            <p-column field="cam" header="CAM" [sortable]="true" [style]="{'width': '95px'}">
+              <template let-data="rowData" pTemplate="body">
+                <div *ngIf="!data.suitability && !data.consent && !data.learningStyle">
+                    <p-checkbox [(ngModel)]="data.cam" binary="true" (onChange)="checkboxChange(data)"></p-checkbox>
+                </div>
+                <div *ngIf="data.suitability && data.consent && data.learningStyle">
+                    <p>N/A</p>
+                </div>
+              </template>
+            </p-column>
+            <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
+              <template let-data="rowData" pTemplate="body">
+                <div class="btn-group">
+                  <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" style="position:absolute;">
+                      <li *ngIf="!data.suitability && !data.consent && !data.learningStyle && data.banner && data.cam"><a (click)="createAsStudent(data)"><i class="fa fa-check" aria-hidden="true"></i> Create as Student</a></li>
+                      <li *ngIf="data.suitability"><a (click)="addSuitabilityInfo(data)"><i class="fa fa-check" aria-hidden="true"></i> Add Suitability Info</a></li>
+                      <li><a (click)="showClientView(data)"><i class="fa fa-eye" aria-hidden="true"></i> View Info</a></li>
+                      <li class="deleteClient"><a (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                  </ul>
+                </div>
+              </template>
+            </p-column>
+          </p-dataTable>
         </div>
     </div>
-    <div class="row" *ngIf="data">
-        <h1><strong>Manage Clients</strong></h1>
-        <hr>
-        <div class="col-md-6">
-            <div class="wrapper2">
-                <h2>Clients</h2>
-                <button class="addClient btn btn-primary" (click)="addClient()" title="Add new client"><i class="fa fa-plus"></i> New Client</button>
-                <hr>
-                <div class="error" *ngIf="error">{{error}}</div>
-                <input placeholder="Filter by client name" class="form-control" [(ngModel)]="filterQuery" />
-                <div style="overflow:visible; position:relative;">
-                <p-dataTable [value]="data | userFilter : filterQuery" [responsive]="true">
-                    <p-column field="status" header="Status" [style]="{'width': '60px'}">
-                      <template let-data="rowData" pTemplate="body">
-                          <div [class.statusStage1]="data.suitability" [class.statusStage2]="!data.suitability" [class.statusStage3]="!data.suitability && !data.consent && !data.learningStyle" [class.statusStage4]="!data.suitability && !data.consent && !data.learningStyle && data.banner && data.cam"></div>
-                      </template>
-                    </p-column>
-                    <p-column field="fullName" header="Name" [sortable]="true" [style]="{'width': '170px'}"></p-column>
-                    <p-column field="email" header="Email" [sortable]="true"></p-column>
-                    <p-column header="Banner/CAM" [style]="{'width': '110px'}">
-                      <template let-data="rowData" pTemplate="body">
-                        <div *ngIf="!data.suitability && !data.consent && !data.learningStyle">
-                            <p-checkbox [(ngModel)]="data.banner" label="B" binary="true" (onChange)="checkboxChange(data)"></p-checkbox>
-                            <p-checkbox [(ngModel)]="data.cam" label="C" binary="true" (onChange)="checkboxChange(data)"></p-checkbox>
-                        </div>
-                      </template>
-                    </p-column>
-                    <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
-                      <template let-data="rowData" pTemplate="body">
-                        <div class="btn-group">
-                          <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-                        <ul class="dropdown-menu" role="menu" style="position:absolute;">
-                            <li *ngIf="!data.suitability && !data.consent && !data.learningStyle && data.banner && data.cam"><a (click)="createAsStudent(data)"><i class="fa fa-check" aria-hidden="true"></i> Create as Student</a></li>
-                            <li *ngIf="data.suitability"><a (click)="addSuitabilityInfo(data)"><i class="fa fa-check" aria-hidden="true"></i> Add Suitability Info</a></li>
-                            <li><a (click)="showClientView(data)"><i class="fa fa-eye" aria-hidden="true"></i> View Info</a></li>
-                            <li class="deleteClient"><a (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
-                        </ul>
-                      </div>
-                      </template>
-                    </p-column>
-                </p-dataTable>
-              </div>
-                <div class="push"></div>
-            </div>
-            <div class="footer">
-                <div>
-                    <button (click)="goBack()" class="btn btn-default">Back</button>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="statusReport" class="col-md-6">
-            <h2>Status Report</h2>
-            <hr>
-            <div class="well">
-                <h3>Total clients: {{ clientTotal }}</h3>
+    <div *ngIf="statusReport" class="col-md-6">
+      <h2>Status Report</h2>
+      <hr>
+      <div class="well">
+        <h3>Total clients: {{ clientTotal }}</h3>
 
-                <div style="display: block">
-                    <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [colors]="doughnutChartColors" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+        <div style="display: block">
+          <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [colors]="doughnutChartColors" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                     </canvas>
-                </div>
-            </div>
         </div>
-        <div *ngIf="clientView" class="col-md-6">
-            <h2>Information for {{clientView.firstName + " " + clientView.lastName}}</h2>
-            <div (click)="showStatusReport($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
-            <hr>
-            <div class="well">
-            <ul class="sectionBtnGroup col-sm-12">
-                <li class="sectionButtons" [ngClass]="{active: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
-                    <h4>General Info</h4></li>
-                <li class="sectionButtons" *ngIf="!clientView.suitability" [ngClass]="{active: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
-                    <h4>Suitability</h4></li>
-                <li class="sectionButtons" *ngIf="!clientView.consent" [ngClass]="{active: showConsent}" title="Consent" (click)="sectionBtnClicked($event, 'consent')">
-                    <h4>Consent</h4></li>
-                <li class="sectionButtons" *ngIf="!clientView.learningStyle" [ngClass]="{active: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
-                    <h4>Learning Style</h4></li>
-            </ul>
-            <br>
-            <div *ngIf="showGeneral">
-                <br />
-                <div class="form-group">
-                    <label class="control-label">id: </label> {{clientView.userID}} <br />
-                    <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate}} <br />
-                    <label class="control-label">First Name: </label> {{clientView.firstName}} <br />
-                    <label class="control-label">Last Name: </label> {{clientView.lastName}} <br />
-                    <label class="control-label">Birth Date: </label> {{clientView.birthdate}} <br />
-                    <label class="control-label">Email: </label> {{clientView.email}} <br />
-                    <label class="control-label">Phone: </label> {{clientView.phone}} <br />
-                </div>
-            </div>
-            <div *ngIf="showSuitability" class="">
-                <br />
-                <div class="form-group">
-                    <button (click)="editSuitability(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
-                    <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <br />
-                    <label class="control-label">Courses: </label> {{suitabilityView.courses}} <br />
-                    <label class="control-label">Goal: </label> {{suitabilityView.goal}} <br />
-                    <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}} <br />
-                    <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}} <br />
-                    <label class="control-label">Appropriate Goal: </label> {{suitabilityView.appropriateGoal}} <br />
-                    <label class="control-label">19+ Years Old: </label> {{suitabilityView.isValidAge}} <br />
-                    <label class="control-label">Not Registered In High School or Post-Sec: </label> {{suitabilityView.schoolRegistration}} <br />
-                    <label class="control-label">Available During Class Time: </label> {{suitabilityView.availableDuringClass}} <br />
-                    <label class="control-label">Last Grade Completed: </label> {{suitabilityView.lastGrade}} <br />
-                    <label class="control-label">Level: </label> {{suitabilityView.level}} <br />
-                    <label class="control-label">Post-Secondary/Job Offer start date: </label> {{suitabilityView.offerStartDate}} <br />
-                    <label class="control-label">Meets Next Goals Requirements: </label> {{suitabilityView.meetsGoal}} <br />
-                    <label class="control-label">Time out of School/Training: </label> {{suitabilityView.timeOutOfSchool}} <br />
-                    <label class="control-label">Has Been In Program Before: </label> {{suitabilityView.inProgramBefore}} <br />
-                    <label class="control-label">Employment: </label> {{suitabilityView.employment}} <br />
-                    <label class="control-label">Income Source: </label> {{suitabilityView.incomeSource}} <br />
-                    <label class="control-label">Age: </label> {{suitabilityView.ageRange}} <br />
-                    <label class="control-label"># of Hours/Week: </label> {{suitabilityView.hoursPerWeek}} <br />
-                    <label class="control-label">Work History: </label> {{suitabilityView.workHistory}} <br />
-                    <label class="control-label">Health a Factor: </label> {{suitabilityView.factorHealth}} <br />
-                    <label class="control-label">Instructions a Factor: </label> {{suitabilityView.factorInstructions}} <br />
-                    <label class="control-label">Communication a Factor: </label> {{suitabilityView.factorCommunication}} <br />
-                    <label class="control-label">Language a Factor: </label> {{suitabilityView.factorLanguage}} <br />
-                    <label class="control-label">Computer a Factor: </label> {{suitabilityView.factorComputer}} <br />
-                    <label class="control-label">Housing a Factor: </label> {{suitabilityView.factorHousing}} <br />
-                    <label class="control-label">Transportation a Factor: </label> {{suitabilityView.factorTransportation}} <br />
-                    <label class="control-label">Daycare a Factor: </label> {{suitabilityView.factorDaycare}} <br />
-                    <label class="control-label">Internet a Factor: </label> {{suitabilityView.factorInternet}} <br />
-                    <label class="control-label">Personal a Factor: </label> {{suitabilityView.factorPersonal}} <br />
-                    <label class="control-label">Other Factor : </label> {{suitabilityView.factorOther}} <br />
-                    <label class="control-label">Transportation Summary: </label> {{suitabilityView.summaryTransportation}} <br />
-                    <label class="control-label">Housing Summary: </label> {{suitabilityView.summaryHousing}} <br />
-                    <label class="control-label">Health Summary: </label> {{suitabilityView.summaryHealth}} <br />
-                    <label class="control-label">Other Summary: </label> {{suitabilityView.summaryOther}} <br />
-                    <label class="control-label">Suitability Points: </label> {{suitabilityView.points}} <br />
-                </div>
-            </div>
-            <div *ngIf="showConsent" class="">
-                <br />
-                <div class="form-group">
-                    <label class="control-label">Date: </label> {{consentView.date}} <br />
-                    <label class="control-label">Detailed Message: </label> {{consentView.allowDetailedMessage}} <br />
-                    <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
-                    <label class="control-label">Ontario Disability: </label> {{consentView.ontarioDisabilityProgram}} <br />
-                    <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
-                    <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
-                    <label class="control-label">Other: </label> {{consentView.other}} <br />
-                    <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
-                    <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
-                    <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
-                    <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
-                </div>
-            </div>
-            <div *ngIf="showLearningStyle" class="">
-                <br />
-                <p><strong>I learn best by: </strong>{{ learningStyleView.learnBy }}</p>
-                <div class="form-group">
-                    <div style="display: block">
-                        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
-                    </div>
-                </div>
+      </div>
+    </div>
+    <div *ngIf="clientView" class="col-md-6">
+      <h2>Information for {{clientView.firstName + " " + clientView.lastName}}</h2>
+      <div (click)="showStatusReport()" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+      <hr>
+      <div class="well">
+        <ul class="sectionBtnGroup col-sm-12">
+          <li class="sectionButtons" [ngClass]="{active: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
+            <h4>General Info</h4></li>
+          <li class="sectionButtons" *ngIf="!clientView.suitability" [ngClass]="{active: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
+            <h4>Suitability</h4></li>
+          <li class="sectionButtons" *ngIf="!clientView.consent" [ngClass]="{active: showConsent}" title="Consent" (click)="sectionBtnClicked($event, 'consent')">
+            <h4>Consent</h4></li>
+          <li class="sectionButtons" *ngIf="!clientView.learningStyle" [ngClass]="{active: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
+            <h4>Learning Style</h4></li>
+        </ul>
+        <br>
+        <div *ngIf="showGeneral">
+          <br />
+          <div class="form-group">
+            <label class="control-label">id: </label> {{clientView.userID}} <br />
+            <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate}} <br />
+            <label class="control-label">Student Number: </label> {{clientView.studentNumber}} <br />
+            <label class="control-label">First Name: </label> {{clientView.firstName}} <br />
+            <label class="control-label">Last Name: </label> {{clientView.lastName}} <br />
+            <label class="control-label">Birth Date: </label> {{clientView.birthdate}} <br />
+            <label class="control-label">Email: </label> {{clientView.email}} <br />
+            <label class="control-label">Phone: </label> {{clientView.phone}} <br />
+            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToText}} <br />
+            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessage}} <br />
+            <label class="control-label">Alternate Phone: </label> {{clientView.alternateNumber}} <br />
+            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToTextAlternate}} <br />
+            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessageAlternate}} <br />
+            <label class="control-label">Comments: </label> {{clientView.comments}} <br />
+          </div>
+        </div>
+        <div *ngIf="showSuitability" class="">
+          <br />
+          <div class="form-group">
+            <button (click)="editSuitability(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
+            <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <br />
+            <label class="control-label">Courses: </label> {{suitabilityView.courses}} <br />
+            <label class="control-label">Goal: </label> {{suitabilityView.goal}} <br />
+            <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}} <br />
+            <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}} <br />
+            <label class="control-label">Appropriate Goal: </label> {{suitabilityView.appropriateGoal}} <br />
+            <label class="control-label">19+ Years Old: </label> {{suitabilityView.isValidAge}} <br />
+            <label class="control-label">Not Registered In High School or Post-Sec: </label> {{suitabilityView.schoolRegistration}} <br />
+            <label class="control-label">Available During Class Time: </label> {{suitabilityView.availableDuringClass}} <br />
+            <label class="control-label">Last Grade Completed: </label> {{suitabilityView.lastGrade}} <br />
+            <label class="control-label">Level: </label> {{suitabilityView.level}} <br />
+            <label class="control-label">Post-Secondary/Job Offer start date: </label> {{suitabilityView.offerStartDate}} <br />
+            <label class="control-label">Meets Next Goals Requirements: </label> {{suitabilityView.meetsGoal}} <br />
+            <label class="control-label">Time out of School/Training: </label> {{suitabilityView.timeOutOfSchool}} <br />
+            <label class="control-label">Has Been In Program Before: </label> {{suitabilityView.inProgramBefore}} <br />
+            <label class="control-label">Employment: </label> {{suitabilityView.employment}} <br />
+            <label class="control-label">Income Source: </label> {{suitabilityView.incomeSource}} <br />
+            <label class="control-label">Age: </label> {{suitabilityView.ageRange}} <br />
+            <label class="control-label"># of Hours/Week: </label> {{suitabilityView.hoursPerWeek}} <br />
+            <label class="control-label">Work History: </label> {{suitabilityView.workHistory}} <br />
+            <label class="control-label">Health a Factor: </label> {{suitabilityView.factorHealth}} <br />
+            <label class="control-label">Instructions a Factor: </label> {{suitabilityView.factorInstructions}} <br />
+            <label class="control-label">Communication a Factor: </label> {{suitabilityView.factorCommunication}} <br />
+            <label class="control-label">Language a Factor: </label> {{suitabilityView.factorLanguage}} <br />
+            <label class="control-label">Computer a Factor: </label> {{suitabilityView.factorComputer}} <br />
+            <label class="control-label">Housing a Factor: </label> {{suitabilityView.factorHousing}} <br />
+            <label class="control-label">Transportation a Factor: </label> {{suitabilityView.factorTransportation}} <br />
+            <label class="control-label">Daycare a Factor: </label> {{suitabilityView.factorDaycare}} <br />
+            <label class="control-label">Internet a Factor: </label> {{suitabilityView.factorInternet}} <br />
+            <label class="control-label">Personal a Factor: </label> {{suitabilityView.factorPersonal}} <br />
+            <label class="control-label">Other Factor : </label> {{suitabilityView.factorOther}} <br />
+            <label class="control-label">Transportation Summary: </label> {{suitabilityView.summaryTransportation}} <br />
+            <label class="control-label">Housing Summary: </label> {{suitabilityView.summaryHousing}} <br />
+            <label class="control-label">Health Summary: </label> {{suitabilityView.summaryHealth}} <br />
+            <label class="control-label">Other Summary: </label> {{suitabilityView.summaryOther}} <br />
+            <label class="control-label">Suitability Points: </label> {{suitabilityView.points}} <br />
+            <label class="control-label">Comments: </label> {{suitabilityView.comments}} <br />
+          </div>
+        </div>
+        <div *ngIf="showConsent" class="">
+          <br />
+          <div class="form-group">
+            <label class="control-label">Date: </label> {{consentView.date}} <br />
+            <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
+            <label class="control-label">OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
+            <label class="control-label">OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
+            <label class="control-label">OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
+            <label class="control-label">Ontario Disability Support Program: </label> {{consentView.ontarioDisabilityProgram}} <br />
+            <label class="control-label">ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
+            <label class="control-label">ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
+            <label class="control-label">ODSP Phone: </label> {{consentView.odspPhone}} <br />
+            <label class="control-label">ODSP Email: </label> {{consentView.odspEmail}} <br />
+            <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
+            <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
+            <label class="control-label">ES Agency Name: </label> {{consentView.esAgencyName}} <br />
+            <label class="control-label">ES Contact Name: </label> {{consentView.esContactName}} <br />
+            <label class="control-label">ES Phone: </label> {{consentView.esPhone}} <br />
+            <label class="control-label">ES Email: </label> {{consentView.esEmail}} <br />
+            <label class="control-label">WSIB: </label> {{consentView.wsib}} <br />
+            <label class="control-label">WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
+            <label class="control-label">WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
+            <label class="control-label">Other: </label> {{consentView.other}} <br />
+            <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
+            <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
+            <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
+            <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
+          </div>
+        </div>
+        <div *ngIf="showLearningStyle" class="">
+          <br />
+          <p><strong>I learn best by: </strong>{{ learningStyleView.learnBy }}</p>
+          <div class="form-group">
+            <div style="display: block">
+              <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
             </div>
           </div>
         </div>
-        <div *ngIf="addSuitability || showSuitabilityEdit">
-            <!-- end of section 1 -->
-            <div class="col-md-6">
-              <div *ngIf="addSuitability" class="addSuitability">
-                <h2>Add Suitability for {{ clientSuitability.firstName }}</h2>
-                <div (click)="showStatusReport($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
-                <hr>
-              </div>
-              <div *ngIf="showSuitabilityEdit" class="addSuitability">
-                <h2>Edit Suitability for {{ clientSuitability.firstName }}</h2>
-                <div (click)="showStatusReport($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
-                <hr>
-              </div>
-              <div class="well">
-                <label class="col-md-2 control-label">Courses: </label>
-                <div class="col-md-10">
-                    <input class="form-control" type="text" [(ngModel)]="suitabilityForm.courses" />
-                </div>
+      </div>
+    </div>
+    <div *ngIf="addSuitability || showSuitabilityEdit">
+      <!-- end of section 1 -->
+      <div class="col-md-6">
+        <div *ngIf="addSuitability" class="addSuitability">
+          <h2>Add Suitability for {{ clientSuitability.firstName }}</h2>
+          <div (click)="showStatusReport()" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+          <hr>
+        </div>
+        <div *ngIf="showSuitabilityEdit" class="addSuitability">
+          <h2>Edit Suitability for {{ clientSuitability.firstName }}</h2>
+          <div (click)="showStatusReport()" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+          <hr>
+        </div>
+        <div class="well">
+          <label class="col-md-2 control-label">Courses: </label>
+          <div class="col-md-10">
+            <input class="form-control" type="text" [(ngModel)]="suitabilityForm.courses" />
+          </div>
 
-                <label class="col-md-2 control-label">Goal: </label>
-                <div class="col-md-10">
-                    <input class="form-control" type="text" [(ngModel)]="suitabilityForm.goal" />
-                </div>
+          <label class="col-md-2 control-label">Goal: </label>
+          <div class="col-md-10">
+            <input class="form-control" type="text" [(ngModel)]="suitabilityForm.goal" />
+          </div>
 
-                <label class="col-md-2 control-label">Transition Date: </label>
-                <div class="col-md-10">
-                    <input class="form-control" type="date" [(ngModel)]="suitabilityForm.transitionDate" />
-                </div>
+          <label class="col-md-2 control-label">Transition Date: </label>
+          <div class="col-md-10">
+            <input class="form-control" type="date" [(ngModel)]="suitabilityForm.transitionDate" />
+          </div>
 
-                <div *ngIf="!suitabilityForm.suitabilityID">
-                  <div style="height: 25px;clear:both"></div>
-                  <label class="col-md-5 control-label">Transcript: </label>
-                  <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.transcript"></p-inputSwitch>
-                  <br />
-                  <label class="col-md-5 control-label">Gov't ID: </label>
-                  <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.governmentID"></p-inputSwitch>
-                  <br />
-                  <label class="col-md-5 control-label">Appropriate Occupational Goal</label>
-                  <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.appropriateGoal"></p-inputSwitch>
-                  <br />
-                  <label class="col-md-5 control-label">19+ Years Old</label>
-                  <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.isValidAge"></p-inputSwitch>
-                  <br />
-                  <label class="col-md-5 control-label">Registered In High School/Post-Sec</label>
-                  <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.schoolRegistration"></p-inputSwitch>
-                  <br />
-                  <label class="col-md-5 control-label">Available During Class Time</label>
-                  <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.availableDuringClass"></p-inputSwitch>
-                </div>
-                <div *ngIf="suitabilityForm.suitabilityID">
-                  <div style="height: 25px;clear:both"></div>
-                  <label class="col-md-5 control-label">Transcript: </label>
-                  <button *ngIf="suitabilityForm.transcript === 'true'" (click)="suitabilityForm.transcript = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                  <button *ngIf="suitabilityForm.transcript === 'false' || suitabilityForm.transcript === 'undefined'" (click)="suitabilityForm.transcript = 'true'" class="btn btn-warning booleanBtn">No</button>
-                  <br />
-                  <label class="col-md-5 control-label">Gov't ID: </label>
-                  <button *ngIf="suitabilityForm.governmentID === 'true'" (click)="suitabilityForm.governmentID = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                  <button *ngIf="suitabilityForm.governmentID === 'false' || suitabilityForm.governmentID === 'undefined'" (click)="suitabilityForm.governmentID = 'true'" class="btn btn-warning booleanBtn">No</button>
-                  <br />
-                  <label class="col-md-5 control-label">Appropriate Occupational Goal</label>
-                  <button *ngIf="suitabilityForm.appropriateGoal === 'true'" (click)="suitabilityForm.appropriateGoal = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                  <button *ngIf="suitabilityForm.appropriateGoal === 'false' || suitabilityForm.appropriateGoal === 'undefined'" (click)="suitabilityForm.appropriateGoal = 'true'" class="btn btn-warning booleanBtn">No</button>
-                  <br />
-                  <label class="col-md-5 control-label">19+ Years Old</label>
-                  <button *ngIf="suitabilityForm.isValidAge === 'true'" (click)="suitabilityForm.isValidAge = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                  <button *ngIf="suitabilityForm.isValidAge === 'false' || suitabilityForm.isValidAge === 'undefined'" (click)="suitabilityForm.isValidAge = 'true'" class="btn btn-warning booleanBtn">No</button>
-                  <br />
-                  <label class="col-md-5 control-label">Registered In High School/Post-Sec</label>
-                  <button *ngIf="suitabilityForm.schoolRegistration === 'true'" (click)="suitabilityForm.schoolRegistration = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                  <button *ngIf="suitabilityForm.schoolRegistration === 'false' || suitabilityForm.schoolRegistration === 'undefined'" (click)="suitabilityForm.schoolRegistration = 'true'" class="btn btn-warning booleanBtn">No</button>
-                  <br />
-                  <label class="col-md-5 control-label">Available During Class Time</label>
-                  <button *ngIf="suitabilityForm.availableDuringClass === 'true'" (click)="suitabilityForm.availableDuringClass = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                  <button *ngIf="suitabilityForm.availableDuringClass === 'false' || suitabilityForm.availableDuringClass === 'undefined'" (click)="suitabilityForm.availableDuringClass = 'true'" class="btn btn-warning booleanBtn">No</button>
-                </div>
-                <div style="height: 25px;clear:both"></div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Last Grade Completed: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.lastGrade" required #lastGrade="ngModel">
+          <!-- <div *ngIf="!suitabilityForm.suitabilityID">
+            <div style="height: 25px;clear:both"></div>
+            <label class="col-md-5 control-label">Transcript: </label>
+            <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.transcript"></p-inputSwitch>
+            <br />
+            <label class="col-md-5 control-label">Gov't ID: </label>
+            <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.governmentID"></p-inputSwitch>
+            <br />
+            <label class="col-md-5 control-label">Appropriate Occupational Goal</label>
+            <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.appropriateGoal"></p-inputSwitch>
+            <br />
+            <label class="col-md-5 control-label">19+ Years Old</label>
+            <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.isValidAge"></p-inputSwitch>
+            <br />
+            <label class="col-md-5 control-label">Registered In High School/Post-Sec</label>
+            <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.schoolRegistration"></p-inputSwitch>
+            <br />
+            <label class="col-md-5 control-label">Available During Class Time</label>
+            <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="suitabilityForm.availableDuringClass"></p-inputSwitch>
+          </div> -->
+          <div>
+            <div style="height: 25px;clear:both"></div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.transcript === true" (click)="suitabilityForm.transcript = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.transcript === false || suitabilityForm.transcript === 'undefined'" (click)="suitabilityForm.transcript = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">Transcript</label>
+            </div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.governmentID === true" (click)="suitabilityForm.governmentID = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.governmentID === false || suitabilityForm.governmentID === 'undefined'" (click)="suitabilityForm.governmentID = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">Gov't ID</label>
+            </div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.appropriateGoal === true" (click)="suitabilityForm.appropriateGoal = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.appropriateGoal === false || suitabilityForm.appropriateGoal === 'undefined'" (click)="suitabilityForm.appropriateGoal = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">Appropriate Occupational Goal</label>
+            </div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.isValidAge === true" (click)="suitabilityForm.isValidAge = 'false'" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.isValidAge === false || suitabilityForm.isValidAge === 'undefined'" (click)="suitabilityForm.isValidAge = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">19+ Years Old</label>
+            </div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.schoolRegistration === true" (click)="suitabilityForm.schoolRegistration = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.schoolRegistration === false || suitabilityForm.schoolRegistration === 'undefined'" (click)="suitabilityForm.schoolRegistration = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">Registered In High School/Post-Sec</label>
+            </div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.availableDuringClass === true" (click)="suitabilityForm.availableDuringClass = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.availableDuringClass === false || suitabilityForm.availableDuringClass === 'undefined'" (click)="suitabilityForm.availableDuringClass = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">Available During Class Time</label>
+            </div>
+          </div>
+          <div style="height: 25px;clear:both"></div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Last Grade Completed: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.lastGrade" required #lastGrade="ngModel">
                           <option value="Less than grade 10">Less than grade 10</option>
                           <option value="Grade 10-11">Grade 10-11</option>
                           <option value="Grade 12">Grade 12</option>
                         </select>
-                        <!-- <div *ngIf="lastGrade.errors && lastGrade.touched" class="alert alert-danger">
+              <!-- <div *ngIf="lastGrade.errors && lastGrade.touched" class="alert alert-danger">
                             <div [hidden]="!lastGrade.errors.required">Please Select Last Grade</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Level: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.level" required #level="ngModel">
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Level: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.level" required #level="ngModel">
                           <option value="Academic/Advanced">Academic/Advanced</option>
                           <option value="Applied/General">Applied/General</option>
                           <option value="Workplace/Basic">Workplace/Basic</option>
                         </select>
-                        <!-- <div *ngIf="level.errors && level.touched" class="alert alert-danger">
+              <!-- <div *ngIf="level.errors && level.touched" class="alert alert-danger">
                             <div [hidden]="!level.errors.required">Please Select A Level</div>
                         </div> -->
-                    </div>
-                </div>
-                <!-- PART A: START -->
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Post-Secondary/Job Offer start date: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.offerStartDate" required #offerStartDate="ngModel">
+            </div>
+          </div>
+          <!-- PART A: START -->
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Post-Secondary/Job Offer start date: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.offerStartDate" required #offerStartDate="ngModel">
                           <option value="Less than one year">Less than one year</option>
                           <option value="In one year">In one year</option>
                           <option value="More than a Year">More than a Year</option>
                         </select>
-                        <!-- <div *ngIf="offerStartDate.errors && offerStartDate.touched" class="alert alert-danger">
+              <!-- <div *ngIf="offerStartDate.errors && offerStartDate.touched" class="alert alert-danger">
                             <div [hidden]="!offerStartDate.errors.required">Please Select Offer Start Date</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Meets Next Goals Requirements: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.meetsGoal" required #meetsGoals="ngModel">
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Meets Next Goals Requirements: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.meetsGoal" required #meetsGoals="ngModel">
                           <option value="No">No</option>
                           <option value="Yes but lacks skills/high enough marks">Yes but lacks skills/high enough marks</option>
                           <option value="Yes">Yes</option>
                         </select>
-                        <!-- <div *ngIf="meetsGoals.errors && meetsGoals.touched" class="alert alert-danger">
+              <!-- <div *ngIf="meetsGoals.errors && meetsGoals.touched" class="alert alert-danger">
                             <div [hidden]="!meetsGoals.errors.required">Please Select Goal Requirements</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Time out of School/Training: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.timeOutOfSchool" required #school="ngModel">
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Time out of School/Training: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.timeOutOfSchool" required #school="ngModel">
                           <option value="6 or more years">6 or more years</option>
                           <option value="1-6 years">1-6 years</option>
                           <option value="Less than 1 year">Less than 1 year</option>
                         </select>
-                        <!-- <div *ngIf="school.errors && school.touched" class="alert alert-danger">
+              <!-- <div *ngIf="school.errors && school.touched" class="alert alert-danger">
                             <div [hidden]="!school.errors.required">Please Select Time Out Of School</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Has Been In Program Before: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.inProgramBefore" required #program="ngModel">
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Has Been In Program Before: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.inProgramBefore" required #program="ngModel">
                           <option value="No/Left with appropriate reasons">No/Left with appropriate reasons</option>
                           <option value="Yes - Appropriate progress">Yes - Appropriate progress</option>
                           <option value="Yes – No progress">Yes – No progress</option>
                         </select>
-                        <!-- <div *ngIf="program.errors && program.touched" class="alert alert-danger">
+              <!-- <div *ngIf="program.errors && program.touched" class="alert alert-danger">
                             <div [hidden]="!program.errors.required">Please Select An Option</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Employment: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.employment" required #employment="ngModel">
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Employment: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.employment" required #employment="ngModel">
                           <option value="Not working">Not working</option>
                           <option value="Working part time">Working part time</option>
                           <option value="Working full time">Working full time</option>
                         </select>
-                        <!-- <div *ngIf="employment.errors && employment.touched" class="alert alert-danger">
+              <!-- <div *ngIf="employment.errors && employment.touched" class="alert alert-danger">
                             <div [hidden]="!employment.errors.required">Please Select Employment Option</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Income Source: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.incomeSource" required #income="ngModel">
-                          <option value="OW  ODSP  EI  SC">OW  ODSP  EI  SC</option>
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Income Source: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.incomeSource" required #income="ngModel">
+                          <option value="EI">EI</option>
+                          <option value="OW">OW</option>
+                          <option value="ODSP">ODSP</option>
+                          <option value="Crown Ward">Crown Ward</option>
+                          <option value="Self-employed">Self-employed</option>
+                          <option value="Second Career">Second Career</option>
                           <option value="No income">No income</option>
+                          <option value="Dependent of OW/ODSP">Dependent of OW/ODSP</option>
                           <option value="Employed">Employed</option>
+                          <option value="WSIB">WSIB</option>
+                          <option value="International Student">International Student</option>
                         </select>
-                        <!-- <div *ngIf="income.errors && income.touched" class="alert alert-danger">
+              <!-- <div *ngIf="income.errors && income.touched" class="alert alert-danger">
                             <div [hidden]="!income.errors.required">Please Select Income Option</div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Age: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.ageRange" required #age="ngModel">
+            </div>
+          </div>
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Age: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.ageRange" required #age="ngModel">
+                          <option value="16-18 years old">16-18 years old</option>
                           <option value="19-29 years old">19-29 years old</option>
                           <option value="30-44 years old">30-44 years old</option>
                           <option value="45-65 years old">45-65 years old</option>
+                          <option value="65+ years old">65+ years old</option>
                         </select>
-                        <!-- <div *ngIf="age.errors && age.touched" class="alert alert-danger">
+              <!-- <div *ngIf="age.errors && age.touched" class="alert alert-danger">
                             <div [hidden]="!age.errors.required">Please Select Age Range</div>
                         </div> -->
-                    </div>
-                </div>
-                <!-- PART A: ENDS -->
-                <!-- PART B: START -->
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label"># of Hours/Week: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.hoursPerWeek" required #hours="ngModel">
+            </div>
+          </div>
+          <!-- PART A: ENDS -->
+          <!-- PART B: START -->
+          <div class="form-group margin">
+            <label class="text-nowrap control-label"># of Hours/Week: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.hoursPerWeek" required #hours="ngModel">
                           <option value="Less than 5">Less than 5</option>
                           <option value="5-10">5-10</option>
                           <option value="10-20">10-20</option>
                         </select>
-                        <!-- <div *ngIf="hours.errors && hours.touched" class="alert alert-danger">
+              <!-- <div *ngIf="hours.errors && hours.touched" class="alert alert-danger">
                             <div [hidden]="!hours.errors.required">Please Select Hours Range</div>
                         </div> -->
-                    </div>
-                </div>
-                <!-- Apply judgement? -->
-                <div class="form-group">
-                    <label class="col-md-5 text-nowrap control-label">Work History: </label>
-                    <div class="col-md-7">
-                        <select class="form-control" [(ngModel)]="suitabilityForm.workHistory" required #history="ngModel">
+            </div>
+          </div>
+          <!-- Apply judgement? -->
+          <div class="form-group margin">
+            <label class="text-nowrap control-label">Work History: </label>
+            <div class="col-md-12">
+              <select class="form-control" [(ngModel)]="suitabilityForm.workHistory" required #history="ngModel">
                       <option value="Less than 1 year experience">Less than 1 year experience</option>
                       <option value="1-4 years experience">1-4 years experience</option>
                       <option value="4+ years experience">4+ years experience</option>
                     </select>
-                        <!-- <div *ngIf="history.errors && history.touched" class="alert alert-danger">
+              <!-- <div *ngIf="history.errors && history.touched" class="alert alert-danger">
                             <div [hidden]="!history.errors.required">Please Select Work History</div>
                         </div> -->
-                    </div>
-                </div>
-                <div style="height: 25px;clear:both"></div>
-                <h3>Factors Affecting Client Success</h3>
-                <hr>
-                <h4>Check all options that apply.</h4>
-                <div  *ngIf="!suitabilityForm.suitabilityID">
-                    <label class="checkbox">
+            </div>
+          </div>
+          <div style="height: 25px;clear:both"></div>
+          <h3>Factors Affecting Client Success</h3>
+          <hr>
+          <h4>Check all options that apply.</h4>
+          <!-- <div *ngIf="!suitabilityForm.suitabilityID">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorHealth" binary="true"></p-checkbox> Client has health problems that may prevent client from working effectively
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorInstructions" binary="true"></p-checkbox> Client has difficulty understanding instructions
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorCommunication" binary="true"></p-checkbox> Client has difficulty communicating
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorLanguage" binary="true"></p-checkbox> Client has language barrier
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorComputer" binary="true"></p-checkbox> Client has limited computer skills
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorHousing" binary="true"></p-checkbox> Client has housing instability
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorTransportation" binary="true"></p-checkbox> Transportation is limited restricted (no license/ no $ for bus/gas)
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorDaycare" binary="true"></p-checkbox> Client does not have reliable daycare
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorInternet" binary="true"></p-checkbox> Client does not have phone/internet access
                     </label>
-                    <label class="checkbox">
+            <label class="checkbox">
                       <p-checkbox [(ngModel)]="suitabilityForm.factorPersonal" binary="true"></p-checkbox> Client is going through difficulties in his/her personal life (legal, family, substance abuse, financial)
                     </label>
-                </div>
-                <div *ngIf="suitabilityForm.suitabilityID">
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorHealth === 'true'" (click)="suitabilityForm.factorHealth = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorHealth === 'false' || suitabilityForm.factorHealth === 'undefined' " (click)="suitabilityForm.factorHealth = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+          </div> -->
+          <div>
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorHealth === true" (click)="suitabilityForm.factorHealth = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorHealth === false || suitabilityForm.factorHealth === 'undefined' " (click)="suitabilityForm.factorHealth = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client has health problems that may prevent client from working effectively
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorInstructions === 'true'" (click)="suitabilityForm.factorInstructions = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorInstructions === 'false' || suitabilityForm.factorInstructions === 'undefined'" (click)="suitabilityForm.factorInstructions = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorInstructions === true" (click)="suitabilityForm.factorInstructions = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorInstructions === false || suitabilityForm.factorInstructions === 'undefined'" (click)="suitabilityForm.factorInstructions = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client has difficulty understanding instructions
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorCommunication === 'true'" (click)="suitabilityForm.factorCommunication = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorCommunication === 'false' || suitabilityForm.factorCommunication === 'undefined'" (click)="suitabilityForm.factorCommunication = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorCommunication === true" (click)="suitabilityForm.factorCommunication = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorCommunication === false || suitabilityForm.factorCommunication === 'undefined'" (click)="suitabilityForm.factorCommunication = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client has difficulty communicating
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorLanguage === 'true'" (click)="suitabilityForm.factorLanguage = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorLanguage === 'false' || suitabilityForm.factorLanguage === 'undefined'" (click)="suitabilityForm.factorLanguage = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorLanguage === true" (click)="suitabilityForm.factorLanguage = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorLanguage === false || suitabilityForm.factorLanguage === 'undefined'" (click)="suitabilityForm.factorLanguage = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client has language barrier
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorComputer === 'true'" (click)="suitabilityForm.factorComputer = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorComputer === 'false' || suitabilityForm.factorComputer === 'undefined'" (click)="suitabilityForm.factorComputer = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorComputer === true" (click)="suitabilityForm.factorComputer = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorComputer === false || suitabilityForm.factorComputer === 'undefined'" (click)="suitabilityForm.factorComputer = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client has limited computer skills
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorHousing === 'true'" (click)="suitabilityForm.factorHousing = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorHousing === 'false' || suitabilityForm.factorHousing === 'undefined'" (click)="suitabilityForm.factorHousing = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorHousing === true" (click)="suitabilityForm.factorHousing = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorHousing === false || suitabilityForm.factorHousing === 'undefined'" (click)="suitabilityForm.factorHousing = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client has housing instability
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorTransportation === 'true'" (click)="suitabilityForm.factorTransportation = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorTransportation === 'false' || suitabilityForm.factorTransportation === 'undefined'" (click)="suitabilityForm.factorTransportation = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorTransportation === true" (click)="suitabilityForm.factorTransportation = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorTransportation === false || suitabilityForm.factorTransportation === 'undefined'" (click)="suitabilityForm.factorTransportation = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Transportation is limited restricted (no license/ no $ for bus/gas)
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorDaycare === 'true'" (click)="suitabilityForm.factorDaycare = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorDaycare === 'false' || suitabilityForm.factorDaycare === 'undefined'" (click)="suitabilityForm.factorDaycare = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorDaycare === true" (click)="suitabilityForm.factorDaycare = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorDaycare === false || suitabilityForm.factorDaycare === 'undefined'" (click)="suitabilityForm.factorDaycare = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client does not have reliable daycare
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorInternet === 'true'" (click)="suitabilityForm.factorInternet = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorInternet === 'false' || suitabilityForm.factorInternet === 'undefined'" (click)="suitabilityForm.factorInternet = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorInternet === true" (click)="suitabilityForm.factorInternet = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorInternet === false || suitabilityForm.factorInternet === 'undefined'" (click)="suitabilityForm.factorInternet = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client does not have phone/internet access
                       </label>
-                    </div>
+            </div>
 
-                    <div class="col-md-12">
-                      <button *ngIf="suitabilityForm.factorPersonal === 'true'" (click)="suitabilityForm.factorPersonal = 'false'" class="btn btn-success booleanBtn">Yes</button>
-                      <button *ngIf="suitabilityForm.factorPersonal === 'false' || suitabilityForm.factorPersonal === 'undefined'" (click)="suitabilityForm.factorPersonal = 'true'" class="btn btn-warning booleanBtn">No</button>
-                      <label class="control-label">
+            <div class="col-md-12">
+              <button *ngIf="suitabilityForm.factorPersonal === true" (click)="suitabilityForm.factorPersonal = false" class="btn btn-success booleanBtn">Yes</button>
+              <button *ngIf="suitabilityForm.factorPersonal === false || suitabilityForm.factorPersonal === 'undefined'" (click)="suitabilityForm.factorPersonal = true" class="btn btn-warning booleanBtn">No</button>
+              <label class="control-label">
                         Client is going through difficulties in his/her personal life (legal, family, substance abuse, financial)
                       </label>
-                    </div>
-                </div>
-                <br />
-                <div class="col-md-12">
-                    <label class="textbox">
-                  Other:<input class="form-control" type="text" name="other" [(ngModel)]="suitabilityForm.factorOther" />
+            </div>
+          </div>
+          <div class="col-md-12" style="margin-top:15px;">
+            <label class="textbox">
+                  Other:
                 </label>
-                </div>
-                <div style="height: 25px;clear:both"></div>
-                <h3>Summary Notes</h3>
-                <hr>
-                <div class="col-md-12">
-                    <div class="form-group col-md-8">
-                        <label for="comment">Transportation:</label>
-                        <textarea class="form-control" rows="2" name="transportation" [(ngModel)]="suitabilityForm.summaryTransportation"></textarea>
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label for="comment">Housing:</label>
-                        <textarea class="form-control" rows="2" name="housing" [(ngModel)]="suitabilityForm.summaryHousing"></textarea>
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label for="comment">Childcare:</label>
-                        <textarea class="form-control" rows="2" name="childcare" [(ngModel)]="suitabilityForm.summaryChildcare"></textarea>
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label for="comment">Health:</label>
-                        <textarea class="form-control" rows="2" name="health" [(ngModel)]="suitabilityForm.summaryHealth"></textarea>
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label for="comment">Other:</label>
-                        <textarea class="form-control" rows="2" name="summaryother" [(ngModel)]="suitabilityForm.summaryOther"></textarea>
-                    </div>
-                </div>
-                <div style="height: 25px;clear:both"></div>
-                <h3>Review</h3>
-                <hr>
-                <div style="height:250px">
-                <div *ngIf="!calculated" class="col-md-12" style="margin-bottom:50px;">
-                  <button class="btn btn-primary" (click)="calculate()"><i class="fa fa-refresh" aria-hidden="true"></i> Calculate</button>
-                </div>
-                <div *ngIf="calculated" class="col-md-12">
-                  <button class="btn btn-primary" (click)="tallyPoints()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
-                <div class="form-group col-md-8">
-                    <label class="control-label">Part A total: </label>
-                    <div class="">
-                        <input class="form-control" value="{{partAPoints}}" type="number" name="partA" disabled>
-                        <div *ngIf="partAWarning"><label>Warning</label></div>
-                    </div>
-                </div>
-                <div class="form-group  col-md-8">
-                    <label class="control-label">Part B total: </label>
-                    <div class="">
-                        <input class="form-control" value="{{partBPoints}}" type="number" name="partB" disabled>
-                        <div *ngIf="partBWarning"><label>Warning</label></div>
-                    </div>
-                </div>
-                <div class="form-group col-md-8">
-                    <label class="control-label">Total: </label>
-                    <div class="">
-                        <input class="form-control" value="{{totalPoints}}" type="number" name="totalPoints" disabled>
-                        <input class="form-control" value="{{totalPoints}}" type="hidden" name="totalPoints" [(ngModel)]="suitabilityForm.dbTotalPoints">
-                    </div>
+                <input class="form-control" type="text" name="other" [(ngModel)]="suitabilityForm.factorOther" />
+          </div>
+          <div style="height: 25px;clear:both"></div>
+          <h3>Summary Notes</h3>
+          <hr>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="comment">Transportation:</label>
+              <textarea class="form-control" rows="2" name="transportation" [(ngModel)]="suitabilityForm.summaryTransportation"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="comment">Housing:</label>
+              <textarea class="form-control" rows="2" name="housing" [(ngModel)]="suitabilityForm.summaryHousing"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="comment">Childcare:</label>
+              <textarea class="form-control" rows="2" name="childcare" [(ngModel)]="suitabilityForm.summaryChildcare"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="comment">Health:</label>
+              <textarea class="form-control" rows="2" name="health" [(ngModel)]="suitabilityForm.summaryHealth"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="comment">Other:</label>
+              <textarea class="form-control" rows="2" name="summaryother" [(ngModel)]="suitabilityForm.summaryOther"></textarea>
+            </div>
+          </div>
+          <div style="height: 25px;clear:both"></div>
+          <h3>Review</h3>
+          <hr>
+          <div style="height:250px">
+            <div *ngIf="!calculated" class="col-md-12" style="margin-bottom:50px;cursor:pointer">
+              <button class="btn btn-primary" (click)="calculate()"><i class="fa fa-refresh" aria-hidden="true"></i> Calculate</button>
+            </div>
+            <div *ngIf="calculated" class="col-md-12" style="margin-bottom:50px;cursor:pointer">
+              <button class="btn btn-primary" (click)="tallyPoints()"><i class="fa fa-refresh" aria-hidden="true"></i> Re-Calculate</button>
+            </div>
+            <div *ngIf="calculated" class="col-md-12">
+              <div class="form-group col-md-12">
+                <label class="col-md-3 control-label">Part A total: </label>
+                <div class="col-md-3">
+                  <input class="form-control" value="{{partAPoints}}" type="number" name="partA" disabled>
                 </div>
               </div>
-              <div class="form-group">
-                  <div class="col-sm-offset-10 col-sm-1">
-                      <button (click)="saveSuitability()" class="saveButton" title="Save suitability"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</h4></button>
-                  </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-3 control-label">Part B total: </label>
+                <div class="col-md-3">
+                  <input class="form-control" value="{{partBPoints}}" type="number" name="partB" disabled>
+                </div>
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-3 control-label">Total: </label>
+                <div class="col-md-3">
+                  <input class="form-control" value="{{totalPoints}}" type="number" name="totalPoints" disabled>
+                  <input class="form-control" value="{{totalPoints}}" type="hidden" name="totalPoints" [(ngModel)]="suitabilityForm.dbTotalPoints">
+                </div>
+                <div *ngIf="warning" style="color:#FFA500; padding-top:7px;">
+                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i> <label>Minimum requirement of 18 total points not met.</label>
+                </div>
+                <div *ngIf="!warning" style="color:#338B33; padding-top:7px;">
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
+            <div class="form-group">
+              <div class="col-sm-offset-10 col-sm-1">
+                <button (click)="saveSuitability()" class="saveButton" title="Save suitability"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</h4></button>
+              </div>
             </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

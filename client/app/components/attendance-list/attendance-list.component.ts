@@ -4,6 +4,7 @@ import { CourseService } from "../../services/course.service";
 import { Course } from "../../models/course";
 import { Student } from "../../models/Student";
 import { StudentService } from "../../services/student.service";
+import { StaffService } from "../../services/staff.service";
 declare var swal: any;
 
 @Component({
@@ -25,28 +26,69 @@ export class AttendanceListComponent implements OnInit {
     absentStudents = [];
     attendanceDates: any[] = [];
     previousAttendance: any;
+    instructors: any;
+    instructorOptions: any = {};
 
-    constructor(private router: Router, private CourseService: CourseService, private StudentService: StudentService) {
+    constructor(private router: Router, private CourseService: CourseService, private StudentService: StudentService, private StaffService: StaffService) {
       this.date = new Date();
     }
 
     ngOnInit() {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       var userID = currentUser.userID;
-      this.getCourses(userID);
-      this.StudentService
-          .getAllAttendance()
-          .then(attendance => {
-              if (attendance.status === "403") {
-                  this.previousAttendance = null;
-              } else {
-                  this.previousAttendance = attendance;
-                  for (let item of this.previousAttendance) {
-                    item.date = item.date[0] + " " + item.date[1];
-                  }
-              }
-          })
-          .catch(error => console.log(error));
+      if (currentUser.userType !== 'Instructor') {
+        this.StaffService
+            .getUsers()
+            .then(instructors => {
+                this.instructors = instructors.filter(x => x.userType === 'Instructor');
+                for (let item of this.instructors) {
+                  this.instructorOptions[item.userID] = item.firstName + " " + item.lastName;
+                }
+            })
+            .catch(error => {
+              // do something
+            });
+
+            console.log(this.instructorOptions);
+
+        swal({
+            title: 'Attendance',
+            text: 'Select an Instructor',
+            input: "select",
+            inputOptions: this.instructorOptions,
+            showCancelButton: true,
+            animation: "slide-from-top",
+            confirmButtonColor: '#3085d6',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            cancelButtonText: 'Back to Dashboard'
+        }).then(isConfirm => {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+            this.router.navigate(['/dashboard']);
+          } else if (isConfirm) {
+            console.log(isConfirm.value);
+          }
+        }).catch(error => {
+          console.log(error);
+        });
+      } else {
+        this.getCourses(userID);
+        this.StudentService
+            .getAllAttendance()
+            .then(attendance => {
+                if (attendance.status === "403") {
+                    this.previousAttendance = null;
+                } else {
+                    this.previousAttendance = attendance;
+                    for (let item of this.previousAttendance) {
+                      item.date = item.date[0] + " " + item.date[1];
+                    }
+                }
+            })
+            .catch(error => console.log(error));
+      }
+
     }
 
     getCourses(instructorID) {
@@ -155,7 +197,9 @@ export class AttendanceListComponent implements OnInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, submit!'
         }).then(isConfirm => {
-          if (isConfirm) {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
             this.attendance = {
               students: this.attendanceStudents,
               courseID: this.courseID,
@@ -175,7 +219,7 @@ export class AttendanceListComponent implements OnInit {
                 .catch(error => console.log(error));
           }
         }).catch(error => {
-          //console.log("Canceled");
+          console.log(error);
         });
       } else {
         swal(

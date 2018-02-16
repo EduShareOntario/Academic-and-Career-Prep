@@ -28,13 +28,13 @@ export class StudentEditComponent implements OnInit {
     }
 
     save() {
-        this.studentService
-            .update(this.student)
-            .then(student => {
-                this.student = student;
-                this.goBack();
-            })
-            .catch(error => this.error = error);
+        // this.studentService
+        //     .update(this.student)
+        //     .then(student => {
+        //         this.student = student;
+        //         this.goBack();
+        //     })
+        //     .catch(error => this.error = error);
     }
 
     goBack() {

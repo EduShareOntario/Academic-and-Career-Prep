@@ -7,6 +7,7 @@ import AuthRoutes = require('../routes/AuthRoutes');
 import ClientRoutes = require('../routes/ClientRoutes');
 import ClientFormsRoutes = require('../routes/ClientFormsRoutes');
 import CourseRoutes = require('../routes/CourseRoutes');
+import UploadRoutes = require('../routes/UploadRoutes');
 var app = express();
 
 class Routes {
@@ -19,6 +20,7 @@ class Routes {
         app.use("/", new ClientRoutes().routes);
         app.use("/", new ClientFormsRoutes().routes);
         app.use("/", new CourseRoutes().routes);
+        app.use("/", new UploadRoutes().routes);
         return app;
     }
 }

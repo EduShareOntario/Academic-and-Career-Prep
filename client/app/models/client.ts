@@ -1,5 +1,5 @@
 export class Client {
-    studentNumber: number;
+    studentNumber: string;
     clientID: string;
     userID: string;
     authLevel: string;
@@ -12,6 +12,13 @@ export class Client {
     birthday: string;
     email: string;
     phone: string;
+    okayToText: boolean;
+    allowDetailedMessage: boolean;
+    longDistance: boolean;
+    alternateNumber: string;
+    okayToTextAlternate: boolean;
+    allowDetailedMessageAlternate: boolean;
+    longDistanceAlternate: boolean;
     suitability: boolean;
     consent: boolean;
     learningStyle: boolean;
@@ -19,4 +26,6 @@ export class Client {
     success: string;
     banner: boolean;
     cam: boolean;
+    comments: string;
+    campus: string;
 }

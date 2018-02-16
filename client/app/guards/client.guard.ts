@@ -11,7 +11,7 @@ export class ClientGuard implements CanActivate {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         var userType = currentUser.userType;
 
-        if (userType === "Client") {
+        if (userType === "Client" || userType.indexOf('Admin') >= 0) {
           return true;
         } else {
           // not logged in so redirect to login page

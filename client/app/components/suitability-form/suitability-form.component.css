@@ -61,3 +61,15 @@
   border: 0px solid;
   transition: .2s;
 }
+
+.checkboxPadding {
+  padding-left:15px;
+}
+
+.studentNumberToggle {
+  margin-top: 6px;
+}
+
+.studentNumberInput {
+  margin-top: 6px;
+}

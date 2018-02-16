@@ -27,3 +27,28 @@ button {
 .middle{
   text-align:center;
 }
+
+.addUser {
+  position:absolute;
+  top: 25;
+  right: 15;
+  float: right;
+  min-width: 0px
+}
+
+.statusStage1 {
+  vertical-align: middle;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+  background-color: #21C700;
+  margin: 0 auto;
+}
+
+.statusStage2 {
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+  background-color: #EB3700;
+  margin: 0 auto;
+}

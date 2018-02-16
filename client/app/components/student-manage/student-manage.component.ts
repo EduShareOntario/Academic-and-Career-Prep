@@ -51,7 +51,7 @@ export class StudentManageComponent implements OnInit {
       this.studentService
         .getStudents()
         .then(students => {
-          if (students.status === "403") {
+          if ((students as any).status === "403") {
             this.students = null;
           } else {
             this.students = students;
@@ -85,9 +85,13 @@ export class StudentManageComponent implements OnInit {
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes, Archive it!'
       }).then(isConfirm => {
-        if (isConfirm) {
+        if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+          console.log(isConfirm.dismiss);
+        } else if (isConfirm) {
           this.archiveStudent(student, event);
         }
+      }).catch(error => {
+        console.log(error);
       });
     }
 

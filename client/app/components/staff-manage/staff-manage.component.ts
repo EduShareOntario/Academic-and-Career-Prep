@@ -33,7 +33,7 @@ export class StaffManageComponent implements OnInit {
         this.staffService
           .getUsers()
           .then(users => {
-            if (users.status === "403") {
+            if ((users as any).status === "403") {
               this.users = null;
             } else {
               this.users = users;
@@ -49,11 +49,11 @@ export class StaffManageComponent implements OnInit {
     }
 
     gotoEdit(user: User, event: any) {
-        this.router.navigate(['/staff-edit', user.staffID]);
+        this.router.navigate(['/staff-details', user.userID]);
     }
 
     addUser() {
-        this.router.navigate(['/staff-edit', 'new']);
+        this.router.navigate(['/staff-details', 'new']);
     }
 
     deleteAlert(user: User, event: any) {
@@ -66,11 +66,13 @@ export class StaffManageComponent implements OnInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete!'
         }).then(isConfirm => {
-          if (isConfirm) {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
             this.deleteUser(user, event);
           }
         }).catch(error => {
-          //console.log("Canceled");
+          console.log(error);
         });
     }
 

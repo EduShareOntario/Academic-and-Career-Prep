@@ -11,7 +11,7 @@ export class SharedGuard implements CanActivate {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         var userType = currentUser.userType;
 
-        if (userType === "Instructor" || userType === "Staff" || userType === "Admin") {
+        if (userType.indexOf('Instructor') >= 0 || userType.indexOf('Staff') >= 0 || userType.indexOf('Admin') >= 0) {
           return true;
         } else {
           // not logged in so redirect to login page

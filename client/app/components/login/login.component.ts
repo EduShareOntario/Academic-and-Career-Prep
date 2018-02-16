@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/authentication.service';
-declare var swal: any;
 
 @Component({
     selector: 'login',
@@ -35,5 +34,9 @@ export class LoginComponent implements OnInit {
               this.loading = false;
           }
         }).catch(error => console.log(error));
+      }
+
+      goToResetPass() {
+        this.router.navigate(['/reset-password']);
       }
 }
