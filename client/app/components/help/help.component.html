@@ -1,0 +1,116 @@
+<div class="row">
+  <div>
+
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Help Center</strong></h1>
+    <hr>
+  </div>
+  <div>
+    <div>
+      <div class="col-md-2 col-sm-3">
+        <h2>How to: </h2>
+        <hr>
+        <ul>
+          <li><a (click)="open('home')" style="cursor:pointer">Home</a></li>
+          <li><a (click)="open('login')" style="cursor:pointer">Login</a></li>
+          <li><a (click)="open('resetPass')" style="cursor:pointer">Reset Password</a></li>
+          <li><a (click)="open('newClient')" style="cursor:pointer">Add New Client</a></li>
+          <li><a (click)="open('manageClients')" style="cursor:pointer">Manage Clients</a></li>
+          <li><a (click)="open('createStudent')" style="cursor:pointer">Create Student</a></li>
+          <li><a (click)="open('manageStudents')" style="cursor:pointer">Manage Students</a></li>
+          <li><a (click)="open('manageStaff')" style="cursor:pointer">Manage Staff</a></li>
+          <li><a (click)="open('newCourse')" style="cursor:pointer">Create New Course</a></li>
+          <li><a (click)="open('manageCourses')" style="cursor:pointer">Manage Courses</a></li>
+          <li><a (click)="open('assignStudentCourse')" style="cursor:pointer">Assign Students to Course</a></li>
+          <li><a (click)="open('attendanceTaking')" style="cursor:pointer">Take Attendance</a></li>
+          <li><a (click)="open('attendanceReport')" style="cursor:pointer">View Attendance Report</a></li>
+          <li><a (click)="open('caseNotes')" style="cursor:pointer">Create/View Case Notes</a></li>
+          <li><a (click)="open('timetable')" style="cursor:pointer">Timetable</a></li>
+          <li><a (click)="open('consent')" style="cursor:pointer">Consent</a></li>
+          <li><a (click)="open('learningStyle')" style="cursor:pointer">Learning Style</a></li>
+        </ul>
+      </div>
+      <div class="col-md-offset-1 col-md-9">
+        <div *ngIf="home">
+          <h2>Welcome to the Help Center!</h2>
+          <hr>
+          <br />
+          <h4>Please select a topic from the left menu for help.</h4>
+          <br />
+          <p><strong>Contact Support:</strong></p>
+          <p>- Phone: TBD</p>
+          <p>- Email: TBD</p>
+        </div>
+        <div *ngIf="login">
+          <h2>Login</h2>
+          <hr>
+          <br />
+          <h3>Step 1:</h3>
+          <p>Once you have been created as a user, check your email for login and temporary password credentials as seen in the image below:</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
+          </div>
+          <h3>Step 2:</h3>
+          <p>Navigate to [site URL] and enter your credentials.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/loginNewUser.PNG">
+          </div>
+          <h3>Step 3:</h3>
+          <p>Upon successful login you will need to reset your password. Your new password must be more than 8 characters, have atleast one capitol and atleast one number. </p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/newPass.PNG">
+          </div>
+          <h3>Step 4:</h3>
+          <p>Once you have entered a valid password, enter it again to confirm, then click the green 'Submit' button.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
+          </div>
+        </div>
+        <div *ngIf="resetPass">
+          <h2>Reset Password</h2>
+        </div>
+        <div *ngIf="newClient">
+          <h2>Add New Client</h2>
+        </div>
+        <div *ngIf="manageClients">
+          <h2>Manage Clients</h2>
+        </div>
+        <div *ngIf="createStudent">
+          <h2>Create Student</h2>
+        </div>
+        <div *ngIf="manageStudents">
+          <h2>Manage Students</h2>
+        </div>
+        <div *ngIf="manageStaff">
+          <h2>Manage Staff</h2>
+        </div>
+        <div *ngIf="newCourse">
+          <h2>New Course</h2>
+        </div>
+        <div *ngIf="manageCourses">
+          <h2>Manage Courses</h2>
+        </div>
+        <div *ngIf="assignStudentCourse">
+          <h2>Assign Student a Course</h2>
+        </div>
+        <div *ngIf="attendanceTaking">
+          <h2>Attendance Taking</h2>
+        </div>
+        <div *ngIf="attendanceReport">
+          <h2>View Attendance Report</h2>
+        </div>
+        <div *ngIf="caseNotes">
+          <h2>Case Notes</h2>
+        </div>
+        <div *ngIf="timetable">
+          <h2>Timetable</h2>
+        </div>
+        <div *ngIf="consent">
+          <h2>Consent</h2>
+        </div>
+        <div *ngIf="learningStyle">
+          <h2>Learning Style</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

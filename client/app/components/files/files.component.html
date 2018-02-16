@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-md-11">
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Files</strong></h1>
+    <hr>
+  </div>
+  <div class="col-md-1">
+    <button class="btn btn-success" (click)="addFile()" title="Add new file"><i class="fa fa-upload"></i> Upload File</button>
+  </div>
+</div>
+<div style="overflow:visible; position:relative;">
+  <p-dataTable [value]="files | userFilter : filterQuery" [responsive]="true">
+    <p-column field="filename" header="File Name" [sortable]="true"></p-column>
+    <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
+    <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
+      <template let-data="rowData" pTemplate="body">
+                <div class="btn-group">
+                  <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+                    <li><a (click)="deleteAlert(data)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                </ul>
+              </div>
+              </template>
+    </p-column>
+  </p-dataTable>
