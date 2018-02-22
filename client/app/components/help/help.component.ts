@@ -12,23 +12,23 @@ declare var swal: any;
 })
 
 export class HelpComponent {
-  public home: boolean = true;
-  public login: boolean = false;
-  public resetPass: boolean = false;
-  public newClient: boolean = false;
-  public manageClients: boolean = false;
-  public createStudent: boolean = false;
-  public manageStudents: boolean = false;
-  public newCourse: boolean = false;
-  public manageCourses: boolean = false;
-  public assignStudentCourse: boolean = false;
-  public caseNotes: boolean = false;
-  public timetable: boolean = false;
-  public consent: boolean = false;
-  public learningStyle: boolean = false;
-  public attendanceReport: boolean = false;
-  public attendanceTaking: boolean = false;
-  public manageStaff: boolean = false;
+  home: boolean = true;
+  login: boolean = false;
+  resetPass: boolean = false;
+  newClient: boolean = false;
+  manageClients: boolean = false;
+  createStudent: boolean = false;
+  manageStudents: boolean = false;
+  newCourse: boolean = false;
+  manageCourses: boolean = false;
+  assignStudentCourse: boolean = false;
+  caseNotes: boolean = false;
+  timetable: boolean = false;
+  consent: boolean = false;
+  learningStyle: boolean = false;
+  attendanceReport: boolean = false;
+  attendanceTaking: boolean = false;
+  manageStaff: boolean = false;
 
   constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
 

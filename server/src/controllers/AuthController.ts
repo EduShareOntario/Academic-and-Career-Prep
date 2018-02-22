@@ -127,11 +127,8 @@ class AuthController {
       // Hash the password with the salt
       var _password = bcrypt.hashSync(randomstring, salt);
 
-      sql.connect(config)
-        .then(function(connection) {
-          new sql.Request(connection)
-            .query("UPDATE Users SET password='" + _password + "', active='false' WHERE email='" + _email + "'")
-            .then(function(recordset) {
+      sql.connect(config).then(function(connection) {
+          sql.query`UPDATE Users SET password= $ {_password}, active='false' WHERE email = ${_email}`.then(function(recordset) {
               // setup email data with unicode symbols
               let mailOptions = {
                 from: '"Georgian Academic & Career Prep"', // sender address

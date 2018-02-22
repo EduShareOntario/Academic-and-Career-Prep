@@ -27,6 +27,7 @@ class ClientController {
           client.username = client.username.replace(/\s+/g, '');
           var suitabilityForm = req.body.suitabilityForm;
           var active = false;
+          var mailOptions;
 
           sql.connect(config)
             .then(function(connection) {
@@ -47,7 +48,7 @@ class ClientController {
                       client.password = bcrypt.hashSync("Georgian2018", salt);
                       active = true;
                       // setup email data with unicode symbols
-                      let mailOptions = {
+                      mailOptions = {
                         from: '"Georgian Academic & Career Prep"', // sender address
                         to: '', // client.email
                         subject: 'New Client Created', // Subject line
@@ -56,7 +57,7 @@ class ClientController {
                       };
                     } else {
                       // setup email data with unicode symbols
-                      let mailOptions = {
+                      mailOptions = {
                         from: '"Georgian Academic & Career Prep"', // sender address
                         to: client.email, // list of receivers
                         subject: 'Welcome, ' + client.firstName, // Subject line
