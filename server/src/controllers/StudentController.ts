@@ -32,9 +32,9 @@ class StudentController {
                 + student.okayToTextAlternate + "','"
                 + student.comments + "')")
                 .then(function() {
-                  res.send({ "success": "success" });
+                  res.send({ status: "success" });
                 }).catch(function(err) {
-                  res.send({ "error": "error" });
+                  res.send({ status: "error" });
                   console.log("(CREATE STUDENT) Error inserting new student " + err);
                 });
             }).catch(function(err) {

@@ -371,7 +371,7 @@ export class SuitabilityFormComponent {
               swal.close();
               swal(
                   'Error',
-                  'Something went wrong, please try again',
+                  'Something went wrong, please try again.',
                   'warning'
               );
               this.clicked('section1');

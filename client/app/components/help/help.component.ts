@@ -6,9 +6,9 @@ import { AuthService } from '../../services/authentication.service';
 declare var swal: any;
 
 @Component({
-    selector: 'help',
-    templateUrl: './app/components/help/help.component.html',
-    styleUrls: ['./app/components/help/help.component.css']
+  selector: 'help',
+  templateUrl: './app/components/help/help.component.html',
+  styleUrls: ['./app/components/help/help.component.css']
 })
 
 export class HelpComponent {
@@ -52,47 +52,48 @@ export class HelpComponent {
     this.learningStyle = false;
     this.attendanceReport = false;
     this.attendanceTaking = false;
-    console.log(page);
-    if (page === 'home') {
-      this.home = true;
-    } else if (page === 'login') {
-      this.login = true;
-    } else if (page === 'resetPass') {
-      this.resetPass = true;
-    } else if (page === 'newClient') {
-      this.newClient = true;
-    } else if (page === 'manageClients') {
-      this.manageClients = true;
-    } else if (page === 'createStudent') {
-      this.createStudent = true;
-    } else if (page === 'manageStudents') {
-      this.manageStudents = true;
-    } else if (page === 'manageStaff') {
-      this.manageStaff = true;
-    } else if (page === 'newCourse') {
-      this.newCourse = true;
-    } else if (page === 'manageCourses') {
-      this.manageCourses = true;
-    } else if (page === 'assignStudentCourse') {
-      this.assignStudentCourse = true;
-    } else if (page === 'caseNotes') {
-      this.caseNotes = true;
-    } else if (page === 'timetable') {
-      this.timetable = true;
-    } else if (page === 'consent') {
-      this.consent = true;
-    } else if (page === 'learningStyle') {
-      this.learningStyle = true;
-    } else if (page === 'attendanceReport') {
-      this.attendanceReport = true;
-    } else if (page === 'attendanceTaking') {
-      this.attendanceTaking = true;
-    } else {
-      this.home = true;
+
+    switch (page) {
+      case 'home':
+        return this.home = true;
+      case 'login':
+        return this.login = true;
+      case 'resetPass':
+        return this.resetPass = true;
+      case 'newClient':
+        return this.newClient = true;
+      case 'manageClients':
+        return this.manageClients = true;
+      case 'createStudent':
+        return this.createStudent = true;
+      case 'manageStudents':
+        return this.manageStudents = true;
+      case 'manageStaff':
+        return this.manageStaff = true;
+      case 'newCourse':
+        return this.newCourse = true;
+      case 'manageCourses':
+        return this.manageCourses = true;
+      case 'assignStudentCourse':
+        return this.assignStudentCourse = true;
+      case 'timetable':
+        return this.timetable = true;
+      case 'consent':
+        return this.consent = true;
+      case 'learningStyle':
+        return this.learningStyle = true;
+      case 'attendanceReport':
+        return this.attendanceReport = true;
+      case 'attendanceTaking':
+        return this.attendanceTaking = true;
+      case 'caseNotes':
+        return this.caseNotes = true;
+      default:
+        return this.home = true;
     }
   }
 
   goBack() {
-      window.history.back();
+    window.history.back();
   }
 }

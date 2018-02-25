@@ -73,6 +73,21 @@ export class ClientService {
           .catch(this.handleError);
     }
 
+    getLearningStyleById(): Promise<ConsentForm>  {
+      // get current user id from web token
+      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      var currentUserID = currentUser.userID;
+      let url = `api/clientForms/learningStyle/${currentUserID}`;
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
+      return this.http
+          .get(url, options)
+          .toPromise()
+          .then(response => response.json())
+          .catch(this.handleError);
+    }
+
     saveLearningStyle(learningStyleForm: LearningStyleForm): Promise<Client> {
       // get current user id from web token
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));

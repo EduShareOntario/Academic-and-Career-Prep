@@ -93,6 +93,30 @@ class ClientFormsController {
       }
     }
 
+    getLearningStyleById(req: express.Request, res: express.Response) {
+      try {
+          new AuthController().authUser(req, res, {
+              requiredAuth: auth, done: function() {
+                  var _id: string = req.params._id;
+                  sql.connect(config)
+                      .then(function(connection) {
+                          new sql.Request(connection)
+                              .query('SELECT * FROM LearningStyle WHERE userID = ' + _id + '')
+                              .then(function(learningStlyeForm) {
+                                res.send(learningStlyeForm);
+                              }).catch(function(err) {
+                                  res.send({ "error": "error" });
+                                  console.log("Get consent by id " + err);
+                              });
+                      });
+              }
+          });
+      } catch (e) {
+          console.log(e);
+          res.send({ "error": "error in your request" });
+      }
+    }
+
     learningStyleForm(req: express.Request, res: express.Response): void {
         try {
             new AuthController().authUser(req, res, {

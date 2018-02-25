@@ -43,7 +43,7 @@ export class StudentService {
     return this.http
       .post(this.studentsUrl, student, options)
       .toPromise()
-      .then(response => response.json().data)
+      .then(response => response.json())
       .catch(err => this.handleError(err, "postNew"));
   }
 

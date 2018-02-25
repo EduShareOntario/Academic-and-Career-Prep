@@ -137,7 +137,8 @@
             <img class="boxShadow" src="app/assets/images/createClient/noEmail.PNG">
           </div>
           <h3>Step 5:</h3>
-          <p>If no information was entered in the four sections after 'Client Info', you will recieve a message confirming that the client will be created without a suitability form and will need to be completed at a later time from the 'Client Manage' page. </p>
+          <p>If no information was entered in the four sections after 'Client Info', you will recieve a message confirming that the client will be created without a suitability form and will need to be completed at a later time from the 'Client Manage' page.
+            </p>
           <div>
             <img class="boxShadow" src="app/assets/images/createClient/suitabilityIncomplete.PNG">
           </div>
@@ -149,57 +150,98 @@
         </div>
         <!-- How to manage clients -->
         <div *ngIf="manageClients">
-          <h2>Manage Clients</h2>
-        </div>
-        <!-- How to create client as student -->
-        <div *ngIf="createStudent">
-          <h2>Create Student</h2>
-        </div>
-        <!-- How to manage students-->
-        <div *ngIf="manageStudents">
-          <h2>Manage Students</h2>
-        </div>
-        <!-- How to manage staff -->
-        <div *ngIf="manageStaff">
-          <h2>Manage Staff</h2>
-        </div>
-        <!-- How to add new course -->
-        <div *ngIf="newCourse">
-          <h2>New Course</h2>
-        </div>
-        <!-- How to manage courses -->
-        <div *ngIf="manageCourses">
-          <h2>Manage Courses</h2>
-        </div>
-        <!-- How to assign student to course -->
-        <div *ngIf="assignStudentCourse">
-          <h2>Assign Student a Course</h2>
-        </div>
-        <!-- How to take attendance -->
-        <div *ngIf="attendanceTaking">
-          <h2>Take Attendance</h2>
-        </div>
-        <!-- How to view attendance report -->
-        <div *ngIf="attendanceReport">
-          <h2>View Attendance Report</h2>
-        </div>
-        <!-- How to view/add case notes -->
-        <div *ngIf="caseNotes">
-          <h2>Case Notes</h2>
-        </div>
-        <!-- How to view timetable -->
-        <div *ngIf="timetable">
-          <h2>Timetable</h2>
-        </div>
-        <!-- How to fill out consent form-->
-        <div *ngIf="consent">
-          <h2>Consent</h2>
-        </div>
-        <!-- How to fill out learning style form -->
-        <div *ngIf="learningStyle">
-          <h2>Learning Style</h2>
+            <h2>Manage Clients</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>This section of the app allows you to view client status, view/edit client forms, files and information, and create client as a student user.</p>
+            <h3>Client Status:</h3>
+            <p>There are currently four stages that a client can be a part of:</p>
+            <div class="well">
+              <p><strong style="color:#FF4207">Red</strong> - Suitability incomplete</p>
+              <p><strong style="color:#F8E903">Yellow</strong> - Consent and/or Learning Style incomplete</p>
+              <p><strong style="color:#309EFF">Blue</strong> - Client information ready for input into Banner and CAM</p>
+              <p><strong style="color:#2AD308">Green</strong> - Client ready to become student</p>
+            </div>
+            <h3>View Client info:</h3>
+            <p>Select the red dropdown arrow under the 'Action' column for the client you want to view. Select 'View Info'.</p>
+            <p>The clients info will appear on the right and from here you can:</p>
+            <div class="well">
+              <h4>View/Edit General Info</h4>
+              <p></p>
+              <h4>View/Edit Suitability</h4>
+              <p></p>
+              <h4>View Learning Style</h4>
+              <p></p>
+              <h4>View Consent</h4>
+              <p></p>
+              <h4>View Files</h4>
+              <p></p>
+            </div>
+          </div>
+          <!-- How to create client as student -->
+          <div *ngIf="createStudent">
+            <h2>Create Student</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>The status of the client must be green before they can be created as a student user. Ensure all forms have been completed and the clients information has been entered into Banner and CAM.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/clientStatus.PNG">
+            </div>
+            <h3>Step 2:</h3>
+            <p>From the 'Client Manage' page, click the red dropdown arrow under the 'Action' column for the client you want to create as student. Select 'Create as Student'.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/createStudent.PNG">
+            </div>
+            <h3>Step 3:</h3>
+            <p></p>
+          </div>
+          <!-- How to manage students-->
+          <div *ngIf="manageStudents">
+            <h2>Manage Students</h2>
+          </div>
+          <!-- How to manage staff -->
+          <div *ngIf="manageStaff">
+            <h2>Manage Staff</h2>
+          </div>
+          <!-- How to add new course -->
+          <div *ngIf="newCourse">
+            <h2>New Course</h2>
+          </div>
+          <!-- How to manage courses -->
+          <div *ngIf="manageCourses">
+            <h2>Manage Courses</h2>
+          </div>
+          <!-- How to assign student to course -->
+          <div *ngIf="assignStudentCourse">
+            <h2>Assign Student a Course</h2>
+          </div>
+          <!-- How to take attendance -->
+          <div *ngIf="attendanceTaking">
+            <h2>Take Attendance</h2>
+          </div>
+          <!-- How to view attendance report -->
+          <div *ngIf="attendanceReport">
+            <h2>View Attendance Report</h2>
+          </div>
+          <!-- How to view/add case notes -->
+          <div *ngIf="caseNotes">
+            <h2>Case Notes</h2>
+          </div>
+          <!-- How to view timetable -->
+          <div *ngIf="timetable">
+            <h2>Timetable</h2>
+          </div>
+          <!-- How to fill out consent form-->
+          <div *ngIf="consent">
+            <h2>Consent</h2>
+          </div>
+          <!-- How to fill out learning style form -->
+          <div *ngIf="learningStyle">
+            <h2>Learning Style</h2>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>

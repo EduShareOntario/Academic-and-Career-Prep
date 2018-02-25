@@ -312,11 +312,25 @@ export class ClientStatusComponent implements OnInit {
         }).then(isConfirm => {
           if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
             console.log(isConfirm.dismiss);
+            client.studentNumber = '';
           } else if (isConfirm) {
+            swal({
+              title: 'Transferring...'
+            });
+            swal.showLoading();
             this.studentService
                 .postNew(client)
                 .then(result => {
-                  this.removeFromClientTable(client.userID);
+                  console.log(result);
+                  if (result.status === 'success') {
+                    this.removeFromClientTable(client.userID);
+                  } else {
+                    swal(
+                        'Error',
+                        'Something went wrong, please try again.',
+                        'warning'
+                    );
+                  }
                 })
                 .catch(error => this.error = error); // TODO: Display error message
           }
@@ -335,12 +349,14 @@ export class ClientStatusComponent implements OnInit {
               this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle);
               this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
               this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
+              swal.close();
               swal(
                   'Transfered',
                   'Client record has been transfered to the student table.',
                   'success'
               );
-              this.clientTotal = this.data.length;
+              this.router.navigate(['/students']);
+              //this.clientTotal = this.data.length;
           })
           .catch(error => this.error = error);
     }
@@ -393,6 +409,10 @@ export class ClientStatusComponent implements OnInit {
     }
 
     saveSuitability() {
+      swal({
+        title: 'Saving...'
+      });
+      swal.showLoading();
       if (this.suitabilityForm.suitabilityID) {
         this.tallyPoints();
         this.suitabilityForm.dbTotalPoints = this.totalPoints;
@@ -402,6 +422,7 @@ export class ClientStatusComponent implements OnInit {
             this.showSuitabilityEdit = false;
             this.clientView = null;
             this.ngOnInit();
+            swal.close();
           })
           .catch();
       } else {
@@ -411,6 +432,7 @@ export class ClientStatusComponent implements OnInit {
           .addSuitability(this.clientSuitability, this.suitabilityForm)
           .then( res => {
             this.ngOnInit();
+            swal.close();
           })
           .catch();
       }
