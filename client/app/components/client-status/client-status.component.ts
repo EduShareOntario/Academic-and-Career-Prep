@@ -27,11 +27,13 @@ export class ClientStatusComponent implements OnInit {
     error: any;
 
     clientView: Client;
+    clientEdit: Client;
     consentView: ConsentForm;
     suitabilityView: SuitabilityForm;
     learningStyleView: LearningStyleForm;
 
     showSuitabilityEdit: boolean;
+    showGeneralInfoEdit: boolean;
 
     addSuitability: boolean = false;
     @Input() suitabilityForm: SuitabilityForm;
@@ -216,6 +218,7 @@ export class ClientStatusComponent implements OnInit {
 
     showStatusReport() {
         this.showSuitabilityEdit = false;
+        this.showGeneralInfoEdit = false;
         this.addSuitability = false;
         this.statusReport = true;
         this.clientSuitability = null;
@@ -312,7 +315,6 @@ export class ClientStatusComponent implements OnInit {
         }).then(isConfirm => {
           if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
             console.log(isConfirm.dismiss);
-            client.studentNumber = '';
           } else if (isConfirm) {
             swal({
               title: 'Transferring...'
@@ -386,7 +388,32 @@ export class ClientStatusComponent implements OnInit {
       this.clientSuitability = client;
     }
 
+    editGeneralInfo(client) {
+      this.statusReport = false;
+      this.clientEdit = client;
+      this.clientView = null;
+      this.showGeneral = false;
+      this.showGeneralInfoEdit = true;
+    }
+
+    updateGeneralInfo() {
+      swal({
+        title: 'Updating...'
+      });
+      swal.showLoading();
+      this.clientService
+        .updateGeneralInfo(this.clientEdit)
+        .then( res => {
+          this.showGeneralInfoEdit = false;
+          this.clientView = null;
+          this.ngOnInit();
+          swal.close();
+        })
+        .catch();
+    }
+
     editSuitability(client) {
+      this.showGeneralInfoEdit = false;
       this.statusReport = false;
       this.clientView = null;
       this.addSuitability = false;

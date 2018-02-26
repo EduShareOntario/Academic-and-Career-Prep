@@ -19,7 +19,6 @@ export class HelpComponent {
   manageClients: boolean = false;
   createStudent: boolean = false;
   manageStudents: boolean = false;
-  newCourse: boolean = false;
   manageCourses: boolean = false;
   assignStudentCourse: boolean = false;
   caseNotes: boolean = false;
@@ -42,7 +41,6 @@ export class HelpComponent {
     this.manageClients = false;
     this.createStudent = false;
     this.manageStudents = false;
-    this.newCourse = false;
     this.manageCourses = false;
     this.manageStaff = false;
     this.assignStudentCourse = false;
@@ -70,8 +68,6 @@ export class HelpComponent {
         return this.manageStudents = true;
       case 'manageStaff':
         return this.manageStaff = true;
-      case 'newCourse':
-        return this.newCourse = true;
       case 'manageCourses':
         return this.manageCourses = true;
       case 'assignStudentCourse':

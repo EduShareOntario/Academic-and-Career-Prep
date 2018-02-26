@@ -341,6 +341,37 @@ class ClientController {
     }
   }
 
+  updateGeneralInfo(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          var client = req.body;
+          sql.connect(config)
+            .then(function(connection) {
+              var query = "UPDATE Clients SET studentNumber='" + client.studentNumber
+                + "', firstName='" + client.firstName
+                + "', lastName='" + client.lastName
+                + "' WHERE clientID = '" + client.clientID + "'"
+              new sql.Request(connection)
+                .query(query)
+                .then(function(recordset) {
+                  res.send({ "success": "success" });
+                }).catch(function(err) {
+                  res.send({ "error": "error" }); console.log("Update client gerneal info " + err);
+                });
+            }).catch(function(err) {
+              console.log(err);
+              res.send({ "error": "error" });
+            });
+        }
+      });
+    }
+    catch (e) {
+      console.log(e);
+      res.send({ "error": "error in your request" });
+    }
+  }
+
   updateSuitability(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {

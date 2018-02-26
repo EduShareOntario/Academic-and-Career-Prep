@@ -2,3 +2,11 @@
   box-shadow: 5px 5px 5px #888888;
   margin-bottom: 45px;
 }
+
+a {
+  cursor:pointer;
+}
+
+a:active, .selectedLink {
+    background-color: yellow;
+}
