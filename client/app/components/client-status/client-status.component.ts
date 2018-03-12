@@ -182,7 +182,12 @@ export class ClientStatusComponent implements OnInit {
 
         var consentForms = this.getConsentFormByUserID(client.userID);
         this.clientConsentForms = consentForms;
-        this.consentView = consentForms[0];
+        // this.clientConsentForms.sort(function compare(a, b) {
+        //   var dateA = new Date(a.date.getTime());
+        //   var dateB = new Date(b.date.getTime());
+        //   return dateA - dateB;
+        // });
+        //this.consentView = consentForms[0];
 
         var learningStyleForm = this.getLearningStyleFormByFilter(client.userID);
         this.learningStyleView = learningStyleForm[0];
@@ -469,6 +474,8 @@ export class ClientStatusComponent implements OnInit {
         this.clientService
           .addSuitability(this.clientSuitability, this.suitabilityForm)
           .then( res => {
+            this.showSuitabilityEdit = false;
+            this.clientView = null;
             this.ngOnInit();
             swal.close();
           })

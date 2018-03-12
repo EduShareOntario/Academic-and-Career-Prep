@@ -20,7 +20,7 @@ export class TimetableComponent implements OnInit {
   header: any;
   options: any;
   students: Student[];
-  selectedStudent: Student[];
+  selectedStudent: number;
   faculty: boolean = false;
 
   constructor(private router: Router, private studentService: StudentService, private courseService:CourseService, private route: ActivatedRoute) {
@@ -37,7 +37,6 @@ export class TimetableComponent implements OnInit {
           .getStudents()
           .then(students => {
               this.students = students;
-              console.log(this.students);
               this.getEventsById(this.selectedStudent[0].userID);
           })
           .catch(error => {
@@ -69,7 +68,6 @@ export class TimetableComponent implements OnInit {
   getEventsById(userID) {
     this.events = [];
     this.studentService.getEventsById(userID).then(result => {
-      console.log(result);
       if (result.status === 'No Timetable Info') {
         swal.close();
         swal(

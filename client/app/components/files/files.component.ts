@@ -21,6 +21,11 @@ export class FilesComponent {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getFiles();
   }
 
@@ -29,6 +34,8 @@ export class FilesComponent {
         .getFiles()
         .then(files => {
           this.files = files;
+          swal.close();
+          console.log(this.files);
         })
         .catch(error => error);
   }

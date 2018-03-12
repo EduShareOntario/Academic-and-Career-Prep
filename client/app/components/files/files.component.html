@@ -9,6 +9,7 @@
 </div>
 <div style="overflow:visible; position:relative;">
   <p-dataTable [value]="files | userFilter : filterQuery" [responsive]="true">
+    <p-column field="userID" header="Student" [sortable]="true"></p-column>
     <p-column field="filename" header="File Name" [sortable]="true"></p-column>
     <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
     <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">

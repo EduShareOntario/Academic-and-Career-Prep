@@ -9,6 +9,7 @@ var storage = multer.diskStorage({
     cb(null, uploads)
   },
   filename: function(req, file, cb) {
+    console.log(file);
     cb(null, Date.now() + '_' + file.originalname);
   }
 });
@@ -27,7 +28,9 @@ class UploadRoutes {
             files.forEach(file => {
               if(file === '.gitkeep') {
               } else {
-                var fileSplitName = file.split(/_(.+)/)[1];
+                var fileSplitNameID = file.split(/_(.+)/)[1];
+                var fileSplitName = fileSplitNameID.split(/_(.+)/)[1];
+                var fileSplitID = fileSplitNameID.split(/_(.+)/)[0];
                 var fileSplitDate = file.split(/_(.+)/)[0];
                 var toInt = parseInt(fileSplitDate);
                 var dateObj = new Date(toInt);
@@ -36,6 +39,7 @@ class UploadRoutes {
                 //var fileDate = new Date(fileSplitDate).toISOString();
                 var fileInfo = {
                   filename: fileSplitName,
+                  userID: fileSplitID,
                   date: formattedDate,
                   milliseconds: fileSplitDate
                 };
@@ -83,7 +87,7 @@ class UploadRoutes {
         router.post("/uploadFile", upload.any(), function (req, res, next) {
           res.end('file uploaded');
           // req.files is array of `photos` files
-          // req.body will contain the text fields, if there were any
+          console.log("studentID: " + req.body.studentID);
         })
         return router;
     }

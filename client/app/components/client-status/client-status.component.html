@@ -179,34 +179,46 @@
               <hr>
             </div>
             <div class="form-group">
-              <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="selectedConsentForm" placeholder="Select consent form" (change)="onSelectChange($event.value)">
-                <option *ngFor="let item of clientConsentForms" value="{{item.consentID}}">{{ item.date }}</option>
+              <label class="control-label">Please select consent to view: </label><br />
+              <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="selectedConsentForm" (change)="onSelectChange($event.value)">
+                <option [selected]="isSelected">Select</option>
+                <option *ngFor="let item of clientConsentForms" value="{{item.consentID}}">{{ item.date | date :'medium' }}</option>
               </select>
             </div>
-            <label class="control-label">Date: </label> {{consentView.date}} <br />
-            <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
-            <label class="control-label">OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
-            <label class="control-label">OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
-            <label class="control-label">OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
-            <label class="control-label">Ontario Disability Support Program: </label> {{consentView.ontarioDisabilityProgram}} <br />
-            <label class="control-label">ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
-            <label class="control-label">ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
-            <label class="control-label">ODSP Phone: </label> {{consentView.odspPhone}} <br />
-            <label class="control-label">ODSP Email: </label> {{consentView.odspEmail}} <br />
-            <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
-            <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
-            <label class="control-label">ES Agency Name: </label> {{consentView.esAgencyName}} <br />
-            <label class="control-label">ES Contact Name: </label> {{consentView.esContactName}} <br />
-            <label class="control-label">ES Phone: </label> {{consentView.esPhone}} <br />
-            <label class="control-label">ES Email: </label> {{consentView.esEmail}} <br />
-            <label class="control-label">WSIB: </label> {{consentView.wsib}} <br />
-            <label class="control-label">WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
-            <label class="control-label">WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
-            <label class="control-label">Other: </label> {{consentView.other}} <br />
-            <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
-            <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
-            <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
-            <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
+            <div *ngIf="consentView">
+              <label class="control-label">Date: </label> {{consentView.date}} <br />
+              <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
+              <div *ngIf="consentView.ontarioWorks">
+                <label class="control-label">OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
+                <label class="control-label">OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
+                <label class="control-label">OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
+              </div>
+              <label class="control-label">Ontario Disability Support Program: </label> {{consentView.ontarioDisabilityProgram}} <br />
+              <div *ngIf="consentView.ontarioDisabilityProgram">
+                <label class="control-label">ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
+                <label class="control-label">ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
+                <label class="control-label">ODSP Phone: </label> {{consentView.odspPhone}} <br />
+                <label class="control-label">ODSP Email: </label> {{consentView.odspEmail}} <br />
+              </div>
+              <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
+              <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
+              <div *ngIf="employmentServices">
+                <label class="control-label">ES Agency Name: </label> {{consentView.esAgencyName}} <br />
+                <label class="control-label">ES Contact Name: </label> {{consentView.esContactName}} <br />
+                <label class="control-label">ES Phone: </label> {{consentView.esPhone}} <br />
+                <label class="control-label">ES Email: </label> {{consentView.esEmail}} <br />
+              </div>
+              <label class="control-label">WSIB: </label> {{consentView.wsib}} <br />
+              <div *ngIf="consentView.wsib">
+                <label class="control-label">WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
+                <label class="control-label">WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
+              </div>
+              <label class="control-label">Other: </label> {{consentView.other}} <br />
+              <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
+              <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
+              <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
+              <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
+            </div>
           </div>
         </div>
         <div *ngIf="showGeneralInfoEdit">
@@ -676,7 +688,7 @@
         </div>
         <div *ngIf="showLearningStyle">
           <br />
-          <p><strong>I learn best by: </strong>{{ learningStyleView.learnBy }}</p>
+          <p><strong>{{clientView.firstName}} learns best by: </strong>{{ learningStyleView.learnBy }}</p>
           <div>
             <div style="display: block">
               <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
