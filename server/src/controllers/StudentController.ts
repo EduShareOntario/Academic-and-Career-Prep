@@ -306,14 +306,14 @@ class StudentController {
 
             }).catch(function(err) {
               console.log(err);
-              res.send({ "error": "error" });
+              res.send({ status: "error" });
             });
         }
       });
     }
     catch (e) {
       console.log('(GET TIMETABLES BY COURSE ID) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+      res.send({ status: "error in your request" });
     }
   }
 
@@ -322,28 +322,34 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Student", "Admin", "Staff"], done: function() {
           var _id: string = req.params.userID;
+          console.log(_id);
           sql.connect(config).then(function(connection) {
             new sql.Request(connection)
               .query(`select * FROM Timetables WHERE userID = ${_id}`)
               .then((result) => {
-                let query = 'select * from course where';
-                for (let i = 0; i < result.length; i++) {
-                  if (i === 0) {
-                    query += ' courseId = ' + result[i].courseID;
-                  } else {
-                    query += " OR courseId = " + result[i].courseID;
+                console.log('GETTING TIMETABLE: ' + result);
+                if (result.length > 0) {
+                  let query = 'select * from course where';
+                  for (let i = 0; i < result.length; i++) {
+                    if (i === 0) {
+                      query += ' courseId = ' + result[i].courseID;
+                    } else {
+                      query += " OR courseId = " + result[i].courseID;
+                    }
                   }
+                  new sql.Request(connection).query(query).then((result) => {
+                    res.send(result);
+                  }).catch(err => {
+                    //     // ... error checks
+                    res.send({ "status": "error" });
+                    console.log("(GET TIMETABLE BY USER ID) There was an error selecting courses " + err)
+                  });
+                } else {
+                  res.send({"status":'No Timetable Info'});
                 }
-                new sql.Request(connection).query(query).then((result) => {
-                  res.send(result);
-                }).catch(err => {
-                  //     // ... error checks
-                  //     res.send({ "error": "error" });
-                  console.log("(GET TIMETABLE BY USER ID) There was an error selecting courses " + err)
-                });
               }).catch(err => {
                 //     // ... error checks
-                //     res.send({ "error": "error" });
+                res.send({ "status": "error" });
                 console.log("(GET TIMETABLE BY USER ID) There was an error selecting timetables " + err)
               });
           })

@@ -29,6 +29,8 @@ export class ClientStatusComponent implements OnInit {
     clientView: Client;
     clientEdit: Client;
     consentView: ConsentForm;
+    selectedConsentForm: string;
+    clientConsentForms: ConsentForm[];
     suitabilityView: SuitabilityForm;
     learningStyleView: LearningStyleForm;
 
@@ -178,8 +180,9 @@ export class ClientStatusComponent implements OnInit {
         var suitabilityForm = this.getSuitabilityFormByFilter(client.userID);
         this.suitabilityView = suitabilityForm[0];
 
-        var consentForm = this.getConsentFormByFilter(client.userID);
-        this.consentView = consentForm[0];
+        var consentForms = this.getConsentFormByUserID(client.userID);
+        this.clientConsentForms = consentForms;
+        this.consentView = consentForms[0];
 
         var learningStyleForm = this.getLearningStyleFormByFilter(client.userID);
         this.learningStyleView = learningStyleForm[0];
@@ -192,8 +195,14 @@ export class ClientStatusComponent implements OnInit {
         return this.suitabilityForms.filter(x => x.userID === id);
     }
 
-    getConsentFormByFilter(id) {
+    getConsentFormByUserID(id) {
         return this.consentForms.filter(x => x.userID === id);
+    }
+
+    getConsentFormByConsentID(id) {
+        id = +id;
+        var consentForm = this.clientConsentForms.filter(x => x.consentID === id);
+        return consentForm;
     }
 
     getLearningStyleFormByFilter(id) {
@@ -364,8 +373,11 @@ export class ClientStatusComponent implements OnInit {
     }
 
     addSuitabilityInfo(client) {
-      this.clientView = null;
+      this.clientView = client;
       this.addSuitability = true;
+      this.showGeneral = false;
+      this.showConsent = false;
+      this.showLearningStyle = false;
       this.showSuitabilityEdit = false;
       this.statusReport = false;
       this.suitabilityForm = new SuitabilityForm();
@@ -391,7 +403,6 @@ export class ClientStatusComponent implements OnInit {
     editGeneralInfo(client) {
       this.statusReport = false;
       this.clientEdit = client;
-      this.clientView = null;
       this.showGeneral = false;
       this.showGeneralInfoEdit = true;
     }
@@ -415,7 +426,7 @@ export class ClientStatusComponent implements OnInit {
     editSuitability(client) {
       this.showGeneralInfoEdit = false;
       this.statusReport = false;
-      this.clientView = null;
+      this.showSuitability = false;
       this.addSuitability = false;
       this.showSuitabilityEdit = true;
       this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
@@ -545,6 +556,35 @@ export class ClientStatusComponent implements OnInit {
       if (this.totalPoints < 18) { this.warning = true; }
     }
 
+    allowClientToEdit(client, permission) {
+      this.clientService
+        .grantConsentEditPermission(client, permission)
+        .then( res => {
+          console.log(res);
+          if (res.status === 'granted') {
+            this.clientView.editConsentRequest = false;
+            swal(
+                'Client Access Granted',
+                'Client will be sent an email informing that they can now edit conesnt.',
+                'success'
+            );
+          } else if (res.status === 'denied') {
+            this.clientView.editConsentRequest = false;
+            swal(
+                'Client Access Denied',
+                'Client will be sent an email informing that they can NOT edit conesnt.',
+                'danger'
+            );
+          }
+        }).catch();
+      // if (value) {
+      //   console.log(client);
+      //   console.log("Access granted: " + value);
+      // } else {
+      //   console.log(client);
+      //   console.log("Access denied: " + value);
+      // }
+    }
 
     checkboxChange(client) {
       this.clientService
@@ -565,9 +605,15 @@ export class ClientStatusComponent implements OnInit {
       this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
     }
 
+    onSelectChange(event) {
+      var consentForm = this.getConsentFormByConsentID(this.selectedConsentForm);
+      this.consentView = consentForm[0];
+    }
+
     resetView() {
       this.statusReport = false;
       this.showGeneral = false;
+      this.showGeneralInfoEdit = false;
       this.showConsent = false;
       this.showLearningStyle = false;
       this.showSuitability = false;

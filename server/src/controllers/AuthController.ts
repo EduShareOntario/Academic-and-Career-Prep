@@ -46,6 +46,7 @@ class AuthController {
   authUser(req: express.Request, res: express.Response, data): void {
     try {
       if (req.headers && req.headers.authorization) {
+        console.log("AUTHORIZING USER" );
         jwt.verify(req.headers.authorization, 'f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff', function(err, decoded) {
           if (err) {
             return res.send({ error: "There was an error" });

@@ -38,6 +38,8 @@ class ClientController {
                   var error;
                   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                   var emailValidation = re.test(client.email);
+                  client.editConsentPermission = false;
+                  client.editConsentRequest = false;
                   for (let user of users) {
                     if (user.username === client.username) {
                       validated = false;
@@ -106,7 +108,9 @@ class ClientController {
                               false + "', '" +
                               false + "', '" +
                               client.comments + "', '" +
-                              client.studentNumber + "'";
+                              client.studentNumber + "', '" +
+                              client.editConsentRequest + "', '" +
+                              client.editConsentPermission + "'";
                             try {
                               new MailService().sendMessage("Welcome Message", mailOptions);
                             } catch (err) {

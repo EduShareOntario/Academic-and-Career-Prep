@@ -1,4 +1,5 @@
 export class ConsentForm {
+  consentID: string;
   userID: string;
   date: Date;
   ontarioWorks: boolean;

@@ -21,7 +21,7 @@
   <div *ngIf="!loading">
     <div class="jumbotron col-md-8 col-md-offset-2">
       <div class="margin">
-        <div class="col-md-11 col-md-offset-1">
+        <div class="col-md-5 col-md-offset-1">
           <div class="form-group">
             <div class="col-md-12">
               <label>Name: </label> {{clientName}}
@@ -30,6 +30,11 @@
               <label for="date">Date: </label> {{date | date: format}}
               <input type="hidden" value="{{date | date: format}}" [(ngModel)]="consentForm.date" placeholder="DD/MM/YYYY" />
             </div>
+          </div>
+        </div>
+        <div class="col-md-5 col-md-offset-1">
+          <div style="float: right;" *ngIf="currentUser.userType === 'Client' && completeConsentForm === false && !editConsentRequest && !editConsentPermission">
+            <button (click)="requestEdit()" class="requestEdit" title="Request to edit"><h4><i class="fa fa-pencil" aria-hidden="true"></i> Request Edit</h4></button>
           </div>
         </div>
         <div class="col-md-12">
@@ -56,55 +61,55 @@
           <h2 class="col-md-12" style="text-align:center">Release of information to outside agencies </h2>
           <b><em><p class="col-md-8 col-md-offset-2">I also authorize Academic and Career Preparation, Georgian College, to provide information concerning my academic status and progress to:</p></em></b>
           <div style="text-align:center" class=" col-md-10 col-md-offset-1">
-            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm" [(ngModel)]="consentForm.ontarioWorks" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Ontario Works</label>
-            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm" [(ngModel)]="consentForm.ontarioDisabilityProgram" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Ontario Disability Support Program</label>
-            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm" [(ngModel)]="consentForm.employmentInsurance" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Employment Insurance</label>
-            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm" [(ngModel)]="consentForm.employmentServices" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Employment Services</label>
-            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm" [(ngModel)]="consentForm.wsib" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> WSIB</label>
-            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm" [(ngModel)]="otherChecked" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Other</label>
+            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.ontarioWorks" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Ontario Works</label>
+            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.ontarioDisabilityProgram" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Ontario Disability Support Program</label>
+            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.employmentInsurance" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Employment Insurance</label>
+            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.employmentServices" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Employment Services</label>
+            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.wsib" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> WSIB</label>
+            <label style="padding-right:10px"><p-checkbox [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="otherChecked" class=" col-md-offset-1 form-check" binary="true"></p-checkbox> Other</label>
           </div>
           <div *ngIf="otherChecked" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Other:</h4>
             <div style="padding-left:15px;">
-              Other: <input class="form-control" name="childcare" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.other" placeholder="Other" />
+              Other: <input class="form-control" name="childcare" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.other" placeholder="Other" />
             </div>
           </div>
           <br />
           <div *ngIf="consentForm.wsib" class="col-md-offset-4 col-md-4">
             <h4 class="underline">WSIB:</h4>
             <div style="padding-left:15px;">
-              Work Transition Specialist Name: <input class="form-control" name="childcare" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.wsibWtsName" placeholder="Work Transition Specialist Name" /> Work Transition Specialist Phone Number:
+              Work Transition Specialist Name: <input class="form-control" name="childcare" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.wsibWtsName" placeholder="Work Transition Specialist Name" /> Work Transition Specialist Phone Number:
               <br />
-              <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.wsibWtsPhone" placeholder="(999)999-9999"></p-inputMask>
+              <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.wsibWtsPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
           </div>
           <br />
           <div *ngIf="consentForm.employmentServices" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Employement Services:</h4>
             <div style="padding-left:15px;">
-              Agency Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.esAgencyName" placeholder="Employment Serivce Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm"
-                [(ngModel)]="consentForm.esContactName" placeholder="Employment Serivce Contact Name" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.esEmail" placeholder="Employment Serivce Email"
+              Agency Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esAgencyName" placeholder="Employment Serivce Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm"
+                [(ngModel)]="consentForm.esContactName" placeholder="Employment Serivce Contact Name" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esEmail" placeholder="Employment Serivce Email"
               /> Contact Phone Number: <br />
-              <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.esPhone" placeholder="(999)999-9999"></p-inputMask>
+              <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
           </div>
           <br />
           <div *ngIf="consentForm.ontarioDisabilityProgram" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Ontario Disability Support Program:</h4>
             <div style="padding-left:15px;">
-              Agency Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.odspAgencyName" placeholder="ODSP Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.odspContactName"
-                placeholder="ODSP contactName" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.odspEmail" placeholder="ODSP Email" /> Contact Phone Number: <br />
+              Agency Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspAgencyName" placeholder="ODSP Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.odspContactName"
+                placeholder="ODSP contactName" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspEmail" placeholder="ODSP Email" /> Contact Phone Number: <br />
               <p-inputMask mask="(999) 999-9999"
-                [disabled]="!completeConsentForm" [(ngModel)]="consentForm.odspPhone" placeholder="(999)999-9999"></p-inputMask>
+                [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
           </div>
           <br />
           <div *ngIf="consentForm.ontarioWorks" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Ontario Works:</h4>
             <div style="padding-left:15px;">
-              Case Worker Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.owCaseWorkerName" placeholder="OW Case Worker Name" /> Case Worker Email: <input class="form-control" [disabled]="!completeConsentForm"
+              Case Worker Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerName" placeholder="OW Case Worker Name" /> Case Worker Email: <input class="form-control" [disabled]="!completeConsentForm"
                 [(ngModel)]="consentForm.owCaseWorkerEmail" placeholder="OW Case Worker Email" /> Case Worker Phone Number: <br />
-              <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.owCaseWorkerPhone" placeholder="(999)999-9999"></p-inputMask>
+              <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
           </div>
         </div>
@@ -114,10 +119,10 @@
           <b><em>  <p> If, during the first twelve months after I leave the program, I cannot be reached at the telephone number(s) and/or email address in my file,
                    Georgian College staff may call the following person to get my current number and/or address:</p></em></b>
           <div class="col-md-offset-3 col-md-6">
-            Contact Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.contactName" placeholder="Contact Name" #contactName="ngModel" />
+            Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.contactName" placeholder="Contact Name" #contactName="ngModel" />
           </div>
           <div class="col-md-offset-3 col-md-6">
-            Contact Phone Number: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.contactNum" placeholder="Phone Number" #contactNum="ngModel" />
+            Contact Phone Number: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.contactNum" placeholder="Phone Number" #contactNum="ngModel" />
           </div>
         </div>
 
@@ -126,21 +131,21 @@
           <b><em>  <p>I agree that my assessment and personal information may be forwarded to another literacy agency if I am to be referred
                  to that agency for more appropriate literacy training.</p></em></b>
           <div class="col-md-offset-3 col-md-6">
-            Signature: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.literacyAgencies" placeholder="Signature" />
+            Signature: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.literacyAgencies" placeholder="Signature" />
           </div>
           <div class="col-md-offset-3 col-md-6">
-            Witness: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.literacyWitness" placeholder="Witness" />
+            Witness: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.literacyWitness" placeholder="Witness" />
           </div>
         </div>
         <div class="col-md-12" style="margin-top:50px;margin-left:-15px;">
-          <div style="float: left;">
+          <div style="float:left">
             <button (click)="goBack()" class="btn btn-default">Back</button>
           </div>
-          <div style="float: right;" *ngIf="currentUser.userType === 'Client' && completeConsentForm === true">
+          <div style="float:right" *ngIf="currentUser.userType === 'Client' && completeConsentForm">
             <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
-          <div style="float: right;" *ngIf="currentUser.userType === 'Client' && completeConsentForm === false">
-            <button (click)="requestEdit()" class="requestEdit" title="Request to edit"><h4><i class="fa fa-pencil" aria-hidden="true"></i> Request Edit</h4></button>
+          <div style="float:right" *ngIf="currentUser.userType === 'Client' && editConsentPermission">
+            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</h4></button>
           </div>
         </div>
       </div>

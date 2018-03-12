@@ -4,7 +4,7 @@ var sql = require('mssql');
 var config = require('../config');
 
 //runs every night at 10pm
-var attendanceCheck = schedule.scheduleJob('0 15 15 * * *', function(){
+var attendanceCheck = schedule.scheduleJob('0 11 56 * * *', function(){
   var date = new Date();
   var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
   console.log("Checking student attendance... " + str);
@@ -33,17 +33,17 @@ var attendanceCheck = schedule.scheduleJob('0 15 15 * * *', function(){
                             for (let item of missedClasses) {
                               student = studentsResult.filter(x => x.userID === item.userID);
                               let mailOptions = {
-                                from: '"Test" <ghost@test.com>', // sender address
+                                from: 'Academic Career Preparation <academic.career.prep@gmail.com>', // sender address
                                 to: student[0].email, // list of receivers
                                 subject: 'SCHEDULER ✔', // Subject line
                                 text: '', // plain text body
                                 html: '<b> Hi ' + student[0].firstName + '!</b><br  />You have been absent from <insert class name here> for two or more classes in a row.' + item.date + '' // html body
                               };
-                              //new MailService().scheduledMessage(mailOptions);
+                              new MailService().scheduledMessage(mailOptions);
                             }
                             let mailOptionsAdmin = {
-                              from: '"Test" <academic.career.prep@gmail.com>', // sender address
-                              to: 'nicholasrowlandson@gmail.com', // list of receivers
+                              from: 'Academic Career Preparation <academic.career.prep@gmail.com>', // sender address
+                              to: 'academic.career.prep@gmail.com', // list of receivers
                               subject: 'SCHEDULER ✔', // Subject line
                               text: '', // plain text body
                               html: '<b> Hi admin!</b><br  />There were ' + missedClasses.length + ' emails sent out due to missed classes.' // html body

@@ -327,7 +327,8 @@ export class SuitabilityFormComponent {
 
     saveClient() {
       swal({
-        title: 'Saving...'
+        title: 'Saving...',
+        allowOutsideClick: false
       });
       swal.showLoading();
       this.clientService
