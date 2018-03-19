@@ -30,6 +30,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { FilesComponent } from './components/files/files.component';
 import { HelpComponent } from './components/help/help.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 const appRoutes: Routes = [
     {
@@ -146,8 +147,6 @@ const appRoutes: Routes = [
         component: HelpComponent,
         canActivate: [AuthGuard]
     }
-
-
 ];
 
 export const routing = RouterModule.forRoot(appRoutes, { useHash: true });

@@ -8,7 +8,7 @@
     </span>
     <strong *ngIf="selectedStudent"> Viewing Timetable for </strong>
     <strong *ngIf="!selectedStudent"> View Timetable for: </strong>
-    <p-dropdown *ngIf="faculty" [options]="students | toSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px'}" (onChange)="studentSelect()"></p-dropdown>
+    <p-dropdown *ngIf="faculty" [options]="students | studentToSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px'}" (onChange)="studentSelect()"></p-dropdown>
   </h2>
   <!-- <button class="searchTimetables btn btn-secondary" style="display:inline-block;float:right;" (click)="alert()" title="Search timetables"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
 </div>

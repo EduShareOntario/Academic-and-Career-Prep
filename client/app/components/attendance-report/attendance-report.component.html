@@ -117,7 +117,7 @@
             <tbody>
                 <tr></tr>
                 <tr *ngFor="let student of courseStudents">
-                  <td>{{ student.student.firstName }} {{ student.student.lastName }} {{i}}</td>
+                  <td>{{ student.student.fullName }} {{i}}</td>
                   <td>{{ student.startDate | date :  "dd/MM/yy" }} - {{ student.endDate |  date :  "dd/MM/yy" }}</td>
                   <td *ngFor="let check of classTimeStr" style="border:1px solid #DDDDDD; text-align:center">
                     <div *ngFor="let item of student.attendanceInfo">

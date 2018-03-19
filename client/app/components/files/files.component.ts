@@ -41,10 +41,11 @@ export class FilesComponent {
   }
 
   download(file) {
-    var filename = file.milliseconds + "_" + file.filename;
+    var filename = file.milliseconds + "_" + file.userID + "_" + file.filename;
     this.filesService
         .download(filename)
         .then(response => {
+          console.log(response);
           var blob = new Blob([response], {type: "application/pdf"});
           //change download.pdf to the name of whatever you want your file to be
           console.log(blob);
@@ -54,7 +55,7 @@ export class FilesComponent {
   }
 
   deleteAlert(file) {
-      var filename = file.milliseconds + "_" + file.filename;
+      var filename = file.milliseconds + "_" + file.userID + "_" + file.filename;
       swal({
           title: 'Delete file (' + file.filename + ')?',
           text: "You won't be able to revert this!",

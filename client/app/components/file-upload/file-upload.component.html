@@ -5,7 +5,7 @@
         <i class="fa fa-arrow-circle-o-left"></i>
       </span>
       <strong> File Upload for: </strong>
-      <p-dropdown [options]="students | toSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px'}" (onChange)="studentSelect()"></p-dropdown>
+      <p-dropdown [options]="users" [(ngModel)]="selectedStudent" placeholder="Select a User" [filter]="true" [style]="{'width':'350px'}" (onChange)="userSelect()"></p-dropdown>
     </h2>
     <hr>
   </div>

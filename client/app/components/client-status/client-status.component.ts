@@ -8,7 +8,9 @@ import { LearningStyleForm } from "../../models/learningStyleForm";
 import { ClientService } from "../../services/client.service";
 import { StudentService } from "../../services/student.service";
 import { AuthService } from "../../services/authentication.service";
+import { FilesService } from "../../services/files.service";
 declare var swal: any;
+declare var FileSaver: any;
 
 @Component({
     selector: 'client-status',
@@ -51,6 +53,7 @@ export class ClientStatusComponent implements OnInit {
     showSuitability: boolean;
     showConsent: boolean;
     showLearningStyle: boolean;
+    showFiles: boolean;
 
     //doughnut chart (client status)
     doughnutChartLabels: string[];
@@ -61,6 +64,9 @@ export class ClientStatusComponent implements OnInit {
     stage2: any;
     stage3: any;
     stage4: any;
+
+    files: any[];
+    clientFiles: any[];
 
     //bar chart (learning style)
     barChartOptions:any = {
@@ -73,11 +79,12 @@ export class ClientStatusComponent implements OnInit {
     barChartData:any;
     barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
 
-    constructor(private router: Router, private clientService: ClientService, private studentService: StudentService, private authService: AuthService) {
+    constructor(private router: Router, private clientService: ClientService, private studentService: StudentService, private authService: AuthService, private filesService: FilesService) {
     }
 
     ngOnInit() {
         this.getClients();
+        this.getFiles();
     }
 
     getClients() {
@@ -123,6 +130,72 @@ export class ClientStatusComponent implements OnInit {
         this.addSuitability = false;
         this.statusReport = true;
 
+    }
+
+    getFiles() {
+      this.filesService
+          .getFiles()
+          .then(files => {
+            this.files = files;
+            for (let file of this.files) {
+              file.userID = +file.userID;
+            }
+            swal.close();
+            console.log(this.files);
+          })
+          .catch(error => error);
+    }
+
+    download(file) {
+      console.log(file);
+      var filename = file.milliseconds + "_" + file.userID + "_" + file.filename;
+      this.filesService
+          .download(filename)
+          .then(response => {
+            var blob = new Blob([response], {type: "application/pdf"});
+            //change download.pdf to the name of whatever you want your file to be
+            console.log(blob);
+            saveAs(blob, file.filename);
+          })
+          .catch(error => error);
+    }
+
+    deleteFileAlert(file) {
+        var filename = file.milliseconds + "_" + file.userID + "_" + file.filename;
+        swal({
+            title: 'Delete file (' + file.filename + ')?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(isConfirm => {
+          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+            console.log(isConfirm.dismiss);
+          } else if (isConfirm) {
+            this.deleteFile(filename);
+          }
+        }).catch(error => error);
+    }
+
+    deleteFile(filename) {
+        event.stopPropagation();
+        this.filesService
+            .delete(filename)
+            .then(res => {
+                this.getFiles();
+                swal(
+                    'Deleted!',
+                    'File has been deleted.',
+                    'success'
+                );
+            })
+            .catch(error => error);
+    }
+
+    addFile() {
+        this.router.navigate(['/file-upload']);
     }
 
     addClient() {
@@ -176,7 +249,7 @@ export class ClientStatusComponent implements OnInit {
         this.clientView = client;
         this.resetView();
         this.showGeneral = true;
-
+        this.clientFiles = this.files.filter(x => x.userID === this.clientView.userID);
         var suitabilityForm = this.getSuitabilityFormByFilter(client.userID);
         this.suitabilityView = suitabilityForm[0];
 
@@ -227,6 +300,9 @@ export class ClientStatusComponent implements OnInit {
         } else if (section === "learningStyle") {
           this.resetView();
             this.showLearningStyle = true;
+        } else if (section === "files") {
+          this.resetView();
+            this.showFiles = true;
         }
     }
 
@@ -618,6 +694,7 @@ export class ClientStatusComponent implements OnInit {
     }
 
     resetView() {
+      this.showFiles = false;
       this.statusReport = false;
       this.showGeneral = false;
       this.showGeneralInfoEdit = false;

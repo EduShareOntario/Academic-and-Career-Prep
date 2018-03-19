@@ -28,6 +28,7 @@
     float: left;
     font-weight: bold;
     box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.1);
+    cursor:pointer;
 }
 
 .sectionBtnGroup {
@@ -125,4 +126,8 @@ h2 {
 
 .margin {
   margin-bottom: 15px;
+}
+
+.marginBottomButton {
+  margin-bottom:10px;
 }

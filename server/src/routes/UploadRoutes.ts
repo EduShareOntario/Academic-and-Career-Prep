@@ -51,21 +51,26 @@ class UploadRoutes {
         });
 
         router.post("/download/:_file", function(req, res){
-          var _filename: string = req.params._file;
-          var downloadFile;
-          fs.readdir(uploads, (err, files) => {
-            files.forEach(file => {
-              if(file === _filename) {
-                downloadFile = file;
-              }
+          try {
+            var _filename: string = req.params._file;
+            var downloadFile;
+            fs.readdir(uploads, (err, files) => {
+              files.forEach(file => {
+                if(file === _filename) {
+                  downloadFile = file;
+                }
+              });
+              res.setHeader('Content-disposition', 'attachment; filename=' + downloadFile);
+              res.setHeader('Content-type', 'application/pdf');
+              var fileData = fs.readFileSync(__dirname + "/../../../uploads/" + downloadFile);
+              var base64Data = new Buffer(fileData).toString('base64');
+              res.send(base64Data);
+              //res.download(__dirname + "/../../../uploads/" + downloadFile, 'binary');
             });
-            res.setHeader('Content-disposition', 'attachment; filename=' + downloadFile);
-            res.setHeader('Content-type', 'application/pdf');
-            var fileData = fs.readFileSync(__dirname + "/../../../uploads/" + downloadFile);
-            var base64Data = new Buffer(fileData).toString('base64');
-            res.send(base64Data);
-            //res.download(__dirname + "/../../../uploads/" + downloadFile, 'binary');
-          });
+          } catch(e) {
+            res.send({status: "error"});
+          }
+
         });
 
         router.delete("/deleteFile/:_file", function(req, res){

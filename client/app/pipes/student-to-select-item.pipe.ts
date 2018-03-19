@@ -4,9 +4,9 @@ import { SelectItem } from 'primeng/primeng';
 import { Student } from "../models/Student";
 
 @Pipe({
-    name: "toSelectItem"
+    name: "studentToSelectItem"
 })
-export class SelectItemPipe implements PipeTransform {
+export class StudentSelectItemPipe implements PipeTransform {
 
   public transform(students: Student[]): SelectItem[] {
     if (!students) {

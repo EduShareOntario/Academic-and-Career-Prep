@@ -1,7 +1,15 @@
 <div class="attendanceList">
-  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Take Attendance</strong></h1>
+  <h2>
+    <span style="cursor:pointer" (click)="goBack()">
+      <i class="fa fa-arrow-circle-o-left"></i>
+    </span>
+    <strong *ngIf="!instructors"> Take Attendance </strong>
+    <strong *ngIf="instructors && ! selectedInstructor"> Take Attendance for: </strong>
+    <strong *ngIf="selectedInstructor"> Taking Attendance for: </strong>
+    <p-dropdown *ngIf="instructors" [options]="instructors | instructorToSelectItem" [(ngModel)]="selectedInstructor" placeholder="Select a Instructor" [filter]="true" [style]="{'width':'350px'}" (onChange)="instructorSelect()"></p-dropdown>
+  </h2>
   <hr>
-    <div *ngIf="!data">
+    <!-- <div *ngIf="!instructors">
         <div class="cs-loader">
             <div class="cs-loader-inner">
                 <label>	L</label>
@@ -16,7 +24,7 @@
                 <label>	.</label>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="row" *ngIf="data">
         <div class="col-md-3">
           <h2>My Courses</h2>

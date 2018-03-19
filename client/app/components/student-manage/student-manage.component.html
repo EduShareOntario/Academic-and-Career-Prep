@@ -1,34 +1,34 @@
 <div class="students">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Students</strong></h1>
-    <hr>
-    <div class="" *ngIf="!students">
-        <div class="cs-loader">
-            <div class="cs-loader-inner">
-                <label>	L</label>
-                <label>	O</label>
-                <label>	A</label>
-                <label>	D</label>
-                <label>	I</label>
-                <label>	N</label>
-                <label>	G</label>
-                <label>	.</label>
-                <label>	.</label>
-                <label>	.</label>
-            </div>
-        </div>
+  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Students</strong></h1>
+  <hr>
+  <div class="" *ngIf="!students">
+    <div class="cs-loader">
+      <div class="cs-loader-inner">
+        <label>	L</label>
+        <label>	O</label>
+        <label>	A</label>
+        <label>	D</label>
+        <label>	I</label>
+        <label>	N</label>
+        <label>	G</label>
+        <label>	.</label>
+        <label>	.</label>
+        <label>	.</label>
+      </div>
     </div>
-    <div class="row" *ngIf="students">
-        <div class="col-md-12">
-            <div class="error" *ngIf="error">{{error}}</div>
-        </div>
-        <div class="col-md-7">
-            <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
-            <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
-                <p-column field="studentNumber" header="Number" [sortable]="true" [style]="{'width': '120px'}"></p-column>
-                <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-                <p-column field="email" header="Email" [sortable]="true"></p-column>
-                <p-column header="Action" [style]="{'width': '60px', 'overflow': 'visible'}">
-                  <template let-data="rowData" pTemplate="body">
+  </div>
+  <div class="row" *ngIf="students">
+    <div class="col-md-12">
+      <div class="error" *ngIf="error">{{error}}</div>
+    </div>
+    <div class="col-md-7">
+      <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
+      <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
+        <p-column field="studentNumber" header="Number" [sortable]="true" [style]="{'width': '120px'}"></p-column>
+        <p-column field="fullName" header="Name" [sortable]="true"></p-column>
+        <p-column field="email" header="Email" [sortable]="true"></p-column>
+        <p-column header="Action" [style]="{'width': '60px', 'overflow': 'visible'}">
+          <template let-data="rowData" pTemplate="body">
                     <div class="btn-group">
                       <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
@@ -42,117 +42,139 @@
                     </ul>
                   </div>
                   </template>
-                </p-column>
-            </p-dataTable>
-        </div>
-        <div *ngIf="!studentInfoView" class="col-md-5">
-          <div class="well">
-              <h2><strong>{{ students.length }}</strong> Total Students</h2>
+        </p-column>
+      </p-dataTable>
+    </div>
+    <div *ngIf="!studentInfoView" class="col-md-5">
+      <div class="well">
+        <h2><strong>{{ students.length }}</strong> Total Students</h2>
+      </div>
+    </div>
+    <div *ngIf="studentInfoView" class="col-md-5">
+      <h2>Information for {{studentView.firstName + " " + studentView.lastName}}</h2>
+      <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+      <hr>
+      <div class="well">
+        <ul class="sectionBtnGroup col-sm-12">
+          <li class="sectionButtons" [ngClass]="{active: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
+            <h4>General Info</h4></li>
+          <li class="sectionButtons" *ngIf="!studentView.suitability" [ngClass]="{active: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
+            <h4>Suitability</h4></li>
+          <li class="sectionButtons" *ngIf="!studentView.consent" [ngClass]="{active: showConsent}" title="Consent" (click)="sectionBtnClicked($event, 'consent')">
+            <h4>Consent</h4></li>
+          <li class="sectionButtons" *ngIf="!studentView.learningStyle" [ngClass]="{active: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
+            <h4>Learning Style</h4></li>
+          <li class="sectionButtons" [ngClass]="{active: showFiles}" title="Files" (click)="sectionBtnClicked($event, 'files')">
+            <h4>Files</h4></li>
+        </ul>
+        <div *ngIf="showGeneral" class="infoPanel">
+          <br />
+          <div class="form-group">
+            <label class="control-label">id: </label> {{studentView.userID}} <br />
+            <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate}} <br />
+            <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <br />
+            <label class="control-label">First Name: </label> {{studentView.firstName}} <br />
+            <label class="control-label">Last Name: </label> {{studentView.lastName}} <br />
+            <label class="control-label">Birth Date: </label> {{studentView.birthdate}} <br />
+            <label class="control-label">Email: </label> {{studentView.email}} <br />
+            <label class="control-label">Phone: </label> {{studentView.phone}} <br />
+            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessage}} <br />
+            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{studentView.okayToText}} <br />
+            <label class="control-label">Alternate Phone: </label> {{studentView.alternateNumber}} <br />
+            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{studentView.okayToTextAlternate}} <br />
+            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessageAlternate}} <br />
+            <label class="control-label">Comments: </label> {{studentView.comments}} <br />
           </div>
         </div>
-        <div *ngIf="studentInfoView" class="col-md-5">
-            <h2>Information for {{studentView.firstName + " " + studentView.lastName}}</h2>
-            <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
-            <hr>
-            <ul class="sectionBtnGroup col-sm-12">
-                <li class="sectionButtons" [ngClass]="{active: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
-                    <h4>General Info</h4></li>
-                <li class="sectionButtons" *ngIf="!studentView.suitability" [ngClass]="{active: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
-                    <h4>Suitability</h4></li>
-                <li class="sectionButtons" *ngIf="!studentView.consent" [ngClass]="{active: showConsent}" title="Consent" (click)="sectionBtnClicked($event, 'consent')">
-                    <h4>Consent</h4></li>
-                <li class="sectionButtons" *ngIf="!studentView.learningStyle" [ngClass]="{active: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
-                    <h4>Learning Style</h4></li>
-            </ul>
-            <div *ngIf="showGeneral" class="infoPanel">
-                <br />
-                <div class="form-group">
-                    <label class="control-label">id: </label> {{studentView.userID}} <br />
-                    <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate}} <br />
-                    <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <br />
-                    <label class="control-label">First Name: </label> {{studentView.firstName}} <br />
-                    <label class="control-label">Last Name: </label> {{studentView.lastName}} <br />
-                    <label class="control-label">Birth Date: </label> {{studentView.birthdate}} <br />
-                    <label class="control-label">Email: </label> {{studentView.email}} <br />
-                    <label class="control-label">Phone: </label> {{studentView.phone}} <br />
-                    <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessage}} <br />
-                    <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{studentView.okayToText}} <br />
-                    <label class="control-label">Alternate Phone: </label> {{studentView.alternateNumber}} <br />
-                    <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{studentView.okayToTextAlternate}} <br />
-                    <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessageAlternate}} <br />
-                    <label class="control-label">Comments: </label> {{studentView.comments}} <br />
-                </div>
+        <div *ngIf="showSuitability" class="infoPanel">
+          <br />
+          <div class="form-group">
+            <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <br />
+            <label class="control-label">Courses: </label> {{suitabilityView.courses}} <br />
+            <label class="control-label">Goal: </label> {{suitabilityView.goal}} <br />
+            <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}} <br />
+            <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}} <br />
+            <label class="control-label">Appropriate Goal: </label> {{suitabilityView.appropriateGoal}} <br />
+            <label class="control-label">19+ Years Old: </label> {{suitabilityView.isValidAge}} <br />
+            <label class="control-label">Not Registered In High School or Post-Sec: </label> {{suitabilityView.schoolRegistration}} <br />
+            <label class="control-label">Available During Class Time: </label> {{suitabilityView.availableDuringClass}} <br />
+            <label class="control-label">Last Grade Completed: </label> {{suitabilityView.lastGrade}} <br />
+            <label class="control-label">Level: </label> {{suitabilityView.level}} <br />
+            <label class="control-label">Post-Secondary/Job Offer start date: </label> {{suitabilityView.offerStartDate}} <br />
+            <label class="control-label">Meets Next Goals Requirements: </label> {{suitabilityView.meetsGoal}} <br />
+            <label class="control-label">Time out of School/Training: </label> {{suitabilityView.timeOutOfSchool}} <br />
+            <label class="control-label">Has Been In Program Before: </label> {{suitabilityView.inProgramBefore}} <br />
+            <label class="control-label">Employment: </label> {{suitabilityView.employment}} <br />
+            <label class="control-label">Income Source: </label> {{suitabilityView.incomeSource}} <br />
+            <label class="control-label">Age: </label> {{suitabilityView.age}} <br />
+            <label class="control-label"># of Hours/Week: </label> {{suitabilityView.hoursPerWeek}} <br />
+            <label class="control-label">Comments: </label> {{suitabilityView.comments}} <br />
+          </div>
+        </div>
+        <div *ngIf="showConsent" class="infoPanel">
+          <br />
+          <div class="form-group">
+            <label class="control-label">Date: </label> {{consentView.date}} <br />
+            <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
+            <label class="control-label">OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
+            <label class="control-label">OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
+            <label class="control-label">OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
+            <label class="control-label">Ontario Disability Support Program: </label> {{consentView.ontarioDisabilityProgram}} <br />
+            <label class="control-label">ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
+            <label class="control-label">ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
+            <label class="control-label">ODSP Phone: </label> {{consentView.odspPhone}} <br />
+            <label class="control-label">ODSP Email: </label> {{consentView.odspEmail}} <br />
+            <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
+            <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
+            <label class="control-label">ES Agency Name: </label> {{consentView.esAgencyName}} <br />
+            <label class="control-label">ES Contact Name: </label> {{consentView.esContactName}} <br />
+            <label class="control-label">ES Phone: </label> {{consentView.esPhone}} <br />
+            <label class="control-label">ES Email: </label> {{consentView.esEmail}} <br />
+            <label class="control-label">WSIB: </label> {{consentView.wsib}} <br />
+            <label class="control-label">WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
+            <label class="control-label">WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
+            <label class="control-label">Other: </label> {{consentView.other}} <br />
+            <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
+            <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
+            <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
+            <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
+          </div>
+        </div>
+        <div *ngIf="showLearningStyle" class="infoPanel">
+          <br />
+          <p><strong>I learn best through: {{ learningStyleView.learnBy }}</strong></p>
+          <div class="form-group">
+            <div style="display: block">
+              <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
             </div>
-            <div *ngIf="showSuitability" class="infoPanel">
-                <br />
-                <div class="form-group">
-                    <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <br />
-                    <label class="control-label">Courses: </label> {{suitabilityView.courses}} <br />
-                    <label class="control-label">Goal: </label> {{suitabilityView.goal}} <br />
-                    <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}} <br />
-                    <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}} <br />
-                    <label class="control-label">Appropriate Goal: </label> {{suitabilityView.appropriateGoal}} <br />
-                    <label class="control-label">19+ Years Old: </label> {{suitabilityView.isValidAge}} <br />
-                    <label class="control-label">Not Registered In High School or Post-Sec: </label> {{suitabilityView.schoolRegistration}} <br />
-                    <label class="control-label">Available During Class Time: </label> {{suitabilityView.availableDuringClass}} <br />
-                    <label class="control-label">Last Grade Completed: </label> {{suitabilityView.lastGrade}} <br />
-                    <label class="control-label">Level: </label> {{suitabilityView.level}} <br />
-                    <label class="control-label">Post-Secondary/Job Offer start date: </label> {{suitabilityView.offerStartDate}} <br />
-                    <label class="control-label">Meets Next Goals Requirements: </label> {{suitabilityView.meetsGoal}} <br />
-                    <label class="control-label">Time out of School/Training: </label> {{suitabilityView.timeOutOfSchool}} <br />
-                    <label class="control-label">Has Been In Program Before: </label> {{suitabilityView.inProgramBefore}} <br />
-                    <label class="control-label">Employment: </label> {{suitabilityView.employment}} <br />
-                    <label class="control-label">Income Source: </label> {{suitabilityView.incomeSource}} <br />
-                    <label class="control-label">Age: </label> {{suitabilityView.age}} <br />
-                    <label class="control-label"># of Hours/Week: </label> {{suitabilityView.hoursPerWeek}} <br />
-                    <label class="control-label">Comments: </label> {{suitabilityView.comments}} <br />
-                </div>
-            </div>
-            <div *ngIf="showConsent" class="infoPanel">
-                <br />
-                <div class="form-group">
-                  <label class="control-label">Date: </label> {{consentView.date}} <br />
-                  <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
-                  <label class="control-label">OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
-                  <label class="control-label">OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
-                  <label class="control-label">OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
-                  <label class="control-label">Ontario Disability Support Program: </label> {{consentView.ontarioDisabilityProgram}} <br />
-                  <label class="control-label">ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
-                  <label class="control-label">ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
-                  <label class="control-label">ODSP Phone: </label> {{consentView.odspPhone}} <br />
-                  <label class="control-label">ODSP Email: </label> {{consentView.odspEmail}} <br />
-                  <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
-                  <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
-                  <label class="control-label">ES Agency Name: </label> {{consentView.esAgencyName}} <br />
-                  <label class="control-label">ES Contact Name: </label> {{consentView.esContactName}} <br />
-                  <label class="control-label">ES Phone: </label> {{consentView.esPhone}} <br />
-                  <label class="control-label">ES Email: </label> {{consentView.esEmail}} <br />
-                  <label class="control-label">WSIB: </label> {{consentView.wsib}} <br />
-                  <label class="control-label">WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
-                  <label class="control-label">WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
-                  <label class="control-label">Other: </label> {{consentView.other}} <br />
-                  <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
-                  <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
-                  <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
-                  <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
-                </div>
-            </div>
-            <div *ngIf="showLearningStyle" class="infoPanel">
-                <br />
-                <p><strong>I learn best through: {{ learningStyleView.learnBy }}</strong></p>
-                <div class="form-group">
-                    <div style="display: block">
-                      <canvas baseChart
-                              [datasets]="barChartData"
-                              [labels]="barChartLabels"
-                              [options]="barChartOptions"
-                              [colors]="barChartColors"
-                              [legend]="barChartLegend"
-                              [chartType]="barChartType"
-                              (chartHover)="chartHovered($event)"
-                              (chartClick)="chartClicked($event)"></canvas>
-                    </div>
-                  </div>
-            </div>
+          </div>
+        </div>
+        <div *ngIf="showFiles">
+          <h3>Viewing Files for {{ studentView.firstName }}</h3>
+          <button class="btn btn-success marginBottom" (click)="addFile()" title="Add new file"><i class="fa fa-upload"></i> Upload File</button>
+          <div style="overflow:visible; position:relative;">
+            <p-dataTable [value]="studentsFiles | userFilter : filterQuery" [responsive]="true">
+              <p-column field="userID" header="UserID" [sortable]="true"></p-column>
+              <p-column field="filename" header="File Name" [sortable]="true"></p-column>
+              <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
+              <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
+                <template let-data="rowData" pTemplate="body">
+                              <div class="btn-group">
+                                <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                  <span class="caret"></span>
+                                  <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                              <ul class="dropdown-menu" role="menu">
+                                  <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+                                  <li><a (click)="deleteFileAlert(data)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                              </ul>
+                            </div>
+                            </template>
+              </p-column>
+            </p-dataTable>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

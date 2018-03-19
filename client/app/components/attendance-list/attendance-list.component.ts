@@ -28,12 +28,18 @@ export class AttendanceListComponent implements OnInit {
     previousAttendance: any;
     instructors: any;
     instructorOptions: any = {};
+    selectedInstructor: number;
 
     constructor(private router: Router, private CourseService: CourseService, private StudentService: StudentService, private StaffService: StaffService) {
       this.date = new Date();
     }
 
     ngOnInit() {
+      swal({
+        title: 'Loading...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       var userID = currentUser.userID;
       if (currentUser.userType !== 'Instructor') {
@@ -41,37 +47,11 @@ export class AttendanceListComponent implements OnInit {
             .getUsers()
             .then(instructors => {
                 this.instructors = instructors.filter(x => x.userType === 'Instructor');
-                for (let item of this.instructors) {
-                  this.instructorOptions[item.userID] = item.firstName + " " + item.lastName;
-                }
             })
             .catch(error => {
               // do something
             });
-
-            console.log(this.instructorOptions);
-
-        swal({
-            title: 'Attendance',
-            text: 'Select an Instructor',
-            input: "select",
-            inputOptions: this.instructorOptions,
-            showCancelButton: true,
-            animation: "slide-from-top",
-            confirmButtonColor: '#3085d6',
-            allowOutsideClick: false,
-            confirmButtonText: 'Continue',
-            cancelButtonText: 'Back to Dashboard'
-        }).then(isConfirm => {
-          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
-            console.log(isConfirm.dismiss);
-            this.router.navigate(['/dashboard']);
-          } else if (isConfirm) {
-            console.log(isConfirm.value);
-          }
-        }).catch(error => {
-          console.log(error);
-        });
+            swal.close();
       } else {
         this.getCourses(userID);
         this.StudentService
@@ -87,8 +67,31 @@ export class AttendanceListComponent implements OnInit {
                 }
             })
             .catch(error => console.log(error));
+            swal.close();
       }
+    }
 
+    instructorSelect() {
+      swal({
+        title: 'Loading...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
+      this.getCourses(this.selectedInstructor);
+      this.StudentService
+          .getAllAttendance()
+          .then(attendance => {
+              if (attendance.status === "403") {
+                  this.previousAttendance = null;
+              } else {
+                  this.previousAttendance = attendance;
+                  for (let item of this.previousAttendance) {
+                    item.date = item.date[0] + " " + item.date[1];
+                  }
+              }
+              swal.close();
+          })
+          .catch(error => console.log(error));
     }
 
     getCourses(instructorID) {
@@ -96,7 +99,7 @@ export class AttendanceListComponent implements OnInit {
             .getInstructorCourses(instructorID)
             .then(result => {
                 var isEmpty = (result || []).length === 0;
-                if (isEmpty) {
+                if (isEmpty || result.status === "403") {
                     console.log(result);
                     this.data = null;
                 } else {
@@ -107,17 +110,21 @@ export class AttendanceListComponent implements OnInit {
     }
 
     doAttendance(course: Course) {
-      this.loading = true;
+      swal({
+        title: 'Loading...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
       this.previousAttendance = this.previousAttendance.filter(x => x.courseID === course.courseID);
       this.courseID = course.courseID;
       this.StudentService
           .getTimetablesByCourseId(course.courseID)
           .then(result => {
               var isEmpty = (result || []).length === 0;
-              if (isEmpty) {
+              if (isEmpty || result.status === "403") {
                   this.timetables = null;
                   this.attendanceStudents = null;
-                  this.loading = false;
+                  swal.close();
               } else {
                   this.timetables = result;
                   this.getStudentsById(this.timetables);
@@ -130,7 +137,6 @@ export class AttendanceListComponent implements OnInit {
       for (let item of array) {
         var attendanceHistory = this.previousAttendance;
         attendanceHistory = attendanceHistory.filter(x => x.date === item);
-        console.log(attendanceHistory);
         if (attendanceHistory.length !== 0) {
           console.log("Attendance already taken");
         } else {
@@ -139,23 +145,23 @@ export class AttendanceListComponent implements OnInit {
         }
       }
       this.attendanceView = true;
-      console.log(this.attendanceDates);
     }
 
     getStudentsById(timetables) {
+      console.log(timetables);
       this.StudentService
           .getStudentsById(timetables)
           .then(result => {
               var isEmpty = (result || []).length === 0;
-              if (isEmpty) {
+              if (isEmpty || result.status === "error") {
                   this.attendanceStudents = null;
               } else {
                   this.attendanceStudents = result;
                   for (let student of this.attendanceStudents) {
                     student.fullName = student.firstName + " " + student.lastName;
                   }
-                  this.loading = false;
               }
+              swal.close();
           })
           .catch(error => console.log(error));
     }

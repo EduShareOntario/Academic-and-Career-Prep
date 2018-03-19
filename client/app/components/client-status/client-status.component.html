@@ -104,6 +104,8 @@
             <h4>Consent</h4></li>
           <li class="sectionButtons" *ngIf="!clientView.learningStyle" [ngClass]="{active: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
             <h4>Learning Style</h4></li>
+          <li class="sectionButtons" [ngClass]="{active: showFiles}" title="Files" (click)="sectionBtnClicked($event, 'files')">
+            <h4>Files</h4></li>
         </ul>
         <br>
         <div *ngIf="showGeneral">
@@ -179,7 +181,7 @@
               <hr>
             </div>
             <div class="form-group">
-              <label class="control-label">Please select consent to view: </label><br />
+              <label class="control-label">Please select a consent record: </label><br />
               <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="selectedConsentForm" (change)="onSelectChange($event.value)">
                 <option [selected]="isSelected">Select</option>
                 <option *ngFor="let item of clientConsentForms" value="{{item.consentID}}">{{ item.date | date :'medium' }}</option>
@@ -219,6 +221,31 @@
               <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
               <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
             </div>
+          </div>
+        </div>
+        <div *ngIf="showFiles">
+          <h3>Viewing Files for {{ clientView.firstName }}</h3>
+          <button class="btn btn-success marginBottomButton" (click)="addFile()" title="Add new file"><i class="fa fa-upload"></i> Upload File</button>
+          <div style="overflow:visible; position:relative;">
+            <p-dataTable [value]="clientFiles | userFilter : filterQuery" [responsive]="true">
+              <p-column field="userID" header="UserID" [sortable]="true"></p-column>
+              <p-column field="filename" header="File Name" [sortable]="true"></p-column>
+              <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
+              <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
+                <template let-data="rowData" pTemplate="body">
+                          <div class="btn-group">
+                            <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                              <span class="caret"></span>
+                              <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                          <ul class="dropdown-menu" role="menu">
+                              <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+                              <li><a (click)="deleteFileAlert(data)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                          </ul>
+                        </div>
+                        </template>
+              </p-column>
+            </p-dataTable>
           </div>
         </div>
         <div *ngIf="showGeneralInfoEdit">
