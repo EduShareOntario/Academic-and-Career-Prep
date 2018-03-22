@@ -453,15 +453,15 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
           var attendance = req.body;
-          var query = "INSERT INTO Attendance (courseID, date, userID, attendanceValue) VALUES ";
+          var query = "INSERT INTO Attendance (courseID, date, userID, attendanceValue, twoMissedClassMsg, fourMissedClassMsg) VALUES ";
           var count = 0;
           if (attendance.students.length > 0) {
             var date = attendance.date;
             for (let student of attendance.students) {
               if (count === 0) {
-                query += "('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "' )";
+                query += "('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "', 'False', 'False' )";
               } else {
-                query += ", ('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "' )";
+                query += ", ('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "', 'False', 'False' )";
               }
               count++;
             }
