@@ -4,7 +4,7 @@ var sql = require('mssql');
 var config = require('../config');
 
 //runs every night at 10pm
-var attendanceCheck = schedule.scheduleJob('0 24 23 * * *', function() {
+var attendanceCheck = schedule.scheduleJob('30 * * * *', function() {
   var date = new Date();
   var twoMissedClasses = 0, fourMissedClasses = 0;
   var student;
@@ -42,11 +42,9 @@ var attendanceCheck = schedule.scheduleJob('0 24 23 * * *', function() {
                           var result = courseBy(studentAttendance, function(item) {
                             return [item.courseID, item.userID];
                           });
-                          console.log(result);
                           for (let course of result) {
                             for (var i = 0; i < course.length-1; i++) {
                               var availableCourses = course.filter(x => x.fourMissedClassMsg === false);
-                              console.log(availableCourses.length);
                               if (availableCourses.length >= 4  && course[i + 1] != null && course[i + 2] != null && course[i + 3] != null) {
                                 if (course[i].fourMissedClassMsg === false &&
                                   course[i + 1].fourMissedClassMsg === false &&
@@ -76,18 +74,18 @@ var attendanceCheck = schedule.scheduleJob('0 24 23 * * *', function() {
                                   fourMissedClasses += 1;
                                   let mailOptions = {
                                     from: 'Academic/Career Preparation <academic.career.prep@gmail.com>', // sender address
-                                    to: 'academic.career.prep@gmail.com', // list of receivers
-                                    subject: 'Four Missed Classes', // Subject line
+                                    to: userInfo[0].email, // list of receivers
+                                    subject: 'Removal from ' + courseInfo[0].courseName, // Subject line
                                     text: '', // plain text body
                                     html: 'Hi ' + student.firstName + ',<br /><br />Our records indicate that you have missed 50% or more of your ' + courseInfo[0].courseName +
                                     ' classes in the last four weeks. Our policy states that students will be withdrawn when this much time has been missed. Unfortunately, ' +
                                     'this means that you are being exited from ' + courseInfo[0].courseName + ' class.<br /><br />Please contact me by phone at 705-728-1968, Ext. XXXX or by ' +
                                     'email at <a>Cheryl.Boyes@GeorgianCollege.ca</a> to complete the necessary paperwork and discuss possible opportunities for returning to the ' +
-                                    + courseInfo[0].courseName + ' class at a later date.<br /><br />Regards,<br /><br /><strong>Cheryl Boyes</strong><br /><strong>Academic Upgrading Officer</strong>' +
+                                    courseInfo[0].courseName + ' class at a later date.<br /><br />Regards,<br /><br /><strong>Cheryl Boyes</strong><br /><strong>Academic Upgrading Officer</strong>' +
                                     '<br />Georgian College| One Georgian Drive | Barrie ON | L4M 3X9' // html body
                                   };
-                                  var query = "UPDATE Attendance SET fourMissedClassMsg = 'true', twoMissedClassMsg = 'true' WHERE attendanceID IN ('" + course[i].attendanceID +"','" + course[i+1].attendanceID +"','" + course[i+2].attendanceID +"','" + course[i+3].attendanceID +"')";
-                                  console.log(query);
+                                  var query = "UPDATE Attendance SET fourMissedClassMsg = 'true', twoMissedClassMsg = 'true' WHERE attendanceID IN" +
+                                  " ('" + course[i].attendanceID +"','" + course[i+1].attendanceID +"','" + course[i+2].attendanceID +"','" + course[i+3].attendanceID +"')";
                                   new sql.Request(connection)
                                     .query(query)
                                     .then(function(result) {
@@ -116,8 +114,8 @@ var attendanceCheck = schedule.scheduleJob('0 24 23 * * *', function() {
                                   twoMissedClasses += 1;
                                   let mailOptions = {
                                     from: 'Academic/Career Preparation <academic.career.prep@gmail.com>', // sender address
-                                    to: 'academic.career.prep@gmail.com', // student.email
-                                    subject: 'Two Missed Classes', // Subject line
+                                    to: userInfo[0].email, // student.email
+                                    subject: 'Two Missed ' + courseInfo[0].courseName + ' Classes', // Subject line
                                     text: '', // plain text body
                                     html: 'Hi ' + student.firstName + ',<br /><br />I noticed that you missed the last two consecutive ' + courseInfo[0].courseName + ' classes.' +
                                     ' I hope everything is okay. Let me know if there is something I can do to help.<br /><br />Please be reminded of our program ' +

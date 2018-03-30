@@ -49,9 +49,11 @@
             <h2>Attendance for {{ attendanceCourse.courseName }}</h2>
             <hr>
             Date:
-            <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Select attendance date">
+            <!-- <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Select attendance date">
+              <option [ngValue]="null" selected>Choose </option>
               <option *ngFor="let date of attendanceDates" value="{{ date[0] }} {{ date[1] }}">{{ date[0] | date }} from {{ date[1] }}</option>
-            </select>
+            </select> -->
+            <p-dropdown [options]="attendanceDates" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Choose a date" [filter]="true"></p-dropdown>
             <p-dataTable [value]="attendanceStudents | userFilter : studentQuery" [responsive]="true">
                 <p-column field="fullName" header="Name" [sortable]="true"></p-column>
                 <p-column header="Action" [style]="{'width': '330px'}">

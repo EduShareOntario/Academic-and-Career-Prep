@@ -3,6 +3,12 @@ html, body {
   margin: 0;
 }
 
+@media print {
+  .doNotPrint {
+    display:none;!important
+  }
+}
+
 .alert {
  margin-bottom: 0px;
 }
@@ -257,4 +263,8 @@ html, body {
 
 .statBox {
   cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #004B87; //#286090
 }

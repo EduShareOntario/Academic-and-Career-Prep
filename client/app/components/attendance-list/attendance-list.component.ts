@@ -6,6 +6,7 @@ import { Student } from "../../models/Student";
 import { StudentService } from "../../services/student.service";
 import { StaffService } from "../../services/staff.service";
 declare var swal: any;
+declare var moment;
 
 @Component({
     selector: 'attendanceList',
@@ -72,6 +73,8 @@ export class AttendanceListComponent implements OnInit {
     }
 
     instructorSelect() {
+      this.attendanceDates = [];
+      this.attendanceView = null;
       swal({
         title: 'Loading...',
         allowOutsideClick: false
@@ -110,6 +113,7 @@ export class AttendanceListComponent implements OnInit {
     }
 
     doAttendance(course: Course) {
+      this.attendanceDates = [];
       swal({
         title: 'Loading...',
         allowOutsideClick: false
@@ -141,7 +145,12 @@ export class AttendanceListComponent implements OnInit {
           console.log("Attendance already taken");
         } else {
           var date = item.split(' ');
-          this.attendanceDates.push(date);
+          var formattedDate = moment(date[0]).format("ddd, MMM Do YYYY");
+          var list = {
+            label: formattedDate + ' from ' + date[1],
+            value: date[0] + ' ' + date[1]
+          };
+          this.attendanceDates.push(list);
         }
       }
       this.attendanceView = true;

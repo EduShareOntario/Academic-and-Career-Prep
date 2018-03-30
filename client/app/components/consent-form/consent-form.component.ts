@@ -55,7 +55,7 @@ export class ConsentFormComponent {
                 if (this.editConsentRequest && !this.editConsentPermission) {
                   swal(
                     'Edit Request Submitted',
-                    "Check back once you have recieved an email.",
+                    "Check back once you have received an email.",
                     'info'
                   );
                 } else if (this.editConsentPermission) {
@@ -153,7 +153,7 @@ export class ConsentFormComponent {
         if (result.status === 'success') {
           swal(
             'Request Sent!',
-            'You will recieve an email once your request has been accepted.',
+            'You will receive an email once your request has been accepted.',
             'info'
           );
           this.router.navigate(['/dashboard']);

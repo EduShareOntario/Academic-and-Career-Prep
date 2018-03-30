@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Course } from "../../models/course";
 import { Student } from "../../models/Student";
 import { StudentService } from "../../services/student.service";
-import { CourseService} from '../../services/course.service';
+import { CourseService } from '../../services/course.service';
 declare var moment: any;
 declare var swal: any;
 
@@ -23,7 +23,7 @@ export class TimetableComponent implements OnInit {
   selectedStudent: number;
   faculty: boolean = false;
 
-  constructor(private router: Router, private studentService: StudentService, private courseService:CourseService, private route: ActivatedRoute) {
+  constructor(private router: Router, private studentService: StudentService, private courseService: CourseService, private route: ActivatedRoute) {
 
   }
 
@@ -34,14 +34,14 @@ export class TimetableComponent implements OnInit {
     if (currentUser.userType !== "Student") {
       this.faculty = true;
       this.studentService
-          .getStudents()
-          .then(students => {
-              this.students = students;
-              this.getEventsById(this.selectedStudent[0].userID);
-          })
-          .catch(error => {
-            // do something
-          });
+        .getStudents()
+        .then(students => {
+          this.students = students;
+          this.getEventsById(this.selectedStudent[0].userID);
+        })
+        .catch(error => {
+          // do something
+        });
     } else {
       this.getEventsById(userID);
     }
@@ -54,6 +54,10 @@ export class TimetableComponent implements OnInit {
       maxTime: "22:00:00",
       height: "auto"
     };
+  }
+
+  onPrint() {
+    window.print();
   }
 
   studentSelect() {
@@ -71,9 +75,9 @@ export class TimetableComponent implements OnInit {
       if (result.status === 'No Timetable Info') {
         swal.close();
         swal(
-            'No Timetable Info',
-            'This student has not been enrolled in a class yet.',
-            'warning'
+          'No Timetable Info',
+          'This student has not been enrolled in a class yet.',
+          'warning'
         );
       } else {
         result.forEach((i) => {

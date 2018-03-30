@@ -1,20 +1,29 @@
-<div *ngIf="!faculty">
-  <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> My Timetable</strong></h2>
-</div>
-<div *ngIf="faculty">
-  <h2 style="display:inline-block;">
+<div class="doNotPrint">
+  <div *ngIf="!faculty">
+    <h2>
+      <span style="cursor:pointer" (click)="goBack()">
+        <i class="fa fa-arrow-circle-o-left"></i>
+      </span>
+      <strong> My Timetable</strong>
+      <button (click)="onPrint()" class="btn btn-primary printButton" title="Print timetable"><i class="fa fa-print"></i> Print</button>
+    </h2>
+  </div>
+  <div *ngIf="faculty">
+    <h2 style="display:inline-block;">
     <span style="cursor:pointer" (click)="goBack()">
       <i class="fa fa-arrow-circle-o-left"></i>
     </span>
     <strong *ngIf="selectedStudent"> Viewing Timetable for </strong>
     <strong *ngIf="!selectedStudent"> View Timetable for: </strong>
     <p-dropdown *ngIf="faculty" [options]="students | studentToSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px'}" (onChange)="studentSelect()"></p-dropdown>
+    <button (click)="onPrint()" class="btn btn-primary printButtonFaculty" title="Print timetable"><i class="fa fa-print"></i> Print</button>
   </h2>
-  <!-- <button class="searchTimetables btn btn-secondary" style="display:inline-block;float:right;" (click)="alert()" title="Search timetables"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
+    <!-- <button class="searchTimetables btn btn-secondary" style="display:inline-block;float:right;" (click)="alert()" title="Search timetables"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
+  </div>
+  <hr>
 </div>
-<hr>
 
-<div *ngIf="!events" class="cs-loader">
+<div *ngIf="!events" class="cs-loader doNotPrint">
   <div class="cs-loader-inner">
     <label>	L</label>
     <label>	O</label>
@@ -28,5 +37,4 @@
     <label>	.</label>
   </div>
 </div>
-
 <p-schedule *ngIf="events" [events]="events" [editable]="false" [weekends]="false" [allDaySlot]="false" [options]="options"></p-schedule>
