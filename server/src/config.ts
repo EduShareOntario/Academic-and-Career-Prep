@@ -1,14 +1,15 @@
 var config = {
-	user: 'test',
-	password: 'test',
-	server: 'test',
-	database: 'test',
+	user: process.env.user,
+	password: process.env.password,
+	server: process.env.server,
+	database: process.env.database,
 	options: {
 		encrypt: true // Use this if you're on Windows Azure
-	}
+	},
 	mail: {
-		user: 'test',
-		pass: 'test'
+		service: process.env.mailservice,
+		user: process.env.mailuser,
+		pass: process.env.mailpassword
 	}
 };
 module.exports = config;
