@@ -1,8 +1,8 @@
 var config = {
-	user: process.env.user,
-	password: process.env.password,
-	server: process.env.server,
-	database: process.env.database,
+	user: process.env.dbuser,
+	password: process.env.dbpassword,
+	server: process.env.dbserver,
+	database: process.env.dbname,
 	options: {
 		encrypt: true // Use this if you're on Windows Azure
 	},
