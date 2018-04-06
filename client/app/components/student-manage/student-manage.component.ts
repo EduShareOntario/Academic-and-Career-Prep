@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Student } from "../../models/student";
+import { Course } from "../../models/course";
 import { ConsentForm } from "../../models/consentForm";
 import { SuitabilityForm } from "../../models/suitabilityForm";
 import { LearningStyleForm } from "../../models/learningStyleForm";
@@ -21,6 +22,8 @@ export class StudentManageComponent implements OnInit {
     error: any;
     studentInfoView: boolean = false;
     studentView: Student;
+    studentCoursesView : Student;
+    studentCourses : any[];
     consentView: ConsentForm;
     suitabilityView: SuitabilityForm;
     learningStyleView: LearningStyleForm;
@@ -212,12 +215,28 @@ export class StudentManageComponent implements OnInit {
         .catch(error => this.error = error);
     }
 
+    viewCourses(student: Student) {
+      this.resetView();
+      this.studentCoursesView = student;
+      this.getTimetableById(student.userID);
+    }
+
+    getTimetableById(userID) {
+      this.studentService.getEventsById(userID).then(result => {
+        this.studentCourses = result;
+      }).catch(error => {
+        console.log("Error getting timetable by id");
+      });
+    }
+
     overallStatus() {
       this.studentInfoView = false;
+      this.studentCoursesView = null;
     }
 
     sectionBtnClicked(event, section) {
         this.resetView();
+        this.studentInfoView = true;
         if (section === "general") {
             this.showGeneral = true;
         } else if (section === "suitability") {
@@ -232,6 +251,8 @@ export class StudentManageComponent implements OnInit {
     }
 
     resetView() {
+        this.studentCoursesView = null;
+        this.studentInfoView = false;
         this.showGeneral = false;
         this.showSuitability = false;
         this.showConsent = false;

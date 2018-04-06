@@ -16,7 +16,8 @@ class AuthController {
       var _password: string = req.body.password;
       var response;
 
-      sql.connect(config).then(function(connection) {
+      sql.connect(config)
+      .then(function(connection) {
         sql.query`SELECT * FROM Users WHERE username = ${_username}`.then(function(user) {
             if (bcrypt.compareSync(_password, user[0].password)) {
               var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff");
@@ -100,7 +101,7 @@ class AuthController {
       _password = bcrypt.hashSync(_password, salt);
 
       sql.connect(config)
-        .then(function(connection) {
+      .then(function(connection) {
           new sql.Request(connection)
             .query("UPDATE Users SET password='" + _password + "', active='true' WHERE userID='" + _userID + "'")
             .then(function(recordset) {
@@ -128,7 +129,8 @@ class AuthController {
       // Hash the password with the salt
       var _password = bcrypt.hashSync(randomstring, salt);
 
-      sql.connect(config).then(function(connection) {
+      sql.connect(config)
+      .then(function(connection) {
           sql.query`UPDATE Users SET password= $ {_password}, active='false' WHERE email = ${_email}`.then(function(recordset) {
               // setup email data with unicode symbols
               let mailOptions = {
