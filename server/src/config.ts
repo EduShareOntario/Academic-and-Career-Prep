@@ -9,9 +9,9 @@ var db = {
 };
 
 var mail = {
-  service: '', // service e.g. gmail
-  user: '', //email
-  pass: '' // password
+  service: process.env.mailservice, // service e.g. gmail
+  user: process.env.mailuser, //email
+  pass: process.env.mailpassword // password
 };
 
 module.exports = {
