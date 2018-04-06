@@ -5,6 +5,7 @@ import { Student } from "../../models/student";
 import { CourseService } from "../../services/course.service";
 import { Course } from "../../models/course";
 declare var moment: any;
+declare var swal: any;
 
 @Component({
     selector: 'attendanceReportComponet',
@@ -49,11 +50,17 @@ export class AttendanceReportComponent implements OnInit {
     }
 
     ngOnInit() {
+      swal({
+        title: 'Loading...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
         this.studentService
             .getAllAttendance()
             .then(attendance => {
                 if (attendance.status === "403") {
                     this.data = null;
+                    swal.close();
                 } else {
                     this.data = attendance;
                     this.getStudents();
@@ -85,6 +92,7 @@ export class AttendanceReportComponent implements OnInit {
             .then(result => {
                 if ((result as any).status === "403") {
                     this.courses = null;
+                    swal.close();
                 } else {
                     //format datetime
                     result.forEach((item) => {
@@ -107,8 +115,10 @@ export class AttendanceReportComponent implements OnInit {
             .then(result => {
                 if (result.status === "403") {
                     this.timetables = null;
+                    swal.close();
                 } else {
                     this.timetables = result;
+                    swal.close();
                 }
             })
             .catch(error => console.log(error));

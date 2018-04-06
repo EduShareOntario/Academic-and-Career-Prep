@@ -326,11 +326,17 @@ export class SuitabilityFormComponent {
     }
 
     saveClient() {
+      swal({
+        title: 'Saving...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
       this.clientService
           .save(this.client, this.suitabilityForm)
           .then(client => {
             console.log(client);
             if (client.error === "username in use") {
+              swal.close();
               swal(
                   'Username taken',
                   'Please enter a different first and last name.',
@@ -338,6 +344,7 @@ export class SuitabilityFormComponent {
               );
               this.clicked('section1');
             } else if (client.error === "email in use") {
+              swal.close();
               swal(
                   'Email already in use',
                   'Please enter a different email.',
@@ -345,6 +352,7 @@ export class SuitabilityFormComponent {
               );
               this.clicked('section1');
             } else if (client.error === "incorrect email format") {
+              swal.close();
               if (this.client.email == null) {
                 this.router.navigate(['/clients']);
               } else {
@@ -356,11 +364,18 @@ export class SuitabilityFormComponent {
                 this.clicked('section1');
               }
             }  else if (client.success === "success") {
+              swal.close();
               console.log("success");
               this.router.navigate(['/clients']);
             } else {
-              console.log("????");
-              this.router.navigate(['/clients']);
+              console.log("something went wrong...");
+              swal.close();
+              swal(
+                  'Error',
+                  'Something went wrong, please try again.',
+                  'warning'
+              );
+              this.clicked('section1');
             }
           })
           .catch(error => {

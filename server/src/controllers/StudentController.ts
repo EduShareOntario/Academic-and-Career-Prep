@@ -32,9 +32,9 @@ class StudentController {
                 + student.okayToTextAlternate + "','"
                 + student.comments + "')")
                 .then(function() {
-                  res.send({ "success": "success" });
+                  res.send({ status: "success" });
                 }).catch(function(err) {
-                  res.send({ "error": "error" });
+                  res.send({ status: "error" });
                   console.log("(CREATE STUDENT) Error inserting new student " + err);
                 });
             }).catch(function(err) {
@@ -72,12 +72,12 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
-                  res.send({ "error": "error" });
+                  res.send({ status: "error" });
                   console.log("(GET STUDENTS BY ID) Error selecting students " + err);
                 });
             }).catch(function(err) {
               console.log(err);
-              res.send({ "error": "error" });
+              res.send({ status: "error" });
             });
         }
       });
@@ -291,7 +291,7 @@ class StudentController {
   getTimetablesByCourseId(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Instructor"], done: function() {
+        requiredAuth: auth, done: function() {
           var _id: string = req.params._courseID;
           sql.connect(config)
             .then(function(connection) {
@@ -306,44 +306,48 @@ class StudentController {
 
             }).catch(function(err) {
               console.log(err);
-              res.send({ "error": "error" });
+              res.send({ status: "error" });
             });
         }
       });
     }
     catch (e) {
       console.log('(GET TIMETABLES BY COURSE ID) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+      res.send({ status: "error in your request" });
     }
   }
 
   getTimetablesByUserId(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Student", "Admin", "Staff"], done: function() {
+        requiredAuth: ["Student", "Admin", "Staff", "Instructor"], done: function() {
           var _id: string = req.params.userID;
           sql.connect(config).then(function(connection) {
             new sql.Request(connection)
               .query(`select * FROM Timetables WHERE userID = ${_id}`)
               .then((result) => {
-                let query = 'select * from course where';
-                for (let i = 0; i < result.length; i++) {
-                  if (i === 0) {
-                    query += ' courseId = ' + result[i].courseID;
-                  } else {
-                    query += " OR courseId = " + result[i].courseID;
+                if (result.length > 0) {
+                  let query = 'select * from course where';
+                  for (let i = 0; i < result.length; i++) {
+                    if (i === 0) {
+                      query += ' courseId = ' + result[i].courseID;
+                    } else {
+                      query += " OR courseId = " + result[i].courseID;
+                    }
                   }
+                  new sql.Request(connection).query(query).then((result) => {
+                    res.send(result);
+                  }).catch(err => {
+                    //     // ... error checks
+                    res.send({ "status": "error" });
+                    console.log("(GET TIMETABLE BY USER ID) There was an error selecting courses " + err)
+                  });
+                } else {
+                  res.send({"status":'No Timetable Info'});
                 }
-                new sql.Request(connection).query(query).then((result) => {
-                  res.send(result);
-                }).catch(err => {
-                  //     // ... error checks
-                  //     res.send({ "error": "error" });
-                  console.log("(GET TIMETABLE BY USER ID) There was an error selecting courses " + err)
-                });
               }).catch(err => {
                 //     // ... error checks
-                //     res.send({ "error": "error" });
+                res.send({ "status": "error" });
                 console.log("(GET TIMETABLE BY USER ID) There was an error selecting timetables " + err)
               });
           })
@@ -449,15 +453,15 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
           var attendance = req.body;
-          var query = "INSERT INTO Attendance (courseID, date, userID, attendanceValue) VALUES ";
+          var query = "INSERT INTO Attendance (courseID, date, userID, attendanceValue, twoMissedClassMsg, fourMissedClassMsg) VALUES ";
           var count = 0;
           if (attendance.students.length > 0) {
             var date = attendance.date;
             for (let student of attendance.students) {
               if (count === 0) {
-                query += "('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "' )";
+                query += "('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "', 'False', 'False' )";
               } else {
-                query += ", ('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "' )";
+                query += ", ('" + attendance.courseID + "', '" + date + "', '" + student.userID + "', '" + student.attendanceValue + "', 'False', 'False' )";
               }
               count++;
             }
