@@ -1,17 +1,17 @@
 var db = {
-    user: '',
-    password: '',
-    server: '',
-    database: '',
-    options: {
-        encrypt: true // Use this if you're on Windows Azure
+	user: process.env.dbuser,
+	password: process.env.dbpassword,
+	server: process.env.dbserver,
+	database: process.env.dbname,
+	options: {
+		encrypt: true // Use this if you're on Windows Azure
     }
 };
 
 var mail = {
-  service: '', // service e.g. gmail
-  user: '', //email
-  pass: '' // password
+  service: process.env.mailservice, // service e.g. gmail
+  user: process.env.mailuser, //email
+  pass: process.env.mailpassword // password
 };
 
 module.exports = {
