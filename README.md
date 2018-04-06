@@ -20,7 +20,7 @@ September 15, 2017
 7. http://localhost:3000
 
 
-## Config.ts
+## /server/src/config.ts
 
 ```javascript
 var db = {
@@ -34,6 +34,7 @@ var db = {
 };
 
 var mail = {
+  service: '', // service e.g. 'gmail'
   user: '', //email
   pass: '' // password
 };
