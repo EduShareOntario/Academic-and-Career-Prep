@@ -5,3 +5,15 @@
 .searchTimetables {
   margin-top: 15px;
 }
+
+.printButtonFaculty {
+   position:absolute;
+   right:50px;
+   top:186px;
+ }
+
+.printButton {
+   position:absolute;
+   right:50px;
+   top:168px;
+ }

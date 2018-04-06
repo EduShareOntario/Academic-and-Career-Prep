@@ -3,7 +3,7 @@ import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
 const sql = require('mssql');
-var auth = ["Admin"];
+var auth = ["Admin", "Staff", "Instructor"];
 
 var config = require('../config');
 config = config.db;
@@ -14,7 +14,7 @@ class CourseController {
     retrieve(req: express.Request, res: express.Response): void {
         try {
             new AuthController().authUser(req, res, {
-                requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
+                requiredAuth: auth, done: function() {
                     sql.connect(config)
                         .then(function(connection) {
                             new sql.Request(connection)
@@ -45,7 +45,7 @@ left join staff on staff.userID = course.professorId`)
     getInstructorCourses(req: express.Request, res: express.Response): void {
         try {
             new AuthController().authUser(req, res, {
-                requiredAuth: ["Instructor"], done: function() {
+                requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
 
                     sql.connect(config)
@@ -133,7 +133,7 @@ left join staff on staff.userID = course.professorId`)
     findById(req: express.Request, res: express.Response): void {
         try {
             new AuthController().authUser(req, res, {
-                requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
+                requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
                     sql.connect(config)
                         .then(function(connection) {
@@ -198,7 +198,7 @@ left join campus on campus.campusId = course.campusId
         try {
 
             new AuthController().authUser(req, res, {
-                requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
+                requiredAuth: auth, done: function() {
 
                     sql.connect(config)
                         .then(function(connection) {
@@ -225,7 +225,7 @@ left join campus on campus.campusId = course.campusId
     getProfessor(req: express.Request, res: express.Response): void {
         try {
             new AuthController().authUser(req, res, {
-                requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
+                requiredAuth: auth, done: function() {
 
                     sql.connect(config)
                         .then(function(connection) {

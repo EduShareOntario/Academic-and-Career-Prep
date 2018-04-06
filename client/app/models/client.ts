@@ -28,4 +28,6 @@ export class Client {
     cam: boolean;
     comments: string;
     campus: string;
+    editConsentRequest: boolean;
+    editConsentPermission: boolean;
 }

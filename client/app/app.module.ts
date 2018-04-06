@@ -42,11 +42,15 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { FilesComponent } from './components/files/files.component';
 import { HelpComponent } from './components/help/help.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+
 
 //Import pipes
 import { UserFilterPipe } from "./pipes/user-filter.pipe";
 import { CourseFilterPipe } from "./pipes/course-filter.pipe";
 import { CampusFilterPipe } from "./pipes/campus-filter.pipe";
+import { StudentSelectItemPipe } from "./pipes/student-to-select-item.pipe";
+import { InstructorSelectItemPipe } from "./pipes/instructor-to-select-item.pipe";
 
 //Import services
 import { AuthGuard } from './guards/auth.guard';
@@ -105,12 +109,15 @@ import { FilesService } from "./services/files.service";
     UserFilterPipe,
     CourseFilterPipe,
     CampusFilterPipe,
+    StudentSelectItemPipe,
+    InstructorSelectItemPipe,
     AttendanceListComponent,
     AttendanceReportComponent,
     ResetPasswordComponent,
     FileUploadComponent,
     FilesComponent,
-    HelpComponent
+    HelpComponent,
+    NotFoundComponent
   ],
   providers: [
     AuthGuard,

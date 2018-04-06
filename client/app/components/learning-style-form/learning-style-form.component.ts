@@ -20,6 +20,7 @@ export class LearningStyleComponent {
   learnBy: any;
   multiChoice: any;
   currentUser: any;
+  submitVisible: boolean = true;
 
   constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -31,6 +32,36 @@ export class LearningStyleComponent {
           "You are logged in as '" + this.currentUser.userType + "'. Only clients can submit this form.",
           'warning'
       );
+    } else {
+      swal({
+        title: 'Loading...'
+      });
+      swal.showLoading();
+      this.clientService
+      .getClient(this.currentUser.userID)
+      .then(result => {
+        if (!result.client[0].learningStyle) {
+          this.clientService
+          .getLearningStyleById()
+          .then(result => {
+            this.submitVisible = false;
+            swal.close();
+            swal(
+                'Read Only',
+                "You have already submitted this form.",
+                'warning'
+            );
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        } else {
+          swal.close();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     }
   }
 

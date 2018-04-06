@@ -35,14 +35,41 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    save(client: Client, suitabilityForm: SuitabilityForm): Promise<Client> {
+    save(client: Client, suitabilityForm: SuitabilityForm) {
         if (client.clientID) {
-            return this.put(client, suitabilityForm);
+            return this.update(client, suitabilityForm);
         }
-        return this.post(client, suitabilityForm);
+        return this.create(client, suitabilityForm);
     }
 
-    saveConsent(consentForm: ConsentForm): Promise<Client> {
+    create(client: Client, suitabilityForm: SuitabilityForm): Promise<Client> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+        let objects = ({ client: client, suitabilityForm: suitabilityForm });
+        return this.http
+            .post(this.clientUrl, objects, options)
+            .toPromise()
+            .then(response => {
+              return response.json();
+            })
+            .catch(this.handleError);
+    }
+
+    update(client: Client, suitabilityForm: SuitabilityForm): Promise<Client> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+        let objects = ({ client: client, suitabilityForm: suitabilityForm });
+        let url = `${this.clientUrl}/${client.clientID}`;
+        return this.http
+            .put(url, objects, options)
+            .toPromise()
+            .then(() => client)
+            .catch(this.handleError);
+    }
+
+    saveConsent(consentForm: ConsentForm): Promise<ConsentForm> {
       // get current user id from web token
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       var currentUserID = currentUser.userID;
@@ -55,6 +82,36 @@ export class ClientService {
           .post(url, objects, options)
           .toPromise()
           .then(response => response.json().data)
+          .catch(this.handleError);
+    }
+
+    requestEditConsent(): Promise<Client> {
+      // get current user id from web token
+      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      var currentUserID = currentUser.userID;
+      let url = `api/clientForms/${currentUserID}/requestEditConsent`;
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
+
+      return this.http
+          .put(url, options)
+          .toPromise()
+          .then(response => response.json())
+          .catch(this.handleError);
+    }
+
+    grantConsentEditPermission(client, permission): Promise<Client> {
+      // get current user id from web token
+      let url = `api/clientForms/grantConsentEditPermission`;
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
+      let objects = ({ client: client, permission:permission });
+      return this.http
+          .put(url, objects, options)
+          .toPromise()
+          .then(response => response.json())
           .catch(this.handleError);
     }
 
@@ -73,7 +130,22 @@ export class ClientService {
           .catch(this.handleError);
     }
 
-    saveLearningStyle(learningStyleForm: LearningStyleForm): Promise<Client> {
+    getLearningStyleById(): Promise<LearningStyleForm>  {
+      // get current user id from web token
+      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      var currentUserID = currentUser.userID;
+      let url = `api/clientForms/learningStyle/${currentUserID}`;
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
+      return this.http
+          .get(url, options)
+          .toPromise()
+          .then(response => response.json())
+          .catch(this.handleError);
+    }
+
+    saveLearningStyle(learningStyleForm: LearningStyleForm): Promise<LearningStyleForm> {
       // get current user id from web token
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       var currentUserID = currentUser.userID;
@@ -89,21 +161,7 @@ export class ClientService {
           .catch(this.handleError);
     }
 
-    private post(client: Client, suitabilityForm: SuitabilityForm): Promise<Client> {
-        // add authorization header with jwt token
-        let headers = new Headers({ authorization: this.authService.token });
-        let options = new RequestOptions({ headers: headers });
-        let objects = ({ client: client, suitabilityForm: suitabilityForm });
-        return this.http
-            .post(this.clientUrl, objects, options)
-            .toPromise()
-            .then(response => {
-              return response.json();
-            })
-            .catch(this.handleError);
-    }
-
-    addSuitability(client, suitabilityForm: SuitabilityForm): Promise<Client> {
+    addSuitability(client, suitabilityForm: SuitabilityForm): Promise<SuitabilityForm> {
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
@@ -119,7 +177,23 @@ export class ClientService {
             .catch(this.handleError);
     }
 
-    updateSuitability(suitabilityForm: SuitabilityForm): Promise<Client> {
+    updateGeneralInfo(client: Client): Promise<Client> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+
+        var url = 'api/general-info-update';
+
+        return this.http
+            .put(url, client, options)
+            .toPromise()
+            .then(response => {
+              return response.json();
+            })
+            .catch(this.handleError);
+    }
+
+    updateSuitability(suitabilityForm: SuitabilityForm): Promise<SuitabilityForm> {
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
@@ -148,19 +222,6 @@ export class ClientService {
             .then(response => {
               return response.json();
             })
-            .catch(this.handleError);
-    }
-
-    private put(client: Client, suitabilityForm: SuitabilityForm) {
-        // add authorization header with jwt token
-        let headers = new Headers({ authorization: this.authService.token });
-        let options = new RequestOptions({ headers: headers });
-        let objects = ({ client: client, suitabilityForm: suitabilityForm });
-        let url = `${this.clientUrl}/${client.clientID}`;
-        return this.http
-            .put(url, objects, options)
-            .toPromise()
-            .then(() => client)
             .catch(this.handleError);
     }
 
