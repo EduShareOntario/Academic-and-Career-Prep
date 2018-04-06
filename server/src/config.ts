@@ -1,14 +1,15 @@
 var config = {
-	user: 'test',
-	password: 'test',
-	server: 'test',
-	database: 'test',
+	user: '',
+	password: '',
+	server: '',
+	database: '',
 	options: {
 		encrypt: true // Use this if you're on Windows Azure
-	}
+	},
 	mail: {
-		user: 'test',
-		pass: 'test'
+		service: '',
+		user: '',
+		pass: ''
 	}
 };
 module.exports = config;
