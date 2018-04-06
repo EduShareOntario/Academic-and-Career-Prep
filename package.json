@@ -8,7 +8,7 @@
     "build": "gulp build",
     "deploy": "concurrently --kill-others \"gulp watch\" \"node ./dist/server/bin/www\"",
     "quickstart": "gulp build &&concurrently --kill-others \"gulp watch\" \"node ./dist/server/bin/www\"",
-    "postinstall": "gulp installTypings && bower install",
+    "postinstall": "gulp installTypings && bower install && gulp build",
     "start": "node ./dist/server/bin/www"
   },
   "repository": {
