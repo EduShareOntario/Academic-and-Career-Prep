@@ -27,6 +27,7 @@ class ClientController {
           client.username = client.username.replace(/\s+/g, '');
           var suitabilityForm = req.body.suitabilityForm;
           var active = false;
+          var mailOptions;
 
           sql.connect(config)
             .then(function(connection) {
@@ -37,6 +38,8 @@ class ClientController {
                   var error;
                   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                   var emailValidation = re.test(client.email);
+                  client.editConsentPermission = false;
+                  client.editConsentRequest = false;
                   for (let user of users) {
                     if (user.username === client.username) {
                       validated = false;
@@ -47,7 +50,7 @@ class ClientController {
                       client.password = bcrypt.hashSync("Georgian2018", salt);
                       active = true;
                       // setup email data with unicode symbols
-                      let mailOptions = {
+                      mailOptions = {
                         from: '"Georgian Academic & Career Prep"', // sender address
                         to: '', // client.email
                         subject: 'New Client Created', // Subject line
@@ -56,7 +59,7 @@ class ClientController {
                       };
                     } else {
                       // setup email data with unicode symbols
-                      let mailOptions = {
+                      mailOptions = {
                         from: '"Georgian Academic & Career Prep"', // sender address
                         to: client.email, // list of receivers
                         subject: 'Welcome, ' + client.firstName, // Subject line
@@ -105,7 +108,9 @@ class ClientController {
                               false + "', '" +
                               false + "', '" +
                               client.comments + "', '" +
-                              client.studentNumber + "'";
+                              client.studentNumber + "', '" +
+                              client.editConsentRequest + "', '" +
+                              client.editConsentPermission + "'";
                             try {
                               new MailService().sendMessage("Welcome Message", mailOptions);
                             } catch (err) {
@@ -326,6 +331,37 @@ class ClientController {
                 }).catch(function(err) {
                   res.send({ "error": "error" });
                   console.log("Update banner and cam booleans " + err);
+                });
+            }).catch(function(err) {
+              console.log(err);
+              res.send({ "error": "error" });
+            });
+        }
+      });
+    }
+    catch (e) {
+      console.log(e);
+      res.send({ "error": "error in your request" });
+    }
+  }
+
+  updateGeneralInfo(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          var client = req.body;
+          sql.connect(config)
+            .then(function(connection) {
+              var query = "UPDATE Clients SET studentNumber='" + client.studentNumber
+                + "', firstName='" + client.firstName
+                + "', lastName='" + client.lastName
+                + "' WHERE clientID = '" + client.clientID + "'"
+              new sql.Request(connection)
+                .query(query)
+                .then(function(recordset) {
+                  res.send({ "success": "success" });
+                }).catch(function(err) {
+                  res.send({ "error": "error" }); console.log("Update client gerneal info " + err);
                 });
             }).catch(function(err) {
               console.log(err);

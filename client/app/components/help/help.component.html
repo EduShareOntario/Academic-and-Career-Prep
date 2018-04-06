@@ -10,42 +10,43 @@
         <h2>How to: </h2>
         <hr>
         <ul>
-          <li><a (click)="open('home')" style="cursor:pointer">Home</a></li>
-          <li><a (click)="open('login')" style="cursor:pointer">Login</a></li>
-          <li><a (click)="open('resetPass')" style="cursor:pointer">Reset Password</a></li>
-          <li><a (click)="open('newClient')" style="cursor:pointer">Add New Client</a></li>
-          <li><a (click)="open('manageClients')" style="cursor:pointer">Manage Clients</a></li>
-          <li><a (click)="open('createStudent')" style="cursor:pointer">Create Student</a></li>
-          <li><a (click)="open('manageStudents')" style="cursor:pointer">Manage Students</a></li>
-          <li><a (click)="open('manageStaff')" style="cursor:pointer">Manage Staff</a></li>
-          <li><a (click)="open('newCourse')" style="cursor:pointer">Create New Course</a></li>
-          <li><a (click)="open('manageCourses')" style="cursor:pointer">Manage Courses</a></li>
-          <li><a (click)="open('assignStudentCourse')" style="cursor:pointer">Assign Students to Course</a></li>
-          <li><a (click)="open('attendanceTaking')" style="cursor:pointer">Take Attendance</a></li>
-          <li><a (click)="open('attendanceReport')" style="cursor:pointer">View Attendance Report</a></li>
-          <li><a (click)="open('caseNotes')" style="cursor:pointer">Create/View Case Notes</a></li>
-          <li><a (click)="open('timetable')" style="cursor:pointer">Timetable</a></li>
-          <li><a (click)="open('consent')" style="cursor:pointer">Consent</a></li>
-          <li><a (click)="open('learningStyle')" style="cursor:pointer">Learning Style</a></li>
+          <li><a (click)="open('home')" [class.selectedLink]="home">Home</a></li>
+          <li><a (click)="open('login')" [class.selectedLink]="login">Login</a></li>
+          <li><a (click)="open('resetPass')" [class.selectedLink]="resetPass">Reset Password</a></li>
+          <li><a (click)="open('newClient')" [class.selectedLink]="newClient">Add New Client</a></li>
+          <li><a (click)="open('manageClients')" [class.selectedLink]="manageClients">Manage Clients</a></li>
+          <li><a (click)="open('createStudent')" [class.selectedLink]="createStudent">Create Student</a></li>
+          <li><a (click)="open('manageStudents')" [class.selectedLink]="manageStudents">Manage Students</a></li>
+          <li><a (click)="open('manageStaff')" [class.selectedLink]="manageStaff">Manage Staff</a></li>
+          <li><a (click)="open('manageCourses')" [class.selectedLink]="manageCourses">Manage Courses</a></li>
+          <li><a (click)="open('assignStudentCourse')" [class.selectedLink]="assignStudentCourse">Assign Students to Course</a></li>
+          <li><a (click)="open('attendanceTaking')" [class.selectedLink]="attendanceTaking">Take Attendance</a></li>
+          <li><a (click)="open('attendanceReport')" [class.selectedLink]="attendanceReport">View Attendance Report</a></li>
+          <li><a (click)="open('caseNotes')" [class.selectedLink]="caseNotes">Create/View Case Notes</a></li>
+          <li><a (click)="open('timetable')" [class.selectedLink]="timetable">Timetable</a></li>
+          <li><a (click)="open('consent')" [class.selectedLink]="consent">Consent</a></li>
+          <li><a (click)="open('learningStyle')" [class.selectedLink]="learningStyle">Learning Style</a></li>
         </ul>
       </div>
       <div class="col-md-offset-1 col-md-9">
+        <!-- Home -->
         <div *ngIf="home">
           <h2>Welcome to the Help Center!</h2>
           <hr>
           <br />
-          <h4>Please select a topic from the left menu for help.</h4>
+          <h4>Please select a topic from the left menu.</h4>
           <br />
           <p><strong>Contact Support:</strong></p>
           <p>- Phone: TBD</p>
           <p>- Email: TBD</p>
         </div>
+        <!-- How to Login -->
         <div *ngIf="login">
           <h2>Login</h2>
           <hr>
           <br />
           <h3>Step 1:</h3>
-          <p>Once you have been created as a user, check your email for login and temporary password credentials as seen in the image below:</p>
+          <p>Once you have been created as a user, check your email for your username and temporary password as seen in the image below:</p>
           <div>
             <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
           </div>
@@ -64,53 +65,282 @@
           <div>
             <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
           </div>
+          <h3>DONE!</h3>
+          <p>You can now login with your username and new password!</p>
         </div>
+        <!-- How to Reset Password -->
         <div *ngIf="resetPass">
           <h2>Reset Password</h2>
+          <hr>
+          <br />
+          <h3>Step 1:</h3>
+          <p>From the login screen, select the 'Forgot password' link.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/resetPass/loginResetLink.PNG">
+          </div>
+          <h3>Step 2:</h3>
+          <p>Enter your email address and click 'Submit'.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/resetPass/resetByEmail.PNG">
+          </div>
+          <h3>Step 3:</h3>
+          <p>Check your email for your temporary password as seen in the image below:</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
+          </div>
+          <h3>Step 4:</h3>
+          <p>Back at the login screen, enter your username and new temporary passsword.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/loginNewUser.PNG">
+          </div>
+          <h3>Step 5:</h3>
+          <p>Upon successful login you will need to reset your password. Your new password must be more than 8 characters, have atleast one capitol and atleast one number. </p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/newPass.PNG">
+          </div>
+          <h3>Step 6:</h3>
+          <p>Once you have entered a valid password, enter it again to confirm, then click the green 'Submit' button.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
+          </div>
+          <h3>DONE!</h3>
+          <p>You can now login with your username and new password!</p>
         </div>
+        <!-- How to add a new client-->
         <div *ngIf="newClient">
           <h2>Add New Client</h2>
+          <hr>
+          <br />
+          <h3>Step 1:</h3>
+          <p>From the dashboard, select 'Suitability'.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/createClient/selectSuitability.PNG">
+          </div>
+          <h3>Step 2:</h3>
+          <p>Begin filling out clients information. The first three fields in the 'Client Info' section are mandatory.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/createClient/clientInfo.PNG">
+          </div>
+          <h3>Step 3:</h3>
+          <p>Once you have moved through all sections, review points and click 'Save'</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/createClient/reviewSave.PNG">
+          </div>
+          <h3>Step 4:</h3>
+          <p>A new client will be created and a welcome email will be sent to the email address provided along with their credentials for logging in.</p>
+          <p>*Username will be clients first name and last name, no capitals, no spaces.</p>
+          <br />
+          <h3>Step 5:</h3>
+          <p>If no email was provided then the client will be created with the default password 'Georgian2018' and email will be set based on campus.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/createClient/noEmail.PNG">
+          </div>
+          <h3>Step 5:</h3>
+          <p>If no information was entered in the four sections after 'Client Info', you will recieve a message confirming that the client will be created without a suitability form and will need to be completed at a later time from the 'Client Manage' page.
+            </p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/createClient/suitabilityIncomplete.PNG">
+          </div>
+          <h3>DONE!</h3>
+          <p>Upon successful client creation you will be redirected to the 'Manage Clients' page and should now see the newly created client.</p>
+          <div>
+            <img class="boxShadow" src="app/assets/images/createClient/clientCreated.PNG">
+          </div>
         </div>
+        <!-- How to manage clients -->
         <div *ngIf="manageClients">
-          <h2>Manage Clients</h2>
-        </div>
-        <div *ngIf="createStudent">
-          <h2>Create Student</h2>
-        </div>
-        <div *ngIf="manageStudents">
-          <h2>Manage Students</h2>
-        </div>
-        <div *ngIf="manageStaff">
-          <h2>Manage Staff</h2>
-        </div>
-        <div *ngIf="newCourse">
-          <h2>New Course</h2>
-        </div>
-        <div *ngIf="manageCourses">
-          <h2>Manage Courses</h2>
-        </div>
-        <div *ngIf="assignStudentCourse">
-          <h2>Assign Student a Course</h2>
-        </div>
-        <div *ngIf="attendanceTaking">
-          <h2>Attendance Taking</h2>
-        </div>
-        <div *ngIf="attendanceReport">
-          <h2>View Attendance Report</h2>
-        </div>
-        <div *ngIf="caseNotes">
-          <h2>Case Notes</h2>
-        </div>
-        <div *ngIf="timetable">
-          <h2>Timetable</h2>
-        </div>
-        <div *ngIf="consent">
-          <h2>Consent</h2>
-        </div>
-        <div *ngIf="learningStyle">
-          <h2>Learning Style</h2>
+            <h2>Manage Clients</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>This section of the app allows you to view client status, view/edit client forms, files and information, and create client as a student user.</p>
+            <h3>Client Status:</h3>
+            <p>There are currently four stages that a client can be a part of:</p>
+            <div class="well">
+              <p><strong style="color:#FF4207">Red</strong> - Suitability incomplete</p>
+              <p><strong style="color:#F8E903">Yellow</strong> - Consent and/or Learning Style incomplete</p>
+              <p><strong style="color:#309EFF">Blue</strong> - Client information ready for input into Banner and CAM</p>
+              <p><strong style="color:#2AD308">Green</strong> - Client ready to become student</p>
+            </div>
+            <h3>View Client Info:</h3>
+            <p>Select the red dropdown arrow under the 'Action' column for the client you want to view. Select 'View Info'.</p>
+            <p>The clients info will appear on the right and from here you can:</p>
+            <div class="well">
+              <h4>View/Edit General Info</h4>
+              <p></p>
+              <h4>View/Edit Suitability</h4>
+              <p></p>
+              <h4>View Learning Style</h4>
+              <p></p>
+              <h4>View Consent</h4>
+              <p></p>
+              <h4>Manage Files</h4>
+              <p></p>
+            </div>
+          </div>
+          <!-- How to create client as student -->
+          <div *ngIf="createStudent">
+            <h2>Create Student</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>The status of the client must be green before they can be created as a student user. Ensure all forms have been completed and the clients information has been entered into Banner and CAM.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/clientStatus.PNG">
+            </div>
+            <h3>Step 2:</h3>
+            <p>From the 'Client Manage' page, click the red dropdown arrow under the 'Action' column for the client you want to create as student. Select 'Create as Student'.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/createStudent.PNG">
+            </div>
+            <h3>Step 3:</h3>
+            <p>Enter the clients assigned student number:</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/studentNumber.PNG">
+            </div>
+            <h3>Step 4:</h3>
+            <p>Confirm the clients student number:</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/confirmStudentNumber.PNG">
+            </div>
+            <h3>Done!</h3>
+            <p>The client will now become a student user and you will be redirected to the 'Manage Students' page. </p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createStudent/studentCreated.PNG">
+            </div>
+          </div>
+          <!-- How to manage students-->
+          <div *ngIf="manageStudents">
+            <h2>Manage Students</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>This section of the app allows you to manage forms, files and information for student users.</p>
+            <h3>View Student Info:</h3>
+            <p>Select the red dropdown arrow under the 'Action' column for the student you want to view. Select 'View Info'.</p>
+            <p>The students information will appear on the right and from here you can:</p>
+            <div class="well">
+              <h4>View General Info</h4>
+              <p></p>
+              <h4>View Suitability</h4>
+              <p></p>
+              <h4>View Learning Style</h4>
+              <p></p>
+              <h4>View Consent</h4>
+              <p></p>
+              <h4>Manage Files</h4>
+              <p></p>
+            </div>
+          </div>
+          <!-- How to manage staff -->
+          <div *ngIf="manageStaff">
+            <h2>Manage Staff</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>This section of the app allows you to manage forms, files and information for staff memebers.</p>
+            <h3>Create New Staff User:</h3>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>Click on the green 'Add Staff' button in the top right corner.</p>
+              <h3>Step 2:</h3>
+              <p>Select a role for the staff user then enter their first/last name and email.</p>
+              <h3>Step 3:</h3>
+              <p>Click the green 'Submit' button.</p>
+              <h3>Done!</h3>
+              <p>The new staff user will be created and credentials for login will be sent to their email.</p>
+            </div>
+            <h3>Edit Staff User Information:</h3>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>Under the 'Action' column for the staff user you want to view, select 'Edit'.</p>
+              <h3>Step 2:</h3>
+              <p>Edit the necessary information, then click 'Save'.</p>
+              <h3>Done!</h3>
+              <p>The staff users information will be updated and you will be redirected back to the 'Manage Staff' page.</p>
+            </div>
+            <h3>Delete Staff User:</h3>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>Under the 'Action' column for the staff user you want to view, select 'Delete'.</p>
+              <h3>Step 2:</h3>
+              <p>Select 'Yes, Delete!' to confirm staff user removal.</p>
+              <h3>Done!</h3>
+              <p>The user and their privileges will be removed from the database.</p>
+            </div>
+          </div>
+          <!-- How to manage courses -->
+          <div *ngIf="manageCourses">
+            <h2>Manage Courses</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>This section of the app allows you to manage course information.</p>
+            <h3>Create New Course:</h3>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>Click on the green 'Add a Course' button in the top right corner.</p>
+              <h3>Step 2:</h3>
+              <p>Enter all information for the course on the left side:</p>
+              <h3>Step 3:</h3>
+              <p>In order to set what time you the class will start and end at, select the day you want the classes to occur on:</p>
+              <h3>Step 4:</h3>
+              <p>Enter the time the class will start and end:</p>
+              <h3>Step 5:</h3>
+              <p>If the class will occur more than once during the week, select another day and complete step 4 again.</p>
+              <h3>Step 6:</h3>
+              <p>Once you have entered all information and are ready to save the course, click the green 'Submit' button in the top right corner.</p>
+              <h3>Done!</h3>
+              <p>The new course will be created and you will be redirected the 'Course Manage' page.</p>
+            </div>
+            <h3>Edit Course Information:</h3>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>Under the 'Action' column for the course you want to work with, select 'Edit'.</p>
+              <h3>Step 2:</h3>
+              <p>Edit the necessary information, then click 'Save'.</p>
+              <h3>Done!</h3>
+              <p>The course information will be updated and you will be redirected back to the 'Manage Courses' page.</p>
+            </div>
+            <h3>Delete Course:</h3>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>Under the 'Action' column for the course you want to remove, select 'Delete'.</p>
+              <h3>Step 2:</h3>
+              <p>Select 'Yes, Delete!' to confirm course removal.</p>
+              <h3>Done!</h3>
+              <p>The course will be removed from the database.</p>
+            </div>
+          </div>
+          <!-- How to assign student to course -->
+          <div *ngIf="assignStudentCourse">
+            <h2>Assign Student a Course</h2>
+          </div>
+          <!-- How to take attendance -->
+          <div *ngIf="attendanceTaking">
+            <h2>Take Attendance</h2>
+          </div>
+          <!-- How to view attendance report -->
+          <div *ngIf="attendanceReport">
+            <h2>View Attendance Report</h2>
+          </div>
+          <!-- How to view/add case notes -->
+          <div *ngIf="caseNotes">
+            <h2>Case Notes</h2>
+          </div>
+          <!-- How to view timetable -->
+          <div *ngIf="timetable">
+            <h2>Timetable</h2>
+          </div>
+          <!-- How to fill out consent form-->
+          <div *ngIf="consent">
+            <h2>Consent</h2>
+          </div>
+          <!-- How to fill out learning style form -->
+          <div *ngIf="learningStyle">
+            <h2>Learning Style</h2>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>

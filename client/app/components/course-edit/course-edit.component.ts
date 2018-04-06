@@ -269,7 +269,7 @@ export class CourseEditComponent implements OnInit {
         let strArry = str.split(',');
         strArry.forEach(element => {
             let myEvent = new MyEvent();
-            myEvent.title = '-  ' + element.split(' ')[1].split('-')[1];
+            myEvent.title = element.split(' ')[0];
             myEvent.id = this.idGen++;
             myEvent.weekday = this.weekDays[moment(myEvent.title).isoWeekday() - 1];
             myEvent.dayStart_correct = element.split(' ')[1].split('-')[0];

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/authentication.service';
+declare var swal: any;
 
 @Component({
     selector: 'consentForm',
@@ -86,16 +87,24 @@ export class ResetPasswordComponent {
   }
 
   requestReset() {
-    this.authService.requestReset(this.email)
-    .then(result => {
-      if (result) {
-        this.router.navigate(['/login']);
-      } else {
-        console.log("There was an error with your request...");
-      }
-    }).catch(error => {
-      console.log(error);
-    });
+    if (this.email == null || this.email === "") {
+      swal(
+          'Error',
+          'Please enter your email address.',
+          'warning'
+      );
+    } else {
+      this.authService.requestReset(this.email)
+      .then(result => {
+        if (result) {
+          this.router.navigate(['/login']);
+        } else {
+          console.log("There was an error with your request...");
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+    }
   }
 
   goBack() {

@@ -8,22 +8,22 @@
     <hr>
   </div>
   <div class="col-md-1">
-    <button (click)="save()" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+    <button (click)="save()" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
   </div>
   <div class="col-md-4" *ngIf="course">
     <div class="form-group">
-      <label class="col-md-4 control-label">Course Name: </label>
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Course Name: </label>
       <div style="max-width:200px; display: inline-block;">
         <input class="form-control" [(ngModel)]="course.courseName" placeholder="Course Name" required />
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-4 control-label">Course Start Date: </label>
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Course Start Date: </label>
       <p-calendar [(ngModel)]="course.courseStart" dateFormat="yy-mm-dd" readonlyInput="readonlyInput">></p-calendar>
     </div>
 
     <div class="form-group">
-      <label class="col-md-4 control-label">Course End Date: </label>
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Course End Date: </label>
       <p-calendar [(ngModel)]="course.courseEnd" dateFormat="yy-mm-dd" readonlyInput="readonlyInput"> ></p-calendar>
     </div>
 
@@ -31,17 +31,17 @@
 
     <!-- Instructor dropdown selection -->
     <div class="form-group">
-      <label class="col-md-4 control-label">Instructor: </label>
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Instructor: </label>
       <p-dropdown [style]="{'width':'175px'}" [options]="professors" [(ngModel)]="course.professorId"></p-dropdown>
     </div>
     <!-- Campus dropdown selection -->
     <div class="form-group">
-      <label class="col-md-4 control-label">Campus: </label>
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Campus: </label>
       <p-dropdown [style]="{'width':'175px'}" [options]="campuses" [(ngModel)]="course.campusId"></p-dropdown>
     </div>
     <!-- Classroom input -->
     <div class="form-group">
-      <label class="col-md-4 control-label">Classroom: </label>
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Classroom: </label>
       <div style="max-width:200px; display: inline-block;">
         <input class="form-control" [(ngModel)]="course.classroom" placeholder="Classroom" required />
       </div>

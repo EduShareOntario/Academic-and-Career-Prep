@@ -58,9 +58,12 @@
           <div *ngFor="let info of records">
             <div class="well col-md-12">
               <label class="control-label">Date: </label> {{ info.date | date }}
-              <br />
-              <label class="control-label">Course Name: </label> {{ info.course[0].courseName }}
-              <br />
+              <div *ngIf="info.course[0].courseName">
+                <label class="control-label">Course Name: </label> {{ info.course[0].courseName }}
+              </div>
+              <div *ngIf="info.course[0].courseName == null">
+                <label class="control-label">Course Name: </label> <span style="color:red">Deleted</span>
+              </div>
               <label class="control-label">Attendance:  </label>
               <span *ngIf="info.attendanceValue === 'P'" style="color:green">Present</span>
               <span *ngIf="info.attendanceValue === 'A'" style="color:red">Absent</span>
@@ -117,7 +120,7 @@
             <tbody>
                 <tr></tr>
                 <tr *ngFor="let student of courseStudents">
-                  <td>{{ student.student.firstName }} {{ student.student.lastName }} {{i}}</td>
+                  <td>{{ student.student.fullName }} {{i}}</td>
                   <td>{{ student.startDate | date :  "dd/MM/yy" }} - {{ student.endDate |  date :  "dd/MM/yy" }}</td>
                   <td *ngFor="let check of classTimeStr" style="border:1px solid #DDDDDD; text-align:center">
                     <div *ngFor="let item of student.attendanceInfo">
