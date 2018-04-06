@@ -4,7 +4,7 @@ var config = require('../config');
 
 // create reusable transporter object using the default SMTP transport
 let transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: config.mail.service,
   auth: {
     user: config.mail.user, //email
     pass: config.mail.pass // password
