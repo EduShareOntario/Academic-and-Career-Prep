@@ -256,8 +256,9 @@ html, body {
 }
 
 .statusButton:hover {
-  background-color: #004B87;
-  color: #fff;
+  transform: scale(1.2);
+  /* background-color: #004B87;
+  color: #fff;*/
   transition: .4s;
 }
 

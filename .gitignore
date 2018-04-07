@@ -50,3 +50,5 @@ tmp
 
 gulpfile.js
 gulpfile.js.map
+
+config.ts
