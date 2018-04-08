@@ -100,10 +100,6 @@ export class ClientStatusComponent implements OnInit {
             .catch(error => this.error = error);
     }
 
-    update(event) {
-      console.log();
-    }
-
     setData(objects) {
         this.data = objects.clients;
         for (let client of this.data) {
@@ -128,8 +124,6 @@ export class ClientStatusComponent implements OnInit {
         this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
         this.doughnutChartType = 'doughnut';
         this.addSuitability = false;
-        this.statusReport = true;
-
     }
 
     getFiles() {
@@ -496,19 +490,16 @@ export class ClientStatusComponent implements OnInit {
       this.clientService
         .updateGeneralInfo(this.clientEdit)
         .then( res => {
+          this.getClients();
           this.showGeneralInfoEdit = false;
-          this.clientView = null;
-          this.ngOnInit();
+          this.showGeneral = true;
           swal.close();
         })
         .catch();
     }
 
     editSuitability(client) {
-      this.showGeneralInfoEdit = false;
-      this.statusReport = false;
-      this.showSuitability = false;
-      this.addSuitability = false;
+      this.resetView();
       this.showSuitabilityEdit = true;
       this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
 
@@ -640,10 +631,10 @@ export class ClientStatusComponent implements OnInit {
     }
 
     allowClientToEdit(client, permission) {
+
       this.clientService
         .grantConsentEditPermission(client, permission)
         .then( res => {
-          console.log(res);
           if (res.status === 'granted') {
             this.clientView.editConsentRequest = false;
             swal(
@@ -660,13 +651,6 @@ export class ClientStatusComponent implements OnInit {
             );
           }
         }).catch();
-      // if (value) {
-      //   console.log(client);
-      //   console.log("Access granted: " + value);
-      // } else {
-      //   console.log(client);
-      //   console.log("Access denied: " + value);
-      // }
     }
 
     checkboxChange(client) {

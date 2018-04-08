@@ -24,6 +24,7 @@ export class AttendanceReportComponent implements OnInit {
     student: any[];
     attendance: any[];
     records = [];
+    recordsBackup = [];
     totalPresent: any;
     totalAbsent: any;
     totalMadeContact: any;
@@ -129,6 +130,11 @@ export class AttendanceReportComponent implements OnInit {
         this.records = [];
         this.studentAttendanceView = true;
         this.attendance = this.data.filter(x => x.userID === student.userID);
+        this.attendance.sort(function(a, b) {
+            a = new Date(a.date);
+            b = new Date(b.date);
+            return a > b ? -1 : a < b ? 1 : 0;
+        });
         this.student = this.students.filter(x => x.studentID === student.studentID);
         this.student = this.student[0];
         this.totalPresent = this.attendance.filter(x => x.attendanceValue === 'P').length;
@@ -148,8 +154,9 @@ export class AttendanceReportComponent implements OnInit {
                 };
                 this.records.push(attendance);
             }
+            this.recordsBackup = this.records;
         }
-
+        this.document.body.scrollTop = 0;
     }
 
     viewCourseReport(course: Course) {
@@ -200,6 +207,17 @@ export class AttendanceReportComponent implements OnInit {
           this.noStudentsEnrolled = false;
         }
         this.document.body.scrollTop = 0;
+    }
+
+    filterAttendance(filterBy) {
+      this.records = this.recordsBackup;
+      if (filterBy === 'absence') {
+        this.records = this.records.filter(x => x.attendanceValue === 'A');
+      } else if (filterBy === 'presence') {
+        this.records = this.records.filter(x => x.attendanceValue === 'P');
+      } else if (filterBy === 'madeContact') {
+        this.records = this.records.filter(x => x.attendanceValue === 'MC');
+      }
     }
 
     overallStatus() {

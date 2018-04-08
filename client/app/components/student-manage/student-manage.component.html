@@ -37,7 +37,6 @@
                     <ul class="dropdown-menu" role="menu" style="position:absolute;">
                         <li><a (click)="viewInfo(data)"><i class="fa fa-info-circle" aria-hidden="true"></i> View Info</a></li>
                         <li><a (click)="viewCourses(data)"><i class="fa fa-book" aria-hidden="true"></i> View Courses</a></li>
-                        <li><a (click)="gotoEdit(data, $event)"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a></li>
                         <!-- <li><a (click)="populatePRF(data)"><i class="fa fa-eye" aria-hidden="true"></i> Generate PRF</a></li> -->
                         <li><a (click)="archiveAlert(data, $event)"><i class="fa fa-archive" aria-hidden="true"></i> Archive</a></li>
                     </ul>
@@ -80,6 +79,7 @@
         <div *ngIf="showGeneral" class="infoPanel">
           <br />
           <div class="form-group">
+            <button (click)="editGeneralInfo(studentView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
             <label class="control-label">id: </label> {{studentView.userID}} <br />
             <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate}} <br />
             <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <br />
@@ -94,6 +94,41 @@
             <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{studentView.okayToTextAlternate}} <br />
             <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessageAlternate}} <br />
             <label class="control-label">Comments: </label> {{studentView.comments}} <br />
+          </div>
+        </div>
+        <div *ngIf="showGeneralInfoEdit">
+          <h3>Editing General Info for {{ studentEdit.firstName }}</h3>
+          <hr>
+          <div class="form-group">
+            <label class="control-label">Student Number: </label>
+            <input class="form-control" type="text" [(ngModel)]="studentEdit.studentNumber" />
+            <label class="control-label">First Name: </label>
+            <input class="form-control" type="text" [(ngModel)]="studentEdit.firstName" />
+            <label class="control-label">Last Name: </label>
+            <input class="form-control" type="text" [(ngModel)]="studentEdit.lastName" />
+            <label class="control-label">Email: </label>
+            <input class="form-control" type="email" [(ngModel)]="studentEdit.email" />
+            <!-- <label class="control-label">Birth Date: </label><br />
+              <p-calendar [(ngModel)]="clientEdit.birthday" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar> <span style="margin-left:35px">{{clientEdit.birthday|date}}</span> (E.g. DD/MM/YYYY)<br />
+              <label class="control-label">Phone: </label><br />
+              <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.phone" placeholder="(999) 999-9999"></p-inputMask> -->
+            <!-- <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
+              <input class="form-control" type="text" [(ngModel)]="clientEdit.okayToText"/>
+              <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
+              <input class="form-control" type="text" [(ngModel)]="clientEdit.allowDetailedMessage"/>
+              <label class="control-label">Alternate Phone: </label>
+              <input class="form-control" type="text" [(ngModel)]="clientEdit.alternateNumber"/>
+              <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
+              <input class="form-control" type="text" [(ngModel)]="clientEdit.okayToTextAlternate"/>
+              <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
+              <input class="form-control" type="text" [(ngModel)]="clientEdit.allowDetailedMessageAlternate"/>
+              <label class="control-label">Comments: </label>
+              <input class="form-control" type="text" [(ngModel)]="clientEdit.comments"/> -->
+            <div class="form-group">
+              <div class="col-sm-offset-10 col-sm-1">
+                <button (click)="updateGeneralInfo()" class="btn btn-success" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>
+              </div>
+            </div>
           </div>
         </div>
         <div *ngIf="showSuitability" class="infoPanel">

@@ -321,7 +321,7 @@
             <h3>Step 2:</h3>
             <p>Find the course that the student is to be enrolled in and select 'Enroll'.</p>
             <h3>Step 3:</h3>
-            <p>Find the student to be enrolled and enter their expected start and end date. Then click 'Enroll' </p>
+            <p>Find the student to be enrolled and enter their expected start and end date. Then click 'Enroll'. </p>
             <h3>Done!</h3>
             <p>The student is now enrolled!</p>
           </div>
@@ -334,34 +334,82 @@
               <h3>Step 1:</h3>
               <p>From the dashboard, select 'Take Attendance'.</p>
               <h3>Step 2:</h3>
-              <p>Find the course that the student is to be enrolled in and select 'Enroll'.</p>
+              <p>Under 'My Courses' find the course you want to take attendance for and select 'Attendance'.</p>
               <h3>Step 3:</h3>
-              <p>Find the student to be enrolled and enter their expected start and end date. Then click 'Enroll' </p>
+              <p>Select the class date of attendance. (note: this list will not show dates for attendance that has already been taken)</p>
+              <h3>Step 4:</h3>
+              <p>Select either 'Present', 'Absent' or 'Made Contact' for each student in the class.</p>
+              <h3>Step 5:</h3>
+              <p>Click 'Submit' and confirm.</p>
               <h3>Done!</h3>
-              <p>The student is now enrolled!</p>
+              <p>Attendance has been taken!</p>
             </div>
             <div *ngIf="userType === 'Admin' || userType === 'Staff'">
               <h3>Step 1:</h3>
               <p>From the dashboard, select 'Take Attendance'.</p>
               <h3>Step 2:</h3>
-              <p>Find the course that the student is to be enrolled in and select 'Enroll'.</p>
+              <p>Select the instructor you wish to take attendance for.</p>
               <h3>Step 3:</h3>
-              <p>Find the student to be enrolled and enter their expected start and end date. Then click 'Enroll' </p>
+              <p>Under 'My Courses' find the course you want to take attendance for and select 'Attendance'.</p>
+              <h3>Step 4:</h3>
+              <p>Select the class date of attendance. (note: this list will not show dates for attendance that has already been taken)</p>
+              <h3>Step 5:</h3>
+              <p>Select either 'Present', 'Absent' or 'Made Contact' for each student in the class.</p>
+              <h3>Step 6:</h3>
+              <p>Click 'Submit' and confirm.</p>
               <h3>Done!</h3>
-              <p>The student is now enrolled!</p>
+              <p>Attendance has been taken!</p>
             </div>
           </div>
           <!-- How to view attendance report -->
           <div *ngIf="attendanceReport">
             <h2>View Attendance Report</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the dashboard, select 'Attendance Report'.</p>
+            <h3>Note:</h3>
+            <p>By default, you will be shown the attendance based on course. Click on 'Student Report' to view attendance by student.</p>
+            <h2>Course View</h2>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>From the 'Courses' list, find the course you wish to view attendance info for and select 'View Report'.</p>
+              <h3>Step 2:</h3>
+              <p></p>
+              <h3>Step 3:</h3>
+              <p></p>
+            </div>
+            <h2>Student View</h2>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>From the 'Students' list, find the student you wish to view attendance info for and select 'View Report'.</p>
+              <h3>Step 2:</h3>
+              <p></p>
+              <h3>Step 3:</h3>
+              <p></p>
+            </div>
           </div>
           <!-- How to view/add case notes -->
           <div *ngIf="caseNotes">
             <h2>Case Notes</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the dashboard, select 'Case Notes'.</p>
+            <h3>Step 2:</h3>
+            <p>From the 'Students' list, find the student you wish to view/enter a case note for and select 'View Notes'.</p>
+            <h3>Done!</h3>
+            <p>You can now view past notes, create new a note or delete a note.</p>
           </div>
           <!-- How to view timetable -->
           <div *ngIf="timetable">
             <h2>Timetable</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>Displays your weekly classes. Use the arrows in the top right to move between each week.</p>
+            <h3>Print:</h3>
+            <p>Allows you to print out a view of the selected week.</p>
           </div>
           <!-- How to fill out consent form-->
           <div *ngIf="consent">

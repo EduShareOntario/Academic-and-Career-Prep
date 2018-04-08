@@ -3,6 +3,15 @@ html, body {
   margin: 0;
 }
 
+.active>li>a {
+  background-color: #F5F5F5;
+}
+
+li>a>i {
+  min-width: 20px;
+  text-align: center;
+}
+
 @media print {
   .doNotPrint {
     display:none;!important
@@ -302,8 +311,4 @@ html, body {
 
 .active_tab>h4 {
     color: #fff !important;
-}
-
-.active>li>a {
-  background-color: #F5F5F5;
 }

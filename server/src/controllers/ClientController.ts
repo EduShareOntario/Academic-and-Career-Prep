@@ -289,34 +289,6 @@ class ClientController {
     }
   }
 
-  update(req: express.Request, res: express.Response): void {
-    try {
-      new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
-          var client = req.body;
-          var _id: string = req.params._id;
-          sql.connect(config)
-            .then(function(connection) {
-              new sql.Request(connection)
-                .query("UPDATE Clients SET firstName='" + client.firstName + "', lastName='" + client.lastName + "', birthdate='" + client.birthday + "', phone='" + client.phone + "' WHERE clientID = '" + _id + "'")
-                .then(function(recordset) {
-                  res.send({ "success": "success" });
-                }).catch(function(err) {
-                  res.send({ "error": "error" }); console.log("Update client " + err);
-                });
-            }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
-            });
-        }
-      });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
-    }
-  }
-
   updateBannerCamBool(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
@@ -352,14 +324,22 @@ class ClientController {
           var client = req.body;
           sql.connect(config)
             .then(function(connection) {
-              var query = "UPDATE Clients SET studentNumber='" + client.studentNumber
+              var clientsQuery = "UPDATE Clients SET studentNumber='" + client.studentNumber
                 + "', firstName='" + client.firstName
                 + "', lastName='" + client.lastName
                 + "' WHERE clientID = '" + client.clientID + "'"
               new sql.Request(connection)
-                .query(query)
-                .then(function(recordset) {
-                  res.send({ "success": "success" });
+                .query(clientsQuery)
+                .then(function(clientsResult) {
+                  var usersQuery = "UPDATE Users SET email='" + client.email
+                    + "' WHERE userID = '" + client.userID + "'"
+                  new sql.Request(connection)
+                    .query(usersQuery)
+                    .then(function(usersResult) {
+                      res.send({ "success": "success" });
+                    }).catch(function(err) {
+                      res.send({ "error": "error" }); console.log("Update student general info " + err);
+                    });
                 }).catch(function(err) {
                   res.send({ "error": "error" }); console.log("Update client gerneal info " + err);
                 });

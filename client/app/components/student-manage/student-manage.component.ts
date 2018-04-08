@@ -29,6 +29,8 @@ export class StudentManageComponent implements OnInit {
     learningStyleView: LearningStyleForm;
 
     showGeneral: boolean = true;
+    studentEdit: Student;
+    showGeneralInfoEdit: boolean = false;
     showSuitability: boolean;
     showConsent: boolean;
     showLearningStyle: boolean;
@@ -139,18 +141,6 @@ export class StudentManageComponent implements OnInit {
         this.router.navigate(['/file-upload']);
     }
 
-    addClient() {
-      this.router.navigate(['/suitability']);
-    }
-
-    gotoEdit(student: Student, event: any) {
-        this.router.navigate(['/student-edit', student.studentID]);
-    }
-
-    addStudent() {
-        this.router.navigate(['/student-edit', 'new']);
-    }
-
     archiveAlert(student: Student, event: any) {
       swal({
           title: 'Archive student (' + student.firstName + ' ' + student.lastName + ')',
@@ -230,8 +220,7 @@ export class StudentManageComponent implements OnInit {
     }
 
     overallStatus() {
-      this.studentInfoView = false;
-      this.studentCoursesView = null;
+      this.resetView();
     }
 
     sectionBtnClicked(event, section) {
@@ -250,8 +239,31 @@ export class StudentManageComponent implements OnInit {
         }
     }
 
+    editGeneralInfo(student) {
+      this.studentEdit = student;
+      this.showGeneral = false;
+      this.showGeneralInfoEdit = true;
+    }
+
+    updateGeneralInfo() {
+      swal({
+        title: 'Updating...'
+      });
+      swal.showLoading();
+      this.studentService
+        .updateGeneralInfo(this.studentEdit)
+        .then( res => {
+          this.getStudents();
+          this.showGeneralInfoEdit = false;
+          this.showGeneral = true;
+          swal.close();
+        })
+        .catch();
+    }
+
     resetView() {
         this.studentCoursesView = null;
+        this.showGeneralInfoEdit = false;
         this.studentInfoView = false;
         this.showGeneral = false;
         this.showSuitability = false;

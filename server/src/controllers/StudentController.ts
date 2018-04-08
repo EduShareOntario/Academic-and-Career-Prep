@@ -50,6 +50,45 @@ class StudentController {
     }
   }
 
+  updateGeneralInfo(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          var student = req.body;
+          sql.connect(config)
+            .then(function(connection) {
+              var studentsQuery = "UPDATE Students SET studentNumber='" + student.studentNumber
+                + "', firstName='" + student.firstName
+                + "', lastName='" + student.lastName
+                + "' WHERE studentID = '" + student.studentID + "'"
+              new sql.Request(connection)
+                .query(studentsQuery)
+                .then(function(studentsResult) {
+                  var usersQuery = "UPDATE Users SET email='" + student.email
+                    + "' WHERE userID = '" + student.userID + "'"
+                  new sql.Request(connection)
+                    .query(usersQuery)
+                    .then(function(usersResult) {
+                      res.send({ "success": "success" });
+                    }).catch(function(err) {
+                      res.send({ "error": "error" }); console.log("Update student general info " + err);
+                    });
+                }).catch(function(err) {
+                  res.send({ "error": "error" }); console.log("Update student general info " + err);
+                });
+            }).catch(function(err) {
+              console.log(err);
+              res.send({ "error": "error" });
+            });
+        }
+      });
+    }
+    catch (e) {
+      console.log(e);
+      res.send({ "error": "error in your request" });
+    }
+  }
+
   getStudentsById(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {

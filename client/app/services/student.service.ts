@@ -47,18 +47,20 @@ export class StudentService {
       .catch(err => this.handleError(err, "postNew"));
   }
 
-  update(student: Student) {
-    // add authorization header with jwt token
-    let headers = new Headers({ authorization: this.authService.token });
-    let options = new RequestOptions({ headers: headers });
+  updateGeneralInfo(student: Student): Promise<Student> {
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
 
-    let url = `${this.studentsUrl}/${student.userID}`;
+      var url = 'api/students/general-info-update';
 
-    return this.http
-      .put(url, student, options)
-      .toPromise()
-      .then(() => student)
-      .catch(err => this.handleError(err, "Update"));
+      return this.http
+          .put(url, student, options)
+          .toPromise()
+          .then(response => {
+            return response.json();
+          })
+          .catch(err => this.handleError(err, "Update General Info"));
   }
 
   delete(student: Student) {

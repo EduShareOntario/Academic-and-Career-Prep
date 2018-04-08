@@ -14,7 +14,6 @@ class ClientRoutes {
         router.get("/clients", controller.retrieve);
         router.post("/clients", controller.create);
         router.post("/clients/:_id", controller.addSuitability);
-        router.put("/clients/:_id", controller.update);
         router.put("/suitability-update", controller.updateSuitability);
         router.put("/general-info-update", controller.updateGeneralInfo);
         router.put("/bannerCamBool-update", controller.updateBannerCamBool);

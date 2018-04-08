@@ -5,3 +5,12 @@
 .viewToggle {
   display: inline-block;
 }
+
+.filter_status {
+  cursor:pointer;
+}
+
+.filter_status:hover {
+  transform: scale(1.05);
+  transition: 0.2s;
+}
