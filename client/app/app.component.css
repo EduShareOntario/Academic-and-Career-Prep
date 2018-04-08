@@ -21,6 +21,10 @@
     transition: all 0.4s ease-in;
 }
 
+.active_nav_item {
+  background-color: #0072ce;
+}
+
 .margin {
   margin-right:50px;
   margin-left:50px;

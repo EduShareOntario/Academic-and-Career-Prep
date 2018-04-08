@@ -96,15 +96,15 @@
       <hr>
       <div class="well">
         <ul class="sectionBtnGroup col-sm-12">
-          <li class="sectionButtons" [ngClass]="{active: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
+          <li class="sectionButtons" [ngClass]="{active_tab: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
             <h4>General Info</h4></li>
-          <li class="sectionButtons" *ngIf="!clientView.suitability" [ngClass]="{active: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
+          <li class="sectionButtons" *ngIf="!clientView.suitability" [ngClass]="{active_tab: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
             <h4>Suitability</h4></li>
-          <li class="sectionButtons" *ngIf="!clientView.consent" [ngClass]="{active: showConsent}" title="Consent" (click)="sectionBtnClicked($event, 'consent')">
+          <li class="sectionButtons" *ngIf="!clientView.consent" [ngClass]="{active_tab: showConsent}" title="Consent" (click)="sectionBtnClicked($event, 'consent')">
             <h4>Consent</h4></li>
-          <li class="sectionButtons" *ngIf="!clientView.learningStyle" [ngClass]="{active: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
+          <li class="sectionButtons" *ngIf="!clientView.learningStyle" [ngClass]="{active_tab: showLearningStyle}" title="Consent" (click)="sectionBtnClicked($event, 'learningStyle')">
             <h4>Learning Style</h4></li>
-          <li class="sectionButtons" [ngClass]="{active: showFiles}" title="Files" (click)="sectionBtnClicked($event, 'files')">
+          <li class="sectionButtons" [ngClass]="{active_tab: showFiles}" title="Files" (click)="sectionBtnClicked($event, 'files')">
             <h4>Files</h4></li>
         </ul>
         <br>

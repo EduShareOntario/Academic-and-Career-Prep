@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject  } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentService } from "../../services/student.service";
 import { Student } from "../../models/student";
 import { CourseService } from "../../services/course.service";
 import { Course } from "../../models/course";
+import { DOCUMENT } from '@angular/platform-browser';
 declare var moment: any;
 declare var swal: any;
 
@@ -45,7 +46,7 @@ export class AttendanceReportComponent implements OnInit {
     classPresenceTotal: any;
     classMadeContactTotal: any;
 
-    constructor(private router: Router, private studentService: StudentService, private courseService: CourseService) {
+    constructor(@Inject(DOCUMENT) private document: Document, private router: Router, private studentService: StudentService, private courseService: CourseService) {
 
     }
 
@@ -198,6 +199,7 @@ export class AttendanceReportComponent implements OnInit {
         } else {
           this.noStudentsEnrolled = false;
         }
+        this.document.body.scrollTop = 0;
     }
 
     overallStatus() {
