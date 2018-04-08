@@ -1,16 +1,19 @@
 var db = {
-    user: 'NickRowlandson',
-    password: 'georgianTest1',
-    server: 'nr-comp2007.database.windows.net',
-    database: 'GeorgianApp',
-    options: {
-        encrypt: true // Use this if you're on Windows Azure
+	user: process.env.dbuser,
+	password: process.env.dbpassword,
+	server: process.env.dbserver,
+	database: process.env.dbname,
+	options: {
+		encrypt: true // Use this if you're on Windows Azure
     }
 };
+
 var mail = {
-    user: 'academic.career.prep@gmail.com',
-    pass: 'Academics4u2018' // password
+  service: process.env.mailservice, // service e.g. gmail
+  user: process.env.mailuser, //email
+  pass: process.env.mailpassword // password
 };
+
 module.exports = {
     db: db,
     mail: mail
