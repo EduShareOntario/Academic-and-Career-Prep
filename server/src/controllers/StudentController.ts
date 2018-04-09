@@ -2,6 +2,7 @@ import express = require("express");
 import jwt = require('jsonwebtoken');
 import AuthController = require("../controllers/AuthController");
 const PRFService = require("../services/PRFService");
+const MailService = require("../services/MailService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
 
@@ -30,6 +31,8 @@ class StudentController {
                 + student.alternateNumber + "','"
                 + student.allowDetailedMessageAlternate + "','"
                 + student.okayToTextAlternate + "','"
+                + student.editConsentRequest + "','"
+                + student.editConsentPermission + "','"
                 + student.comments + "')")
                 .then(function() {
                   res.send({ status: "success" });
@@ -221,17 +224,17 @@ class StudentController {
   findById(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: ["Admin", "Staff", "Instructor", "Student"], done: function() {
           var _id: string = req.params._id;
           sql.connect(config)
             .then(function(connection) {
               new sql.Request(connection)
-                .query("SELECT *  FROM Students WHERE studentID = '" + _id + "'")
+                .query("SELECT * FROM Students WHERE userID = '" + _id + "'")
                 .then(function(recordset) {
                   res.send(recordset[0]);
                 }).catch(function(err) {
-                  res.send({ "error": "error" });
                   console.log("(FIND STUDENT BY ID) Error getting student by id " + err);
+                  res.send({ "error": "error" });
                 });
             }).catch(function(err) {
               console.log(err);
@@ -242,6 +245,91 @@ class StudentController {
     }
     catch (e) {
       console.log('(FIND STUDENT BY ID) Connection Error ' + e);
+      res.send({ "error": "error in your request" });
+    }
+  }
+
+  editConsentRequest(req: express.Request, res: express.Response) {
+    var _id: string = req.params._id;
+    sql.connect(config)
+      .then(function(connection) {
+        new sql.Request(connection)
+          .query('SELECT firstName, lastName FROM Students WHERE userID = ' + _id + '')
+          .then(function(student) {
+            new sql.Request(connection)
+              .query("UPDATE Students SET editConsentRequest = 'true' WHERE userID = " + _id + "")
+              .then(function(result) {
+                student = student[0];
+                var mailOptions = {
+                  from: 'Georgian Academic & Career Prep', // sender address
+                  to: 'academic.career.prep@gmail.com', // client.email
+                  subject: student.firstName + ' ' + student.lastName + ' Request to Edit Consent (Student)', // Subject line
+                  text: '', // plain text body
+                  html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: http://georgianapp.azurewebsites.net/#/students. Search for '+ student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
+                };
+                new MailService().sendMessage("Request to Edit Consent", mailOptions);
+                res.send({ status: "success" });
+              }).catch(function(err) {
+                res.send({ status: "error" });
+                console.log("editConsentRequest: Update request to edit" + err);
+              });
+          }).catch(function(err) {
+            res.send({ status: "error" });
+            console.log("editConsentRequest: Select first and last name" + err);
+          });
+      });
+
+  }
+
+  grantConsentEditPermission(req: express.Request, res: express.Response) {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          var permission = req.body.permission;
+          var student = req.body.student;
+          console.log("yaya");
+          console.log("Value: " + permission + ', ' + "UserID: " + student.userID );
+          if (permission) {
+            sql.connect(config)
+              .then(function(connection) {
+                new sql.Request(connection)
+                  .query("UPDATE Students SET editConsentRequest = 'false' WHERE userID = " + student.userID)
+                  .then(function(result1) {
+                    new sql.Request(connection)
+                      .query("UPDATE Students SET editConsentPermission = 'true' WHERE userID = " + student.userID)
+                      .then(function(result2) {
+                        new sql.Request(connection)
+                          .query("SELECT email FROM users WHERE userID = " + student.userID)
+                          .then(function(studentEmail) {
+                            var mailOptions = {
+                              from: 'Georgian Academic & Career Prep', // sender address
+                              to: studentEmail[0].email, // client.email
+                              subject: 'Request Granted!', // Subject line
+                              text: '', // plain text body
+                              html: 'You can now login at: http://georgianapp.azurewebsites.net/ and make changes to your consent form.'// html body
+                            };
+                            new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
+                            res.send({status: "granted"});
+                          }).catch(function(err) {
+                            res.send({ "error": "error" });
+                            console.log("grantConsentEditPermission: Get email for user. " + err);
+                          });
+                      }).catch(function(err) {
+                        res.send({ "error": "error" });
+                        console.log("grantConsentEditPermission: Set consent equal to true(needs to be completed). " + err);
+                      });
+                  }).catch(function(err) {
+                    res.send({ "error": "error" });
+                    console.log("grantConsentEditPermission: Set editConsentRequest equal to false. " + err);
+                  });
+              });
+          } else {
+            res.send({status: "denied"});
+          }
+        }
+      });
+    } catch (e) {
+      console.log(e);
       res.send({ "error": "error in your request" });
     }
   }

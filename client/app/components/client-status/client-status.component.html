@@ -70,7 +70,7 @@
                     <li><a (click)="showClientView(data)"><i class="fa fa-info-circle" aria-hidden="true"></i> View Info</a></li>
                       <li *ngIf="!data.suitability && !data.consent && !data.learningStyle && data.banner && data.cam"><a (click)="createAsStudent(data)"><i class="fa fa-check" aria-hidden="true"></i> Create as Student</a></li>
                       <li *ngIf="data.suitability"><a (click)="addSuitabilityInfo(data)"><i class="fa fa-check" aria-hidden="true"></i> Add Suitability Info</a></li>
-                      <li><a (click)="addAssessmetResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Enter Assessment Results</a></li>  
+                      <li><a (click)="addAssessmetResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Enter Assessment Results</a></li>
                       <li class="deleteClient"><a (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
                   </ul>
                 </div>
@@ -113,20 +113,20 @@
           <br />
           <div class="form-group">
             <button (click)="editGeneralInfo(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
-            <label class="control-label">id: </label> {{clientView.userID}} <br />
-            <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate}} <br />
-            <label class="control-label">Student Number: </label> {{clientView.studentNumber}} <br />
-            <label class="control-label">First Name: </label> {{clientView.firstName}} <br />
-            <label class="control-label">Last Name: </label> {{clientView.lastName}} <br />
-            <label class="control-label">Birth Date: </label> {{clientView.birthdate}} <br />
-            <label class="control-label">Email: </label> {{clientView.email}} <br />
-            <label class="control-label">Phone: </label> {{clientView.phone}} <br />
-            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToText}} <br />
-            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessage}} <br />
-            <label class="control-label">Alternate Phone: </label> {{clientView.alternateNumber}} <br />
-            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToTextAlternate}} <br />
-            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessageAlternate}} <br />
-            <label class="control-label">Comments: </label> {{clientView.comments}} <br />
+            <label class="control-label">id: </label> {{clientView.userID}} <div class="info_seperate"></div>
+            <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate}} <div class="info_seperate"></div>
+            <label class="control-label">Student Number: </label> {{clientView.studentNumber}} <div class="info_seperate"></div>
+            <label class="control-label">First Name: </label> {{clientView.firstName}} <div class="info_seperate"></div>
+            <label class="control-label">Last Name: </label> {{clientView.lastName}} <div class="info_seperate"></div>
+            <label class="control-label">Birth Date: </label> {{clientView.birthdate}} <div class="info_seperate"></div>
+            <label class="control-label">Email: </label> {{clientView.email}} <div class="info_seperate"></div>
+            <label class="control-label">Phone: </label> {{clientView.phone}} <div class="info_seperate"></div>
+            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToText}} <div class="info_seperate"></div>
+            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessage}} <div class="info_seperate"></div>
+            <label class="control-label">Alternate Phone: </label> {{clientView.alternateNumber}} <div class="info_seperate"></div>
+            <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToTextAlternate}} <div class="info_seperate"></div>
+            <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessageAlternate}} <div class="info_seperate"></div>
+            <label class="control-label">Comments: </label> {{clientView.comments}} <div class="info_seperate"></div>
           </div>
         </div>
         <div *ngIf="showGeneralInfoEdit">
@@ -168,43 +168,43 @@
           <br />
           <div class="form-group">
             <button (click)="editSuitability(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
-            <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <br />
-            <label class="control-label">Courses: </label> {{suitabilityView.courses}} <br />
-            <label class="control-label">Goal: </label> {{suitabilityView.goal}} <br />
-            <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}} <br />
-            <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}} <br />
-            <label class="control-label">Appropriate Goal: </label> {{suitabilityView.appropriateGoal}} <br />
-            <label class="control-label">19+ Years Old: </label> {{suitabilityView.isValidAge}} <br />
-            <label class="control-label">Not Registered In High School or Post-Sec: </label> {{suitabilityView.schoolRegistration}} <br />
-            <label class="control-label">Available During Class Time: </label> {{suitabilityView.availableDuringClass}} <br />
-            <label class="control-label">Last Grade Completed: </label> {{suitabilityView.lastGrade}} <br />
-            <label class="control-label">Level: </label> {{suitabilityView.level}} <br />
-            <label class="control-label">Post-Secondary/Job Offer start date: </label> {{suitabilityView.offerStartDate}} <br />
-            <label class="control-label">Meets Next Goals Requirements: </label> {{suitabilityView.meetsGoal}} <br />
-            <label class="control-label">Time out of School/Training: </label> {{suitabilityView.timeOutOfSchool}} <br />
-            <label class="control-label">Has Been In Program Before: </label> {{suitabilityView.inProgramBefore}} <br />
-            <label class="control-label">Employment: </label> {{suitabilityView.employment}} <br />
-            <label class="control-label">Income Source: </label> {{suitabilityView.incomeSource}} <br />
-            <label class="control-label">Age: </label> {{suitabilityView.ageRange}} <br />
-            <label class="control-label"># of Hours/Week: </label> {{suitabilityView.hoursPerWeek}} <br />
-            <label class="control-label">Work History: </label> {{suitabilityView.workHistory}} <br />
-            <label class="control-label">Health a Factor: </label> {{suitabilityView.factorHealth}} <br />
-            <label class="control-label">Instructions a Factor: </label> {{suitabilityView.factorInstructions}} <br />
-            <label class="control-label">Communication a Factor: </label> {{suitabilityView.factorCommunication}} <br />
-            <label class="control-label">Language a Factor: </label> {{suitabilityView.factorLanguage}} <br />
-            <label class="control-label">Computer a Factor: </label> {{suitabilityView.factorComputer}} <br />
-            <label class="control-label">Housing a Factor: </label> {{suitabilityView.factorHousing}} <br />
-            <label class="control-label">Transportation a Factor: </label> {{suitabilityView.factorTransportation}} <br />
-            <label class="control-label">Daycare a Factor: </label> {{suitabilityView.factorDaycare}} <br />
-            <label class="control-label">Internet a Factor: </label> {{suitabilityView.factorInternet}} <br />
-            <label class="control-label">Personal a Factor: </label> {{suitabilityView.factorPersonal}} <br />
-            <label class="control-label">Other Factor : </label> {{suitabilityView.factorOther}} <br />
-            <label class="control-label">Transportation Summary: </label> {{suitabilityView.summaryTransportation}} <br />
-            <label class="control-label">Housing Summary: </label> {{suitabilityView.summaryHousing}} <br />
-            <label class="control-label">Health Summary: </label> {{suitabilityView.summaryHealth}} <br />
-            <label class="control-label">Other Summary: </label> {{suitabilityView.summaryOther}} <br />
-            <label class="control-label">Suitability Points: </label> {{suitabilityView.points}} <br />
-            <label class="control-label">Comments: </label> {{suitabilityView.comments}} <br />
+            <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <div class="info_seperate"></div>
+            <label class="control-label">Courses: </label> {{suitabilityView.courses}} <div class="info_seperate"></div>
+            <label class="control-label">Goal: </label> {{suitabilityView.goal}} <div class="info_seperate"></div>
+            <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}} <div class="info_seperate"></div>
+            <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}} <div class="info_seperate"></div>
+            <label class="control-label">Appropriate Goal: </label> {{suitabilityView.appropriateGoal}} <div class="info_seperate"></div>
+            <label class="control-label">19+ Years Old: </label> {{suitabilityView.isValidAge}} <div class="info_seperate"></div>
+            <label class="control-label">Not Registered In High School or Post-Sec: </label> {{suitabilityView.schoolRegistration}} <div class="info_seperate"></div>
+            <label class="control-label">Available During Class Time: </label> {{suitabilityView.availableDuringClass}} <div class="info_seperate"></div>
+            <label class="control-label">Last Grade Completed: </label> {{suitabilityView.lastGrade}} <div class="info_seperate"></div>
+            <label class="control-label">Level: </label> {{suitabilityView.level}} <div class="info_seperate"></div>
+            <label class="control-label">Post-Secondary/Job Offer start date: </label> {{suitabilityView.offerStartDate}} <div class="info_seperate"></div>
+            <label class="control-label">Meets Next Goals Requirements: </label> {{suitabilityView.meetsGoal}} <div class="info_seperate"></div>
+            <label class="control-label">Time out of School/Training: </label> {{suitabilityView.timeOutOfSchool}} <div class="info_seperate"></div>
+            <label class="control-label">Has Been In Program Before: </label> {{suitabilityView.inProgramBefore}} <div class="info_seperate"></div>
+            <label class="control-label">Employment: </label> {{suitabilityView.employment}} <div class="info_seperate"></div>
+            <label class="control-label">Income Source: </label> {{suitabilityView.incomeSource}} <div class="info_seperate"></div>
+            <label class="control-label">Age: </label> {{suitabilityView.ageRange}} <div class="info_seperate"></div>
+            <label class="control-label"># of Hours/Week: </label> {{suitabilityView.hoursPerWeek}} <div class="info_seperate"></div>
+            <label class="control-label">Work History: </label> {{suitabilityView.workHistory}} <div class="info_seperate"></div>
+            <label class="control-label">Health a Factor: </label> {{suitabilityView.factorHealth}} <div class="info_seperate"></div>
+            <label class="control-label">Instructions a Factor: </label> {{suitabilityView.factorInstructions}} <div class="info_seperate"></div>
+            <label class="control-label">Communication a Factor: </label> {{suitabilityView.factorCommunication}} <div class="info_seperate"></div>
+            <label class="control-label">Language a Factor: </label> {{suitabilityView.factorLanguage}} <div class="info_seperate"></div>
+            <label class="control-label">Computer a Factor: </label> {{suitabilityView.factorComputer}} <div class="info_seperate"></div>
+            <label class="control-label">Housing a Factor: </label> {{suitabilityView.factorHousing}} <div class="info_seperate"></div>
+            <label class="control-label">Transportation a Factor: </label> {{suitabilityView.factorTransportation}} <div class="info_seperate"></div>
+            <label class="control-label">Daycare a Factor: </label> {{suitabilityView.factorDaycare}} <div class="info_seperate"></div>
+            <label class="control-label">Internet a Factor: </label> {{suitabilityView.factorInternet}} <div class="info_seperate"></div>
+            <label class="control-label">Personal a Factor: </label> {{suitabilityView.factorPersonal}} <div class="info_seperate"></div>
+            <label class="control-label">Other Factor : </label> {{suitabilityView.factorOther}} <div class="info_seperate"></div>
+            <label class="control-label">Transportation Summary: </label> {{suitabilityView.summaryTransportation}} <div class="info_seperate"></div>
+            <label class="control-label">Housing Summary: </label> {{suitabilityView.summaryHousing}} <div class="info_seperate"></div>
+            <label class="control-label">Health Summary: </label> {{suitabilityView.summaryHealth}} <div class="info_seperate"></div>
+            <label class="control-label">Other Summary: </label> {{suitabilityView.summaryOther}} <div class="info_seperate"></div>
+            <label class="control-label">Suitability Points: </label> {{suitabilityView.points}} <div class="info_seperate"></div>
+            <label class="control-label">Comments: </label> {{suitabilityView.comments}} <div class="info_seperate"></div>
           </div>
         </div>
         <div *ngIf="addSuitability || showSuitabilityEdit">
@@ -555,7 +555,7 @@
           <br />
           <div class="form-group">
             <div *ngIf="clientView.editConsentRequest">
-              <strong><h3>{{clientView.firstName}} is requesting to edit: </h3></strong>
+              <strong><h3>{{studentView.firstName}} is requesting to edit: </h3></strong>
               <button (click)="allowClientToEdit(clientView, true)" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Grant</button>
               <button (click)="allowClientToEdit(clientView, false)" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Deny</button>
               <hr>
@@ -568,38 +568,38 @@
               </select>
             </div>
             <div *ngIf="consentView">
-              <label class="control-label">Date: </label> {{consentView.date}} <br />
+              <label class="control-label">Date: </label> {{consentView.date}} <div class="info_seperate"></div>
               <label class="control-label">Ontario Works: </label> {{consentView.ontarioWorks}} <br />
               <div *ngIf="consentView.ontarioWorks">
-                <label class="control-label">OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
-                <label class="control-label">OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
-                <label class="control-label">OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
-              </div>
+                <label class="control-label">   - OW Case Worker Name: </label> {{consentView.owCaseWorkerName}} <br />
+                <label class="control-label">   - OW Case Worker Phone: </label> {{consentView.owCaseWorkerPhone}} <br />
+                <label class="control-label">   - OW Case Worker Email: </label> {{consentView.owCaseWorkerEmail}} <br />
+              </div><div class="info_seperate"></div>
               <label class="control-label">Ontario Disability Support Program: </label> {{consentView.ontarioDisabilityProgram}} <br />
               <div *ngIf="consentView.ontarioDisabilityProgram">
-                <label class="control-label">ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
-                <label class="control-label">ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
-                <label class="control-label">ODSP Phone: </label> {{consentView.odspPhone}} <br />
-                <label class="control-label">ODSP Email: </label> {{consentView.odspEmail}} <br />
-              </div>
-              <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <br />
+                <label class="control-label">   - ODSP Agency Name: </label> {{consentView.odspAgencyName}} <br />
+                <label class="control-label">   - ODSP Contact Name: </label> {{consentView.odspContactName}} <br />
+                <label class="control-label">   - ODSP Phone: </label> {{consentView.odspPhone}} <br />
+                <label class="control-label">   - ODSP Email: </label> {{consentView.odspEmail}} <br />
+              </div><div class="info_seperate"></div>
+              <label class="control-label">Employment Insurance: </label> {{consentView.employmentInsurance}} <div class="info_seperate"></div>
               <label class="control-label">Employment Services: </label> {{consentView.employmentServices}} <br />
               <div *ngIf="employmentServices">
-                <label class="control-label">ES Agency Name: </label> {{consentView.esAgencyName}} <br />
-                <label class="control-label">ES Contact Name: </label> {{consentView.esContactName}} <br />
-                <label class="control-label">ES Phone: </label> {{consentView.esPhone}} <br />
-                <label class="control-label">ES Email: </label> {{consentView.esEmail}} <br />
-              </div>
+                <label class="control-label">   - ES Agency Name: </label> {{consentView.esAgencyName}} <br />
+                <label class="control-label">   - ES Contact Name: </label> {{consentView.esContactName}} <br />
+                <label class="control-label">   - ES Phone: </label> {{consentView.esPhone}} <br />
+                <label class="control-label">   - ES Email: </label> {{consentView.esEmail}} <br />
+              </div><div class="info_seperate"></div>
               <label class="control-label">WSIB: </label> {{consentView.wsib}} <br />
               <div *ngIf="consentView.wsib">
-                <label class="control-label">WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
-                <label class="control-label">WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
-              </div>
-              <label class="control-label">Other: </label> {{consentView.other}} <br />
-              <label class="control-label">Contact Name: </label> {{consentView.contactName}} <br />
-              <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <br />
-              <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <br />
-              <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <br />
+                <label class="control-label">   - WSIB Work Transition Specialist Name: </label> {{consentView.wsibWtsName}} <br />
+                <label class="control-label">   - WSIB Work Transition Specialist Phone: </label> {{consentView.wsibWtsPhone}} <br />
+              </div><div class="info_seperate"></div>
+              <label class="control-label">Other: </label> {{consentView.other}} <div class="info_seperate"></div>
+              <label class="control-label">Contact Name: </label> {{consentView.contactName}} <div class="info_seperate"></div>
+              <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <div class="info_seperate"></div>
+              <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <div class="info_seperate"></div>
+              <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <div class="info_seperate"></div>
             </div>
           </div>
         </div>

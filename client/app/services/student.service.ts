@@ -63,6 +63,36 @@ export class StudentService {
           .catch(err => this.handleError(err, "Update General Info"));
   }
 
+  requestEditConsent(): Promise<Student> {
+    // get current user id from web token
+    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    var currentUserID = currentUser.userID;
+    let url = `api/students/${currentUserID}/requestEditConsent`;
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http
+        .put(url, options)
+        .toPromise()
+        .then(response => response.json())
+        .catch(err => this.handleError(err, "Request to edit consent"));
+  }
+
+  grantConsentEditPermission(student, permission): Promise<Student> {
+    // get current user id from web token
+    let url = `api/students/grantConsentEditPermission`;
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+    let objects = ({ student: student, permission:permission });
+    return this.http
+        .put(url, objects, options)
+        .toPromise()
+        .then(response => response.json())
+        .catch(err => this.handleError(err, "Grant permission to edit consent"));
+  }
+
   delete(student: Student) {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });

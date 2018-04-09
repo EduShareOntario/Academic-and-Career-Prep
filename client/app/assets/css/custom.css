@@ -18,6 +18,13 @@ li>a>i {
   }
 }
 
+.info_seperate {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
 .alert {
  margin-bottom: 0px;
 }

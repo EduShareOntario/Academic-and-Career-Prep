@@ -74,7 +74,7 @@ const appRoutes: Routes = [
     {
         path: 'consent',
         component: ConsentFormComponent,
-        canActivate: [AuthGuard, ClientGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'case-notes',

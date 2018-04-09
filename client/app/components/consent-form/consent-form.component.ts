@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConsentForm } from "../../models/consentForm";
 import { ClientService } from "../../services/client.service";
+import { StudentService } from "../../services/student.service";
 import { AuthService } from '../../services/authentication.service';
 declare var swal: any;
 
@@ -24,13 +25,13 @@ export class ConsentFormComponent {
   otherChecked: boolean = false;
   loading: boolean = true;
 
-  constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
+  constructor(private clientService: ClientService, private studentService: StudentService, private router: Router, private authService: AuthService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     var userID = this.currentUser.userID;
     this.date = new Date();
     this.consentForm = new ConsentForm();
 
-    if (this.currentUser.userType !== "Client") {
+    if (this.currentUser.userType === "Instructor" || this.currentUser.userType === "Staff" || this.currentUser.userType === "Admin") {
       this.completeConsentForm = true;
       this.loading = false;
       swal(
@@ -38,7 +39,9 @@ export class ConsentFormComponent {
         "You are logged in as '" + this.currentUser.userType + "'. Only clients can submit this form.",
         'info'
       );
-    } else {
+    }
+
+    if (this.currentUser.userType === "Client") {
       this.clientService
         .getClient(userID)
         .then(result => {
@@ -51,6 +54,64 @@ export class ConsentFormComponent {
               .getConsentById()
               .then(result => {
                 this.consentForm = result[0];
+                this.loading = false;
+                if (this.editConsentRequest && !this.editConsentPermission) {
+                  swal(
+                    'Edit Request Submitted',
+                    "Check back once you have received an email.",
+                    'info'
+                  );
+                } else if (this.editConsentPermission) {
+                  swal(
+                    'Edit Request Granted!',
+                    "You can now edit this form.",
+                    'info'
+                  );
+                } else {
+                  swal(
+                    'Read Only',
+                    "You have already submitted this form. Select 'Request to Edit' if you would like to make changes.",
+                    'info'
+                  );
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
+            if (this.consentForm.other == null || this.consentForm.other === '') {
+              this.otherChecked = false;
+            } else {
+              this.otherChecked = true;
+            }
+          } else {
+            this.consentForm.ontarioWorks = false;
+            this.consentForm.ontarioDisabilityProgram = false;
+            this.consentForm.employmentInsurance = false;
+            this.consentForm.employmentServices = false;
+            this.consentForm.wsib = false;
+            this.loading = false;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+
+    if (this.currentUser.userType === "Student") {
+      this.studentService
+        .getStudent(userID)
+        .then(result => {
+          console.log(result);
+          this.clientName = result.firstName + " " + result.lastName;
+          this.editConsentRequest = result.editConsentRequest;
+          this.editConsentPermission = result.editConsentPermission;
+          this.completeConsentForm = result.consent;
+          if (!result.consent) {
+            this.clientService
+              .getConsentById()
+              .then(result => {
+                this.consentForm = result[0];
+                console.log(this.consentForm);
                 this.loading = false;
                 if (this.editConsentRequest && !this.editConsentPermission) {
                   swal(
@@ -147,25 +208,47 @@ export class ConsentFormComponent {
   }
 
   requestEdit() {
-    this.clientService
-      .requestEditConsent()
-      .then(result => {
-        if (result.status === 'success') {
-          swal(
-            'Request Sent!',
-            'You will receive an email once your request has been accepted.',
-            'info'
-          );
-          this.router.navigate(['/dashboard']);
-        } else {
-          swal(
-            'Something went wrong...',
-            'Please try again. If the issue persists contact support.',
-            'error'
-          );
-        }
-      })
-      .catch(error => this.error = error);
+    if (this.currentUser.userType === "Client") {
+      this.clientService
+        .requestEditConsent()
+        .then(result => {
+          if (result.status === 'success') {
+            swal(
+              'Request Sent!',
+              'You will receive an email once your request has been accepted.',
+              'info'
+            );
+            this.router.navigate(['/dashboard']);
+          } else {
+            swal(
+              'Something went wrong...',
+              'Please try again. If the issue persists contact support.',
+              'error'
+            );
+          }
+        })
+        .catch(error => this.error = error);
+    } else if (this.currentUser.userType === "Student") {
+      this.studentService
+        .requestEditConsent()
+        .then(result => {
+          if (result.status === 'success') {
+            swal(
+              'Request Sent!',
+              'You will receive an email once your request has been accepted.',
+              'info'
+            );
+            this.router.navigate(['/dashboard']);
+          } else {
+            swal(
+              'Something went wrong...',
+              'Please try again. If the issue persists contact support.',
+              'error'
+            );
+          }
+        })
+        .catch(error => this.error = error);
+    }
   }
 
   goBack() {

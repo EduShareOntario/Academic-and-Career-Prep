@@ -631,7 +631,6 @@ export class ClientStatusComponent implements OnInit {
     }
 
     allowClientToEdit(client, permission) {
-
       this.clientService
         .grantConsentEditPermission(client, permission)
         .then( res => {
@@ -678,6 +677,7 @@ export class ClientStatusComponent implements OnInit {
     }
 
     resetView() {
+      this.consentView = null;
       this.showFiles = false;
       this.statusReport = false;
       this.showGeneral = false;

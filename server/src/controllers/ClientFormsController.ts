@@ -15,7 +15,7 @@ class ClientFormsController {
   consentForm(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function() {
           var consentForm = req.body.consentForm;
           var _id: string = req.params._id;
           sql.connect(config)
@@ -51,7 +51,14 @@ class ClientFormsController {
                   new sql.Request(connection)
                     .query("UPDATE Clients SET consent='false', editConsentPermission='false' WHERE userID = '" + _id + "'")
                     .then(function() {
-                      res.send({ "success": "success" });
+                      new sql.Request(connection)
+                        .query("UPDATE Students SET editConsentPermission='false' WHERE userID = '" + _id + "'")
+                        .then(function() {
+                          res.send({ "success": "success" });
+                        }).catch(function(err) {
+                          res.send({ "error": "error" });
+                          console.log("Update student " + err);
+                        });
                     }).catch(function(err) {
                       res.send({ "error": "error" });
                       console.log("Update client " + err);
@@ -72,7 +79,7 @@ class ClientFormsController {
   getConsentById(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function() {
           var _id: string = req.params._id;
           sql.connect(config)
             .then(function(connection) {
@@ -107,9 +114,9 @@ class ClientFormsController {
                 var mailOptions = {
                   from: 'Georgian Academic & Career Prep', // sender address
                   to: 'academic.career.prep@gmail.com', // client.email
-                  subject: client.firstName + ' ' + client.lastName + ' Request to Edit Consent', // Subject line
+                  subject: client.firstName + ' ' + client.lastName + ' Request to Edit Consent (Client)', // Subject line
                   text: '', // plain text body
-                  html: client.firstName + ' ' + client.lastName + ' wants to edit their consent form.<br/> Please login to the clients page at: http://georgianapp.azurewebsites.net/#/clients. Search for '+ client.firstName + ' ' + client.lastName + ' in the clients table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
+                  html: 'Client ' + client.firstName + ' ' + client.lastName + ' wants to edit their consent form.<br/> Please login to the clients page at: http://georgianapp.azurewebsites.net/#/clients. Search for '+ client.firstName + ' ' + client.lastName + ' in the clients table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                 };
                 new MailService().sendMessage("Request to Edit Consent", mailOptions);
                 res.send({ status: "success" });
