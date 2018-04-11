@@ -55,7 +55,7 @@ class ClientController {
                         to: '', // client.email
                         subject: 'New Client Created', // Subject line
                         text: '', // plain text body
-                        html: 'A new client has been created. Username is <b>' + client.username + '</b> and password is <b>Georgian2018</b><br />. Please assist the client when logging in for the first time at http://georgianapp.azurewebsites.net. <br /><br /> Thankyou' // html body
+                        html: 'A new client has been created. Username is <b>' + client.username + '</b> and password is <b>Georgian2018</b><br />. Please assist the client when logging in for the first time at https://gcacademicprep.azurewebsites.net. <br /><br /> Thankyou' // html body
                       };
                     } else {
                       // setup email data with unicode symbols
@@ -64,7 +64,7 @@ class ClientController {
                         to: client.email, // list of receivers
                         subject: 'Welcome, ' + client.firstName, // Subject line
                         text: '', // plain text body
-                        html: 'Your username is <b>' + client.username + '</b> and your temporary password is: <b>' + randomstring + '</b><br /> Please login at http://georgianapp.azurewebsites.net and complete the required forms. <br /><br /> Thankyou' // html body
+                        html: 'Your username is <b>' + client.username + '</b> and your temporary password is: <b>' + randomstring + '</b><br /> Please login at https://gcacademicprep.azurewebsites.net and complete the required forms. <br /><br /> Thankyou' // html body
                       };
                       if (user.email === client.email) {
                         validated = false;

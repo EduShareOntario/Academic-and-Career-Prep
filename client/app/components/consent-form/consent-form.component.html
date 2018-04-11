@@ -33,7 +33,10 @@
           </div>
         </div>
         <div class="col-md-5 col-md-offset-1">
-          <div style="float: right;" *ngIf="currentUser.userType === 'Client' || currentUser.userType === 'Student' && completeConsentForm === false || currentUser.userType === 'Student' && !editConsentRequest && !editConsentPermission">
+          <div style="float: right;" *ngIf="currentUser.userType === 'Student' && !editConsentRequest && !editConsentPermission">
+            <button (click)="requestEdit()" class="requestEdit" title="Request to edit"><h4><i class="fa fa-pencil" aria-hidden="true"></i> Request Edit</h4></button>
+          </div>
+          <div style="float: right;" *ngIf="currentUser.userType === 'Client' && completeConsentForm === false && !editConsentPermission">
             <button (click)="requestEdit()" class="requestEdit" title="Request to edit"><h4><i class="fa fa-pencil" aria-hidden="true"></i> Request Edit</h4></button>
           </div>
         </div>
@@ -141,11 +144,11 @@
           <div style="float:left">
             <button (click)="goBack()" class="btn btn-default">Back</button>
           </div>
-          <div style="float:right" *ngIf="currentUser.userType === 'Client' && completeConsentForm">
+          <div style="float:right" *ngIf="currentUser.userType === 'Client' && (completeConsentForm || editConsentPermission)">
             <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
-          <div style="float:right" *ngIf="currentUser.userType === 'Client' || currentUser.userType === 'Student' && editConsentPermission">
-            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</h4></button>
+          <div style="float:right" *ngIf="currentUser.userType === 'Student' && editConsentPermission">
+            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
         </div>
       </div>

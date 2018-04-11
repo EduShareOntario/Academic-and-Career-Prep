@@ -265,7 +265,7 @@ class StudentController {
                   to: 'academic.career.prep@gmail.com', // client.email
                   subject: student.firstName + ' ' + student.lastName + ' Request to Edit Consent (Student)', // Subject line
                   text: '', // plain text body
-                  html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: http://georgianapp.azurewebsites.net/#/students. Search for '+ student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
+                  html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: https://gcacademicprep.azurewebsites.net/#/students. Search for '+ student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                 };
                 new MailService().sendMessage("Request to Edit Consent", mailOptions);
                 res.send({ status: "success" });
@@ -306,7 +306,7 @@ class StudentController {
                               to: studentEmail[0].email, // client.email
                               subject: 'Request Granted!', // Subject line
                               text: '', // plain text body
-                              html: 'You can now login at: http://georgianapp.azurewebsites.net/ and make changes to your consent form.'// html body
+                              html: 'You can now login at: https://gcacademicprep.azurewebsites.net and make changes to your consent form.'// html body
                             };
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
                             res.send({status: "granted"});

@@ -138,7 +138,7 @@ class AuthController {
                 to: _email, // list of receivers
                 subject: 'Password Reset', // Subject line
                 text: '', // plain text body
-                html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at http://georgianapp.azurewebsites.net <br /><br /> Thankyou'// html body
+                html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at https://gcacademicprep.azurewebsites.net <br /><br /> Thankyou'// html body
               };
 
               new MailService().sendMessage(" Reset Password", mailOptions);
