@@ -6,149 +6,148 @@
   </div>
   <div>
     <div>
-      <div class="col-md-2 col-sm-3">
-        <h2>How to: </h2>
-        <hr>
-        <ul>
-          <li><a (click)="open('home')" [class.selectedLink]="home">Home</a></li>
-          <li><a (click)="open('login')" [class.selectedLink]="login">Login</a></li>
-          <li><a (click)="open('resetPass')" [class.selectedLink]="resetPass">Reset Password</a></li>
-          <li><a (click)="open('newClient')" [class.selectedLink]="newClient">Add New Client</a></li>
-          <li><a (click)="open('manageClients')" [class.selectedLink]="manageClients">Manage Clients</a></li>
-          <li><a (click)="open('createStudent')" [class.selectedLink]="createStudent">Create Student</a></li>
-          <li><a (click)="open('manageStudents')" [class.selectedLink]="manageStudents">Manage Students</a></li>
-          <li><a (click)="open('manageStaff')" [class.selectedLink]="manageStaff">Manage Staff</a></li>
-          <li><a (click)="open('manageCourses')" [class.selectedLink]="manageCourses">Manage Courses</a></li>
-          <li><a (click)="open('assignStudentCourse')" [class.selectedLink]="assignStudentCourse">Assign Students to Course</a></li>
-          <li><a (click)="open('attendanceTaking')" [class.selectedLink]="attendanceTaking">Take Attendance</a></li>
-          <li><a (click)="open('attendanceReport')" [class.selectedLink]="attendanceReport">View Attendance Report</a></li>
-          <li><a (click)="open('caseNotes')" [class.selectedLink]="caseNotes">Create/View Case Notes</a></li>
-          <li><a (click)="open('timetable')" [class.selectedLink]="timetable">Timetable</a></li>
-          <li><a (click)="open('consent')" [class.selectedLink]="consent">Consent</a></li>
-          <li><a (click)="open('learningStyle')" [class.selectedLink]="learningStyle">Learning Style</a></li>
-        </ul>
+      <div class="col-md-2 col-sm-3 col-xs-4">
+        <div class="welcome_page_btn" (click)="open('home')" [class.selectedLink]="home"><i class="fa fa-home fa-lg" aria-hidden="true"></i> Welcome Page</div>
+        <h3>How to: </h3>
+        <div class="help_topic" (click)="open('login')" [class.selectedLink]="login">Login</div>
+        <div class="help_topic" (click)="open('resetPass')" [class.selectedLink]="resetPass">Reset Password</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="help_topic" (click)="open('newClient')" [class.selectedLink]="newClient">Add New Client</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="help_topic" (click)="open('manageClients')" [class.selectedLink]="manageClients">Manage Clients</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="help_topic" (click)="open('createStudent')" [class.selectedLink]="createStudent">Create Student</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="help_topic" (click)="open('manageStudents')" [class.selectedLink]="manageStudents">Manage Students</div>
+        <div *ngIf="userType === 'Admin'" class="help_topic" (click)="open('manageStaff')" [class.selectedLink]="manageStaff">Manage Staff</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="help_topic" (click)="open('manageCourses')" [class.selectedLink]="manageCourses">Manage Courses</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="help_topic" (click)="open('assignStudentCourse')" [class.selectedLink]="assignStudentCourse">Assign Students to Course</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff' || userType === 'Instructor'" class="help_topic" (click)="open('attendanceTaking')" [class.selectedLink]="attendanceTaking">Take Attendance</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff' || userType === 'Instructor'" class="help_topic" (click)="open('attendanceReport')" [class.selectedLink]="attendanceReport">View Attendance Report</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff' || userType === 'Instructor'" class="help_topic" (click)="open('caseNotes')" [class.selectedLink]="caseNotes">Create/View Case Notes</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff' || userType === 'Instructor'" class="help_topic" (click)="open('timetable')" [class.selectedLink]="timetable">Timetable</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff' || userType === 'Client'" class="help_topic" (click)="open('consent')" [class.selectedLink]="consent">Consent</div>
+        <div *ngIf="userType === 'Admin' || userType === 'Staff' || userType === 'Client'" class="help_topic" (click)="open('learningStyle')" [class.selectedLink]="learningStyle">Learning Style</div>
       </div>
-      <div class="col-md-offset-1 col-md-9">
-        <!-- Home -->
-        <div *ngIf="home">
-          <h2>Welcome to the Help Center!</h2>
-          <hr>
-          <br />
-          <h4>Please select a topic from the left menu.</h4>
-          <br />
-          <p><strong>Contact Support:</strong></p>
-          <p>- Phone: TBD</p>
-          <p>- Email: TBD</p>
-        </div>
-        <!-- How to Login -->
-        <div *ngIf="login">
-          <h2>Login</h2>
-          <hr>
-          <br />
-          <h3>Step 1:</h3>
-          <p>Once you have been created as a user, check your email for your username and temporary password as seen in the image below:</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
+      <div class="col-md-10 col-sm-9 col-xs-8 well">
+        <div class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+          <!-- Home -->
+          <div *ngIf="home">
+            <h2>Welcome to the Help Center!</h2>
+            <hr>
+            <br />
+            <h4>Please select a topic from the left menu.</h4>
+            <br />
+            <p><strong>Contact Support:</strong></p>
+            <p>- Phone: TBD</p>
+            <p>- Email: TBD</p>
           </div>
-          <h3>Step 2:</h3>
-          <p>Navigate to [site URL] and enter your credentials.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/loginNewUser.PNG">
+          <!-- How to Login -->
+          <div *ngIf="login">
+            <h2>Login</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>Once you have been created as a user, check your email for your username and temporary password as seen in the image below:</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
+            </div>
+            <h3>Step 2:</h3>
+            <p>Navigate to [site URL] and enter your credentials.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/loginNewUser.PNG">
+            </div>
+            <h3>Step 3:</h3>
+            <p>Upon successful login you will need to reset your password. Your new password must be more than 8 characters, have atleast one capitol and atleast one number. </p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/newPass.PNG">
+            </div>
+            <h3>Step 4:</h3>
+            <p>Once you have entered a valid password, enter it again to confirm, then click the green 'Submit' button.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
+            </div>
+            <h3>DONE!</h3>
+            <p>You can now login with your username and new password!</p>
           </div>
-          <h3>Step 3:</h3>
-          <p>Upon successful login you will need to reset your password. Your new password must be more than 8 characters, have atleast one capitol and atleast one number. </p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/newPass.PNG">
+          <!-- How to Reset Password -->
+          <div *ngIf="resetPass">
+            <h2>Reset Password</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the login screen, select the 'Forgot password' link.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/resetPass/loginResetLink.PNG">
+            </div>
+            <h3>Step 2:</h3>
+            <p>Enter your email address and click 'Submit'.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/resetPass/resetByEmail.PNG">
+            </div>
+            <h3>Step 3:</h3>
+            <p>Check your email for your temporary password as seen in the image below:</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
+            </div>
+            <h3>Step 4:</h3>
+            <p>Back at the login screen, enter your username and new temporary passsword.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/loginNewUser.PNG">
+            </div>
+            <h3>Step 5:</h3>
+            <p>Upon successful login you will need to reset your password. Your new password must be more than 8 characters, have atleast one capitol and atleast one number. </p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/newPass.PNG">
+            </div>
+            <h3>Step 6:</h3>
+            <p>Once you have entered a valid password, enter it again to confirm, then click the green 'Submit' button.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
+            </div>
+            <h3>DONE!</h3>
+            <p>You can now login with your username and new password!</p>
           </div>
-          <h3>Step 4:</h3>
-          <p>Once you have entered a valid password, enter it again to confirm, then click the green 'Submit' button.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
-          </div>
-          <h3>DONE!</h3>
-          <p>You can now login with your username and new password!</p>
-        </div>
-        <!-- How to Reset Password -->
-        <div *ngIf="resetPass">
-          <h2>Reset Password</h2>
-          <hr>
-          <br />
-          <h3>Step 1:</h3>
-          <p>From the login screen, select the 'Forgot password' link.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/resetPass/loginResetLink.PNG">
-          </div>
-          <h3>Step 2:</h3>
-          <p>Enter your email address and click 'Submit'.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/resetPass/resetByEmail.PNG">
-          </div>
-          <h3>Step 3:</h3>
-          <p>Check your email for your temporary password as seen in the image below:</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/emailNewUser.PNG">
-          </div>
-          <h3>Step 4:</h3>
-          <p>Back at the login screen, enter your username and new temporary passsword.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/loginNewUser.PNG">
-          </div>
-          <h3>Step 5:</h3>
-          <p>Upon successful login you will need to reset your password. Your new password must be more than 8 characters, have atleast one capitol and atleast one number. </p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/newPass.PNG">
-          </div>
-          <h3>Step 6:</h3>
-          <p>Once you have entered a valid password, enter it again to confirm, then click the green 'Submit' button.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/login/confirmPass.PNG">
-          </div>
-          <h3>DONE!</h3>
-          <p>You can now login with your username and new password!</p>
-        </div>
-        <!-- How to add a new client-->
-        <div *ngIf="newClient">
-          <h2>Add New Client</h2>
-          <hr>
-          <br />
-          <h3>Step 1:</h3>
-          <p>From the dashboard, select 'Suitability'.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/createClient/selectSuitability.PNG">
-          </div>
-          <h3>Step 2:</h3>
-          <p>Begin filling out clients information. The first three fields in the 'Client Info' section are mandatory.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/createClient/clientInfo.PNG">
-          </div>
-          <h3>Step 3:</h3>
-          <p>Once you have moved through all sections, review points and click 'Save'</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/createClient/reviewSave.PNG">
-          </div>
-          <h3>Step 4:</h3>
-          <p>A new client will be created and a welcome email will be sent to the email address provided along with their credentials for logging in.</p>
-          <p>*Username will be clients first name and last name, no capitals, no spaces.</p>
-          <br />
-          <h3>Step 5:</h3>
-          <p>If no email was provided then the client will be created with the default password 'Georgian2018' and email will be set based on campus.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/createClient/noEmail.PNG">
-          </div>
-          <h3>Step 5:</h3>
-          <p>If no information was entered in the four sections after 'Client Info', you will recieve a message confirming that the client will be created without a suitability form and will need to be completed at a later time from the 'Client Manage' page.
+          <!-- How to add a new client-->
+          <div *ngIf="newClient">
+            <h2>Add New Client</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the dashboard, select 'Suitability'.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createClient/selectSuitability.PNG">
+            </div>
+            <h3>Step 2:</h3>
+            <p>Begin filling out clients information. The first three fields in the 'Client Info' section are mandatory.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createClient/clientInfo.PNG">
+            </div>
+            <h3>Step 3:</h3>
+            <p>Once you have moved through all sections, review points and click 'Save'</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createClient/reviewSave.PNG">
+            </div>
+            <h3>Step 4:</h3>
+            <p>A new client will be created and a welcome email will be sent to the email address provided along with their credentials for logging in.</p>
+            <p>*Username will be clients first name and last name, no capitals, no spaces.</p>
+            <br />
+            <h3>Step 5:</h3>
+            <p>If no email was provided then the client will be created with the default password 'Georgian2018' and email will be set based on campus.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createClient/noEmail.PNG">
+            </div>
+            <h3>Step 5:</h3>
+            <p>If no information was entered in the four sections after 'Client Info', you will recieve a message confirming that the client will be created without a suitability form and will need to be completed at a later time from the 'Client Manage'
+              page.
             </p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/createClient/suitabilityIncomplete.PNG">
+            <div>
+              <img class="boxShadow" src="app/assets/images/createClient/suitabilityIncomplete.PNG">
+            </div>
+            <h3>DONE!</h3>
+            <p>Upon successful client creation you will be redirected to the 'Manage Clients' page and should now see the newly created client.</p>
+            <div>
+              <img class="boxShadow" src="app/assets/images/createClient/clientCreated.PNG">
+            </div>
           </div>
-          <h3>DONE!</h3>
-          <p>Upon successful client creation you will be redirected to the 'Manage Clients' page and should now see the newly created client.</p>
-          <div>
-            <img class="boxShadow" src="app/assets/images/createClient/clientCreated.PNG">
-          </div>
-        </div>
-        <!-- How to manage clients -->
-        <div *ngIf="manageClients">
+          <!-- How to manage clients -->
+          <div *ngIf="manageClients">
             <h2>Manage Clients</h2>
             <hr>
             <br />
@@ -315,22 +314,102 @@
           <!-- How to assign student to course -->
           <div *ngIf="assignStudentCourse">
             <h2>Assign Student a Course</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the dashboard, select 'Manage Courses'.</p>
+            <h3>Step 2:</h3>
+            <p>Find the course that the student is to be enrolled in and select 'Enroll'.</p>
+            <h3>Step 3:</h3>
+            <p>Find the student to be enrolled and enter their expected start and end date. Then click 'Enroll'. </p>
+            <h3>Done!</h3>
+            <p>The student is now enrolled!</p>
           </div>
           <!-- How to take attendance -->
           <div *ngIf="attendanceTaking">
             <h2>Take Attendance</h2>
+            <hr>
+            <br />
+            <div *ngIf="userType === 'Instructor'">
+              <h3>Step 1:</h3>
+              <p>From the dashboard, select 'Take Attendance'.</p>
+              <h3>Step 2:</h3>
+              <p>Under 'My Courses' find the course you want to take attendance for and select 'Attendance'.</p>
+              <h3>Step 3:</h3>
+              <p>Select the class date of attendance. (note: this list will not show dates for attendance that has already been taken)</p>
+              <h3>Step 4:</h3>
+              <p>Select either 'Present', 'Absent' or 'Made Contact' for each student in the class.</p>
+              <h3>Step 5:</h3>
+              <p>Click 'Submit' and confirm.</p>
+              <h3>Done!</h3>
+              <p>Attendance has been taken!</p>
+            </div>
+            <div *ngIf="userType === 'Admin' || userType === 'Staff'">
+              <h3>Step 1:</h3>
+              <p>From the dashboard, select 'Take Attendance'.</p>
+              <h3>Step 2:</h3>
+              <p>Select the instructor you wish to take attendance for.</p>
+              <h3>Step 3:</h3>
+              <p>Under 'My Courses' find the course you want to take attendance for and select 'Attendance'.</p>
+              <h3>Step 4:</h3>
+              <p>Select the class date of attendance. (note: this list will not show dates for attendance that has already been taken)</p>
+              <h3>Step 5:</h3>
+              <p>Select either 'Present', 'Absent' or 'Made Contact' for each student in the class.</p>
+              <h3>Step 6:</h3>
+              <p>Click 'Submit' and confirm.</p>
+              <h3>Done!</h3>
+              <p>Attendance has been taken!</p>
+            </div>
           </div>
           <!-- How to view attendance report -->
           <div *ngIf="attendanceReport">
             <h2>View Attendance Report</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the dashboard, select 'Attendance Report'.</p>
+            <h3>Note:</h3>
+            <p>By default, you will be shown the attendance based on course. Click on 'Student Report' to view attendance by student.</p>
+            <h2>Course View</h2>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>From the 'Courses' list, find the course you wish to view attendance info for and select 'View Report'.</p>
+              <h3>Step 2:</h3>
+              <p></p>
+              <h3>Step 3:</h3>
+              <p></p>
+            </div>
+            <h2>Student View</h2>
+            <div class="well">
+              <h3>Step 1:</h3>
+              <p>From the 'Students' list, find the student you wish to view attendance info for and select 'View Report'.</p>
+              <h3>Step 2:</h3>
+              <p></p>
+              <h3>Step 3:</h3>
+              <p></p>
+            </div>
           </div>
           <!-- How to view/add case notes -->
           <div *ngIf="caseNotes">
             <h2>Case Notes</h2>
+            <hr>
+            <br />
+            <h3>Step 1:</h3>
+            <p>From the dashboard, select 'Case Notes'.</p>
+            <h3>Step 2:</h3>
+            <p>From the 'Students' list, find the student you wish to view/enter a case note for and select 'View Notes'.</p>
+            <h3>Done!</h3>
+            <p>You can now view past notes, create new a note or delete a note.</p>
           </div>
           <!-- How to view timetable -->
           <div *ngIf="timetable">
             <h2>Timetable</h2>
+            <hr>
+            <br />
+            <h3>About:</h3>
+            <p>Displays your weekly classes. Use the arrows in the top right to move between each week.</p>
+            <h3>Print:</h3>
+            <p>Allows you to print out a view of the selected week.</p>
           </div>
           <!-- How to fill out consent form-->
           <div *ngIf="consent">
@@ -344,3 +423,4 @@
       </div>
     </div>
   </div>
+</div>

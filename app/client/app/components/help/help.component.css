@@ -1,6 +1,7 @@
 .boxShadow {
-  box-shadow: 5px 5px 5px #888888;
+  box-shadow: 5px 5px 5px #eee;
   margin-bottom: 45px;
+  max-width:100%;
 }
 
 a {
@@ -8,5 +9,31 @@ a {
 }
 
 a:active, .selectedLink {
-    background-color: yellow;
+  background-color: #eee;
+  font-weight: bold;
+}
+
+.help_topic {
+  border-left: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  padding-left: 20px;
+  cursor:pointer;
+}
+
+.help_topic:hover {
+ transform: scale(1.05);
+ box-shadow: 2px 2px 2px #eee;
+ transition: 0.2s;
+}
+
+.welcome_page_btn {
+  padding: 10px;
+  cursor:pointer;
+}
+
+.welcome_page_btn:hover {
+ transform: scale(1.05);
+ box-shadow: 2px 2px 2px #eee;
+ transition: 0.2s;
 }
