@@ -13,7 +13,6 @@ import { DashboardComponent }   from './components/dashboard/dashboard.component
 import { StaffManageComponent } from './components/staff-manage/staff-manage.component';
 import { StaffDetailsComponent }  from './components/staff-details/staff-details.component';
 import { StudentManageComponent } from './components/student-manage/student-manage.component';
-import { StudentEditComponent }  from './components/student-edit/student-edit.component';
 import { ClientStatusComponent }  from './components/client-status/client-status.component';
 import { SuitabilityFormComponent } from './components/suitability-form/suitability-form.component';
 import { ConsentFormComponent } from './components/consent-form/consent-form.component';
@@ -48,11 +47,6 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'student-edit/:id',
-        component: StudentEditComponent,
-        canActivate: [AuthGuard, StaffGuard]
-    },
-    {
         path: 'students',
         component: StudentManageComponent,
         canActivate: [AuthGuard, StaffGuard]
@@ -80,7 +74,7 @@ const appRoutes: Routes = [
     {
         path: 'consent',
         component: ConsentFormComponent,
-        canActivate: [AuthGuard, ClientGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'case-notes',

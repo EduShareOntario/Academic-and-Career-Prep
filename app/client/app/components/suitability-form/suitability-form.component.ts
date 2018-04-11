@@ -332,7 +332,7 @@ export class SuitabilityFormComponent {
       });
       swal.showLoading();
       this.clientService
-          .save(this.client, this.suitabilityForm)
+          .create(this.client, this.suitabilityForm)
           .then(client => {
             console.log(client);
             if (client.error === "username in use") {

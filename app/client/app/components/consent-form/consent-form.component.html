@@ -33,7 +33,10 @@
           </div>
         </div>
         <div class="col-md-5 col-md-offset-1">
-          <div style="float: right;" *ngIf="currentUser.userType === 'Client' && completeConsentForm === false && !editConsentRequest && !editConsentPermission">
+          <div style="float: right;" *ngIf="currentUser.userType === 'Student' && !editConsentRequest && !editConsentPermission">
+            <button (click)="requestEdit()" class="requestEdit" title="Request to edit"><h4><i class="fa fa-pencil" aria-hidden="true"></i> Request Edit</h4></button>
+          </div>
+          <div style="float: right;" *ngIf="currentUser.userType === 'Client' && completeConsentForm === false && !editConsentPermission">
             <button (click)="requestEdit()" class="requestEdit" title="Request to edit"><h4><i class="fa fa-pencil" aria-hidden="true"></i> Request Edit</h4></button>
           </div>
         </div>
@@ -87,7 +90,7 @@
           <div *ngIf="consentForm.employmentServices" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Employement Services:</h4>
             <div style="padding-left:15px;">
-              Agency Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esAgencyName" placeholder="Employment Serivce Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm"
+              Agency Name: <input class="form-control" [disabled]="!editConsentPermission" [(ngModel)]="consentForm.esAgencyName" placeholder="Employment Serivce Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission"
                 [(ngModel)]="consentForm.esContactName" placeholder="Employment Serivce Contact Name" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esEmail" placeholder="Employment Serivce Email"
               /> Contact Phone Number: <br />
               <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esPhone" placeholder="(999)999-9999"></p-inputMask>
@@ -97,7 +100,7 @@
           <div *ngIf="consentForm.ontarioDisabilityProgram" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Ontario Disability Support Program:</h4>
             <div style="padding-left:15px;">
-              Agency Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspAgencyName" placeholder="ODSP Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm" [(ngModel)]="consentForm.odspContactName"
+              Agency Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspAgencyName" placeholder="ODSP Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspContactName"
                 placeholder="ODSP contactName" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspEmail" placeholder="ODSP Email" /> Contact Phone Number: <br />
               <p-inputMask mask="(999) 999-9999"
                 [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspPhone" placeholder="(999)999-9999"></p-inputMask>
@@ -107,7 +110,7 @@
           <div *ngIf="consentForm.ontarioWorks" class="col-md-offset-4 col-md-4">
             <h4 class="underline">Ontario Works:</h4>
             <div style="padding-left:15px;">
-              Case Worker Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerName" placeholder="OW Case Worker Name" /> Case Worker Email: <input class="form-control" [disabled]="!completeConsentForm"
+              Case Worker Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerName" placeholder="OW Case Worker Name" /> Case Worker Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission"
                 [(ngModel)]="consentForm.owCaseWorkerEmail" placeholder="OW Case Worker Email" /> Case Worker Phone Number: <br />
               <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
@@ -141,11 +144,11 @@
           <div style="float:left">
             <button (click)="goBack()" class="btn btn-default">Back</button>
           </div>
-          <div style="float:right" *ngIf="currentUser.userType === 'Client' && completeConsentForm">
+          <div style="float:right" *ngIf="currentUser.userType === 'Client' && (completeConsentForm || editConsentPermission)">
             <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
-          <div style="float:right" *ngIf="currentUser.userType === 'Client' && editConsentPermission">
-            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</h4></button>
+          <div style="float:right" *ngIf="currentUser.userType === 'Student' && editConsentPermission">
+            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
         </div>
       </div>

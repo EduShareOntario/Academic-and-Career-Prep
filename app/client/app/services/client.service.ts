@@ -22,7 +22,7 @@ export class ClientService {
         return this.http.get(this.clientUrl, options)
             .toPromise()
             .then(response => response.json())
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Get clients"));
     }
 
     getClient(id: string) {
@@ -32,14 +32,7 @@ export class ClientService {
         return this.http.get(this.clientUrl + '/' + id, options)
             .toPromise()
             .then(response => response.json())
-            .catch(this.handleError);
-    }
-
-    save(client: Client, suitabilityForm: SuitabilityForm) {
-        if (client.clientID) {
-            return this.update(client, suitabilityForm);
-        }
-        return this.create(client, suitabilityForm);
+            .catch(err => this.handleError(err, "Get client"));
     }
 
     create(client: Client, suitabilityForm: SuitabilityForm): Promise<Client> {
@@ -53,20 +46,7 @@ export class ClientService {
             .then(response => {
               return response.json();
             })
-            .catch(this.handleError);
-    }
-
-    update(client: Client, suitabilityForm: SuitabilityForm): Promise<Client> {
-        // add authorization header with jwt token
-        let headers = new Headers({ authorization: this.authService.token });
-        let options = new RequestOptions({ headers: headers });
-        let objects = ({ client: client, suitabilityForm: suitabilityForm });
-        let url = `${this.clientUrl}/${client.clientID}`;
-        return this.http
-            .put(url, objects, options)
-            .toPromise()
-            .then(() => client)
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Create client"));
     }
 
     saveConsent(consentForm: ConsentForm): Promise<ConsentForm> {
@@ -82,7 +62,7 @@ export class ClientService {
           .post(url, objects, options)
           .toPromise()
           .then(response => response.json().data)
-          .catch(this.handleError);
+          .catch(err => this.handleError(err, "Save consent"));
     }
 
     requestEditConsent(): Promise<Client> {
@@ -98,7 +78,7 @@ export class ClientService {
           .put(url, options)
           .toPromise()
           .then(response => response.json())
-          .catch(this.handleError);
+          .catch(err => this.handleError(err, "Request to edit consent"));
     }
 
     grantConsentEditPermission(client, permission): Promise<Client> {
@@ -112,7 +92,7 @@ export class ClientService {
           .put(url, objects, options)
           .toPromise()
           .then(response => response.json())
-          .catch(this.handleError);
+          .catch(err => this.handleError(err, "Grant permission to edit consent"));
     }
 
     getConsentById(): Promise<ConsentForm>  {
@@ -127,7 +107,7 @@ export class ClientService {
           .get(url, options)
           .toPromise()
           .then(response => response.json())
-          .catch(this.handleError);
+          .catch(err => this.handleError(err, "Get consent by id"));
     }
 
     getLearningStyleById(): Promise<LearningStyleForm>  {
@@ -142,7 +122,7 @@ export class ClientService {
           .get(url, options)
           .toPromise()
           .then(response => response.json())
-          .catch(this.handleError);
+          .catch(err => this.handleError(err, "Get learning style"));
     }
 
     saveLearningStyle(learningStyleForm: LearningStyleForm): Promise<LearningStyleForm> {
@@ -158,7 +138,7 @@ export class ClientService {
           .post(url, objects, options)
           .toPromise()
           .then(response => response.json().data)
-          .catch(this.handleError);
+          .catch(err => this.handleError(err, "Save learning style"));
     }
 
     addSuitability(client, suitabilityForm: SuitabilityForm): Promise<SuitabilityForm> {
@@ -174,7 +154,7 @@ export class ClientService {
             .then(response => {
               return response.json();
             })
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Add suitability"));
     }
 
     updateGeneralInfo(client: Client): Promise<Client> {
@@ -190,7 +170,7 @@ export class ClientService {
             .then(response => {
               return response.json();
             })
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Update general info"));
     }
 
     updateSuitability(suitabilityForm: SuitabilityForm): Promise<SuitabilityForm> {
@@ -206,7 +186,7 @@ export class ClientService {
             .then(response => {
               return response.json();
             })
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Update suitability"));
     }
 
     updateBannerCamBool(client: Client): Promise<Client> {
@@ -222,7 +202,7 @@ export class ClientService {
             .then(response => {
               return response.json();
             })
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Update banner/cam boolean values"));
     }
 
     delete(client) {
@@ -239,7 +219,7 @@ export class ClientService {
             .then(result => {
               console.log(result);
             })
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Delete client"));
     }
 
     removeFromClientTable(userID) {
@@ -252,11 +232,10 @@ export class ClientService {
         return this.http
             .delete(url, options)
             .toPromise()
-            .catch(this.handleError);
+            .catch(err => this.handleError(err, "Remove client"));
     }
 
-    private handleError(error: any) {
-        console.log('An error occurred', error);
-        return Promise.reject(error.message || error);
+    private handleError(error: any, name: any) {
+      console.log('An error occurred at ' + name, error);
     }
 }

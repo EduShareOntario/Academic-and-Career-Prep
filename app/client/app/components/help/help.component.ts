@@ -12,6 +12,7 @@ declare var swal: any;
 })
 
 export class HelpComponent {
+  private userType: string;
   home: boolean = true;
   login: boolean = false;
   resetPass: boolean = false;
@@ -30,7 +31,8 @@ export class HelpComponent {
   manageStaff: boolean = false;
 
   constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
-
+    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.userType = currentUser.userType;
   }
 
   open(page) {

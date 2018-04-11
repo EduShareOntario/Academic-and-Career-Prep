@@ -84,6 +84,7 @@ export class DashboardComponent implements OnInit {
         }
         if (userType === 'Student') {
             this.timetable = true;
+            this.consent = true;
         }
         if (userType === 'Client') {
             this.consent = true;

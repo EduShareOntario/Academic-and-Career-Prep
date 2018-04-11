@@ -16,4 +16,6 @@ export class Student {
     studentStartDate: Date;
     studentEndDate: Date;
     attendanceValue: any;
+    editConsentRequest: boolean;
+    editConsentPermission: boolean;
 }
