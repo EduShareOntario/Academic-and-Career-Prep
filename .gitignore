@@ -51,4 +51,5 @@ tmp
 gulpfile.js
 gulpfile.js.map
 
-config.ts
+# need to remove 'config.ts' from .gitignore for Azure deployment to work
+# config.ts
