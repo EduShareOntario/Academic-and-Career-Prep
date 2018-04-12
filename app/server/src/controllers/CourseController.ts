@@ -4,9 +4,10 @@ import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
 const sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
-
-var config = require('../config');
-config = config.db;
+const config = require('../config');
+const db = config.db;
+const mail = config.mail;
+const site_settings = config.site_settings;
 
 class CourseController {
 
@@ -15,7 +16,7 @@ class CourseController {
         try {
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
-                    sql.connect(config)
+                    sql.connect(db)
                         .then(function(connection) {
                             new sql.Request(connection)
                                 .query(`
@@ -48,7 +49,7 @@ left join staff on staff.userID = course.professorId`)
                 requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
 
-                    sql.connect(config)
+                    sql.connect(db)
                         .then(function(connection) {
                             new sql.Request(connection)
                                 .query("SELECT * FROM Course WHERE professorId = '" + _id + "'")
@@ -76,7 +77,7 @@ left join staff on staff.userID = course.professorId`)
                 requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
 
-                    sql.connect(config).then(() => {
+                    sql.connect(db).then(() => {
                         return sql.query`DELETE FROM Course WHERE courseID = ${_id}`
                     }).then(result => {
                         console.dir("sucess");
@@ -135,7 +136,7 @@ left join staff on staff.userID = course.professorId`)
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
-                    sql.connect(config)
+                    sql.connect(db)
                         .then(function(connection) {
                             new sql.Request(connection)
                                 .query(`SELECT course.*,username[professorName],campusName FROM Course
@@ -169,7 +170,7 @@ left join campus on campus.campusId = course.campusId
                     // get course from req url
                     var course = req.body;
 
-                    sql.connect(config).then(() => {
+                    sql.connect(db).then(() => {
                         return sql.query`INSERT INTO Course (courseName, professorId, campusId, classroom, classTimeStr,courseStart,courseEnd)
                           VALUES(${course.courseName}, ${course.professorId}, ${course.campusId}, ${course.classroom}, ${course.classTimeStr},
                           ${course.courseStart},${course.courseEnd})`;
@@ -200,7 +201,7 @@ left join campus on campus.campusId = course.campusId
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
 
-                    sql.connect(config)
+                    sql.connect(db)
                         .then(function(connection) {
                             new sql.Request(connection)
                                 .query(`SELECT * FROM campus`)
@@ -227,7 +228,7 @@ left join campus on campus.campusId = course.campusId
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
 
-                    sql.connect(config)
+                    sql.connect(db)
                         .then(function(connection) {
                             new sql.Request(connection)
                                 .query(`

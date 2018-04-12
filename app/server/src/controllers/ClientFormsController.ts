@@ -7,9 +7,10 @@ const MailService = require("../services/MailService");
 const PRFService = require("../services/PRFService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Client"];
-
-var config = require('../config');
-config = config.db;
+const config = require('../config');
+const db = config.db;
+const mail = config.mail;
+const site_settings = config.site_settings;
 
 class ClientFormsController {
   consentForm(req: express.Request, res: express.Response): void {
@@ -18,7 +19,7 @@ class ClientFormsController {
         requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function() {
           var consentForm = req.body.consentForm;
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               var consentQuery = "'" + _id + "', '" +
                 consentForm.date + "', '" +
@@ -81,7 +82,7 @@ class ClientFormsController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query('SELECT * FROM Consent WHERE userID = ' + _id + '')
@@ -102,7 +103,7 @@ class ClientFormsController {
 
   editConsentRequest(req: express.Request, res: express.Response) {
     var _id: string = req.params._id;
-    sql.connect(config)
+    sql.connect(db)
       .then(function(connection) {
         new sql.Request(connection)
           .query('SELECT firstName, lastName FROM Clients WHERE userID = ' + _id + '')
@@ -112,11 +113,11 @@ class ClientFormsController {
               .then(function(result) {
                 client = client[0];
                 var mailOptions = {
-                  from: 'Georgian Academic & Career Prep', // sender address
-                  to: 'academic.career.prep@gmail.com', // client.email
+                  from: mail.user, // sender address
+                  to: mail.user, // receiver TBD
                   subject: client.firstName + ' ' + client.lastName + ' Request to Edit Consent (Client)', // Subject line
                   text: '', // plain text body
-                  html: 'Client ' + client.firstName + ' ' + client.lastName + ' wants to edit their consent form.<br/> Please login to the clients page at: https://gcacademicprep.azurewebsites.net/#/clients. Search for '+ client.firstName + ' ' + client.lastName + ' in the clients table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
+                  html: 'Client ' + client.firstName + ' ' + client.lastName + ' wants to edit their consent form.<br/> Please login to the clients page at: ' + site_settings.url + '/#/clients. Search for '+ client.firstName + ' ' + client.lastName + ' in the clients table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                 };
                 new MailService().sendMessage("Request to Edit Consent", mailOptions);
                 res.send({ status: "success" });
@@ -140,7 +141,7 @@ class ClientFormsController {
           var client = req.body.client;
           console.log("Value: " + permission + ', ' + "UserID: " + client.userID );
           if (permission) {
-            sql.connect(config)
+            sql.connect(db)
               .then(function(connection) {
                 new sql.Request(connection)
                   .query("UPDATE Clients SET editConsentRequest = 'false' WHERE userID = " + client.userID)
@@ -152,11 +153,11 @@ class ClientFormsController {
                           .query("SELECT email FROM users WHERE userID = " + client.userID)
                           .then(function(clientEmail) {
                             var mailOptions = {
-                              from: 'Georgian Academic & Career Prep', // sender address
+                              from: mail.user, // sender address
                               to: clientEmail[0].email, // client.email
                               subject: 'Request Granted!', // Subject line
                               text: '', // plain text body
-                              html: 'You can now login at: https://gcacademicprep.azurewebsites.net and make changes to your consent form.'// html body
+                              html: 'You can now login at: ' + site_settings.url + ' and make changes to your consent form.'// html body
                             };
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
                             res.send({status: "granted"});
@@ -189,7 +190,7 @@ class ClientFormsController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query('SELECT * FROM LearningStyle WHERE userID = ' + _id + '')
@@ -214,7 +215,7 @@ class ClientFormsController {
         requiredAuth: auth, done: function() {
           var learningStyleForm = req.body.learningStyleForm;
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               var learningStyleQuery = "'" + _id + "', '" +
                 learningStyleForm.seeing + "', '" +
@@ -250,7 +251,7 @@ class ClientFormsController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query('SELECT * FROM SuitabilityForm WHERE userID = ' + _id + '')

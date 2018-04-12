@@ -3,9 +3,10 @@ import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 const MailService = require("../services/MailService");
 var sql = require('mssql');
-
-var config = require('../config');
-config = config.db;
+const config = require('../config');
+const db = config.db;
+const mail = config.mail;
+const site_settings = config.site_settings;
 
 class AuthController {
 
@@ -16,7 +17,7 @@ class AuthController {
       var _password: string = req.body.password;
       var response;
 
-      sql.connect(config)
+      sql.connect(db)
       .then(function(connection) {
         sql.query`SELECT * FROM Users WHERE username = ${_username}`.then(function(user) {
             if (bcrypt.compareSync(_password, user[0].password)) {
@@ -58,7 +59,7 @@ class AuthController {
           }
           var _id = decoded.userid;
           var query = "SELECT * FROM Users WHERE userID = '" + _id + "'";
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query(query)
@@ -100,7 +101,7 @@ class AuthController {
       // Hash the password with the salt
       _password = bcrypt.hashSync(_password, salt);
 
-      sql.connect(config)
+      sql.connect(db)
       .then(function(connection) {
           new sql.Request(connection)
             .query("UPDATE Users SET password='" + _password + "', active='true' WHERE userID='" + _userID + "'")
@@ -129,16 +130,16 @@ class AuthController {
       // Hash the password with the salt
       var _password = bcrypt.hashSync(randomstring, salt);
 
-      sql.connect(config)
+      sql.connect(db)
       .then(function(connection) {
           sql.query`UPDATE Users SET password= $ {_password}, active='false' WHERE email = ${_email}`.then(function(recordset) {
               // setup email data with unicode symbols
               let mailOptions = {
-                from: '"Georgian Academic & Career Prep"', // sender address
+                from: mail.user, // sender address
                 to: _email, // list of receivers
                 subject: 'Password Reset', // Subject line
                 text: '', // plain text body
-                html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at https://gcacademicprep.azurewebsites.net <br /><br /> Thankyou'// html body
+                html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + ' <br /><br /> Thankyou'// html body
               };
 
               new MailService().sendMessage(" Reset Password", mailOptions);
