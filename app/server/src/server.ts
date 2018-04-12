@@ -12,6 +12,7 @@ var env:string = process.env.NODE_ENV || 'developement';
 
 var app = express();
 
+
 app.set('port', port);
 
 app.use('/app', express.static(path.resolve(__dirname, '../client/app')));

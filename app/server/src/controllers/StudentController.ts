@@ -5,9 +5,10 @@ const PRFService = require("../services/PRFService");
 const MailService = require("../services/MailService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
-
-var config = require('../config');
-config = config.db;
+const config = require('../config');
+const db = config.db;
+const mail = config.mail;
+const site_settings = config.site_settings;
 
 class StudentController {
 
@@ -16,7 +17,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var student = req.body;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("INSERT INTO Students VALUES ('" + student.userID + "','"
@@ -58,7 +59,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var student = req.body;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               var studentsQuery = "UPDATE Students SET studentNumber='" + student.studentNumber
                 + "', firstName='" + student.firstName
@@ -107,7 +108,7 @@ class StudentController {
             }
             count++;
           }
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query(query)
@@ -136,7 +137,7 @@ class StudentController {
         requiredAuth: auth, done: function() {
           var student = req.body;
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("UPDATE Students SET firstName='" + student.firstName + "', lastName='" + student.lastName + "', birthdate='" + student.birthday + "', phone='" + student.phone + "' WHERE userID = '" + _id + "'")
@@ -164,7 +165,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("DELETE FROM Students WHERE userID = '" + _id + "'")
@@ -198,7 +199,7 @@ class StudentController {
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query('SELECT Students.*, Users.email, Users.active FROM Students LEFT JOIN Users ON Students.userID = Users.UserID')
@@ -226,7 +227,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Instructor", "Student"], done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT * FROM Students WHERE userID = '" + _id + "'")
@@ -251,7 +252,7 @@ class StudentController {
 
   editConsentRequest(req: express.Request, res: express.Response) {
     var _id: string = req.params._id;
-    sql.connect(config)
+    sql.connect(db)
       .then(function(connection) {
         new sql.Request(connection)
           .query('SELECT firstName, lastName FROM Students WHERE userID = ' + _id + '')
@@ -261,11 +262,11 @@ class StudentController {
               .then(function(result) {
                 student = student[0];
                 var mailOptions = {
-                  from: 'Georgian Academic & Career Prep', // sender address
-                  to: 'academic.career.prep@gmail.com', // client.email
+                  from: mail.user, // sender address
+                  to: mail.user, // reciever TBD
                   subject: student.firstName + ' ' + student.lastName + ' Request to Edit Consent (Student)', // Subject line
                   text: '', // plain text body
-                  html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: https://gcacademicprep.azurewebsites.net/#/students. Search for '+ student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
+                  html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: ' + site_settings.url + '/#/students. Search for '+ student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                 };
                 new MailService().sendMessage("Request to Edit Consent", mailOptions);
                 res.send({ status: "success" });
@@ -290,7 +291,7 @@ class StudentController {
           console.log("yaya");
           console.log("Value: " + permission + ', ' + "UserID: " + student.userID );
           if (permission) {
-            sql.connect(config)
+            sql.connect(db)
               .then(function(connection) {
                 new sql.Request(connection)
                   .query("UPDATE Students SET editConsentRequest = 'false' WHERE userID = " + student.userID)
@@ -302,8 +303,8 @@ class StudentController {
                           .query("SELECT email FROM users WHERE userID = " + student.userID)
                           .then(function(studentEmail) {
                             var mailOptions = {
-                              from: 'Georgian Academic & Career Prep', // sender address
-                              to: studentEmail[0].email, // client.email
+                              from: mail.user, // sender address
+                              to: studentEmail[0].email, // student.email
                               subject: 'Request Granted!', // Subject line
                               text: '', // plain text body
                               html: 'You can now login at: https://gcacademicprep.azurewebsites.net and make changes to your consent form.'// html body
@@ -342,7 +343,7 @@ class StudentController {
       var _endDate = info.endDate;
       var _courseID = info.courseID;
       var _instructorID = info.instructorID;
-      sql.connect(config)
+      sql.connect(db)
         .then(function(connection) {
           new sql.Request(connection)
             .query("INSERT INTO Timetables (userID,startDate,endDate,courseID,instructorID) VALUES ('" + _userID + "','" + _startDate + "','" + _endDate + "','" + _courseID + "','" + _instructorID + "')")
@@ -367,7 +368,7 @@ class StudentController {
     try {
       var _userID = req.params._userID;
       var _courseID = req.params._courseID;
-      sql.connect(config)
+      sql.connect(db)
         .then(function(connection) {
           new sql.Request(connection)
             .query("DELETE FROM Timetables WHERE userID = ('" + _userID + "') AND courseID = ('" + _courseID + "')")
@@ -392,7 +393,7 @@ class StudentController {
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Instructor", "Admin", "Staff"], done: function() {
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT * FROM Timetables")
@@ -420,7 +421,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._courseID;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT * FROM Timetables WHERE courseID = '" + _id + "'")
@@ -449,7 +450,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Student", "Admin", "Staff", "Instructor"], done: function() {
           var _id: string = req.params.userID;
-          sql.connect(config).then(function(connection) {
+          sql.connect(db).then(function(connection) {
             new sql.Request(connection)
               .query(`select * FROM Timetables WHERE userID = ${_id}`)
               .then((result) => {
@@ -495,7 +496,7 @@ class StudentController {
           var dateTime = req.body.dateTime;
           var _id: string = req.params._studentID;
 
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               console.log(dateTime);
               new sql.Request(connection)
@@ -524,7 +525,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
           var _id: string = req.params._studentID;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT *  FROM CaseNotes WHERE studentID = '" + _id + "' ORDER BY dateTime DESC")
@@ -552,7 +553,7 @@ class StudentController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("DELETE FROM caseNotes WHERE caseNoteID = '" + _id + "'")
@@ -593,7 +594,7 @@ class StudentController {
               count++;
             }
             console.log(query);
-            sql.connect(config)
+            sql.connect(db)
               .then(function(connection) {
                 new sql.Request(connection)
                   .query(query)
@@ -626,7 +627,7 @@ class StudentController {
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT * FROM Attendance")
@@ -657,7 +658,7 @@ class StudentController {
     new AuthController().authUser(req, res, {
       requiredAuth: auth, done: function() {
         var _id: string = req.params._id;
-        sql.connect(config)
+        sql.connect(db)
           .then(function(connection) {
             new sql.Request(connection)
               .query("SELECT * FROM Clients C INNER JOIN SuitabilityForm S ON C.userID = S.userID WHERE C.userID = '" + _id + "' AND S.userID = '" + _id + "'")

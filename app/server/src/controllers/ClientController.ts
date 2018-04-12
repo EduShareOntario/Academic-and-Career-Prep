@@ -5,9 +5,10 @@ import AuthController = require("../controllers/AuthController");
 const MailService = require("../services/MailService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff"];
-
-var config = require('../config');
-config = config.db;
+const config = require('../config');
+const db = config.db;
+const mail = config.mail;
+const site_settings = config.site_settings;
 
 class ClientController {
 
@@ -29,7 +30,7 @@ class ClientController {
           var active = false;
           var mailOptions;
 
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT * FROM Users")
@@ -47,24 +48,24 @@ class ClientController {
                       break;
                     }
                     if (client.email === "BA.ACP@georgiancollege.ca" || client.email === "OR.ACP@georgiancollege.ca" || client.email === "OS.ACP@georgiancollege.ca") {
-                      client.password = bcrypt.hashSync("Georgian2018", salt);
+                      client.password = bcrypt.hashSync(site_settings.client_pass, salt);
                       active = true;
                       // setup email data with unicode symbols
                       mailOptions = {
-                        from: '"Georgian Academic & Career Prep"', // sender address
+                        from: mail.user, // sender address
                         to: '', // client.email
                         subject: 'New Client Created', // Subject line
                         text: '', // plain text body
-                        html: 'A new client has been created. Username is <b>' + client.username + '</b> and password is <b>Georgian2018</b><br />. Please assist the client when logging in for the first time at https://gcacademicprep.azurewebsites.net. <br /><br /> Thankyou' // html body
+                        html: 'A new client has been created. Username is <b>' + client.username + '</b> and password is <b>Georgian2018</b><br />. Please assist the client when logging in for the first time at ' + site_settings.url + '. <br /><br /> Thankyou' // html body
                       };
                     } else {
                       // setup email data with unicode symbols
                       mailOptions = {
-                        from: '"Georgian Academic & Career Prep"', // sender address
+                        from: mail.user, // sender address
                         to: client.email, // list of receivers
                         subject: 'Welcome, ' + client.firstName, // Subject line
                         text: '', // plain text body
-                        html: 'Your username is <b>' + client.username + '</b> and your temporary password is: <b>' + randomstring + '</b><br /> Please login at https://gcacademicprep.azurewebsites.net and complete the required forms. <br /><br /> Thankyou' // html body
+                        html: 'Your username is <b>' + client.username + '</b> and your temporary password is: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + ' and complete the required forms. <br /><br /> Thankyou' // html body
                       };
                       if (user.email === client.email) {
                         validated = false;
@@ -225,7 +226,7 @@ class ClientController {
           var _id: string = req.params._id;
           var suitabilityForm = req.body;
 
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
 
               var suitabilityFormQuery = "'" + _id
@@ -294,7 +295,7 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var client = req.body;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("UPDATE Clients SET banner='" + client.banner + "', cam='" + client.cam + "' WHERE clientID = '" + client.clientID + "'")
@@ -322,7 +323,7 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var client = req.body;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               var clientsQuery = "UPDATE Clients SET studentNumber='" + client.studentNumber
                 + "', firstName='" + client.firstName
@@ -361,7 +362,7 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var suitability = req.body;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               var query = "UPDATE SuitabilityForm SET transcript='" + suitability.transcript
                 + "', courses='" + suitability.courses
@@ -425,7 +426,7 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("DELETE FROM Clients WHERE userID = '" + _id + "'")
@@ -459,7 +460,7 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("DELETE FROM Clients WHERE userID = '" + _id + "'")
@@ -491,7 +492,7 @@ class ClientController {
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query('SELECT Clients.*, Users.email, Users.active from Clients Left JOIN Users ON Clients.userID = Users.userID')
@@ -541,7 +542,7 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff", "Client"], done: function() {
           var _id: string = req.params._id;
-          sql.connect(config)
+          sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("SELECT * FROM Clients WHERE userID = '" + _id + "'")

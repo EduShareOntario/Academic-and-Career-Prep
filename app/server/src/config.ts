@@ -14,7 +14,13 @@ var mail = {
   pass: process.env.mailpassword // password
 };
 
+var site_settings = {
+		url: process.env.siteurl, // site url
+		client_pass: process.env.clientpass // default pass for client users without email access
+};
+
 module.exports = {
     db: db,
-    mail: mail
+    mail: mail,
+		site_settings: site_settings
 };

@@ -5,9 +5,11 @@ import AuthController = require("../controllers/AuthController");
 const MailService = require("../services/MailService");
 var sql = require('mssql');
 var auth = ["Admin"];
+const config = require('../config');
+const db = config.db;
+const mail = config.mail;
+const site_settings = config.site_settings;
 
-var config = require('../config');
-config = config.db;
 /**
     The staff controller communicates with the client
     side in order to manage all staff CRUD operations.
@@ -29,7 +31,7 @@ class StaffController {
                     req.body.username = req.body.username.toLowerCase();
                     req.body.username = req.body.username.replace(/\s+/g, '');
                     var staff = req.body;
-                    sql.connect(config)
+                    sql.connect(db)
                     .then(function(connection) {
                       new sql.Request(connection)
                           .query("SELECT * FROM Users")
@@ -66,11 +68,11 @@ class StaffController {
                                                   .then(function() {
                                                       // setup email data with unicode symbols
                                                       let mailOptions = {
-                                                        from: '"Georgian Academic & Career Prep"', // sender address
+                                                        from: mail.user, // sender address
                                                         to: staff.email, // list of receivers
                                                         subject: 'Welcome!', // Subject line
                                                         text: '', // plain text body
-                                                        html: 'Your username is <b>' + staff.username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at http://georgianapp.azurewebsites.net  <br /><br /> Thankyou'// html body
+                                                        html: 'Your username is <b>' + staff.username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
                                                       };
 
                                                       new MailService().sendMessage("Welcome Staff", mailOptions);
@@ -122,7 +124,7 @@ class StaffController {
                       var error = "incorrect email format";
                     }
                     if (validated) {
-                    sql.connect(config)
+                    sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
                             .query("UPDATE Users SET userType='" + user.userType + "', email='" + user.email + "' WHERE userID = '" + _id + "'")
@@ -154,7 +156,7 @@ class StaffController {
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
-                    sql.connect(config)
+                    sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
                             .query("DELETE FROM Staff WHERE userID = '" + _id + "'")
@@ -189,7 +191,7 @@ class StaffController {
         try {
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
-                    sql.connect(config)
+                    sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
                             .query('SELECT Staff.*, Users.userType, Users.email, Users.active, Users.username FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
@@ -218,7 +220,7 @@ class StaffController {
             new AuthController().authUser(req, res, {
                 requiredAuth: auth, done: function() {
                     var _id: string = req.params._id;
-                    sql.connect(config)
+                    sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
                             .query("SELECT firstName, lastName, email, userType FROM Staff INNER JOIN Users ON Staff.userID = Users.userID WHERE Staff.userID = '" + _id + "'")
