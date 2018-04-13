@@ -73,7 +73,7 @@ var attendanceCheck = schedule.scheduleJob('0 30 19 * * *', function() {
                                   console.log("__________________________________________________________________________________________");
                                   fourMissedClasses += 1;
                                   let mailOptions = {
-                                    from: 'Academic/Career Preparation <academic.career.prep@gmail.com>', // sender address
+                                    from: config.mail.user, // sender address
                                     to: userInfo[0].email, // list of receivers
                                     subject: 'Removal from ' + courseInfo[0].courseName, // Subject line
                                     text: '', // plain text body
@@ -113,7 +113,7 @@ var attendanceCheck = schedule.scheduleJob('0 30 19 * * *', function() {
                                   console.log("__________________________________________________________________________________________");
                                   twoMissedClasses += 1;
                                   let mailOptions = {
-                                    from: 'Academic/Career Preparation <academic.career.prep@gmail.com>', // sender address
+                                    from: config.mail.user, // sender address
                                     to: userInfo[0].email, // student.email
                                     subject: 'Two Missed ' + courseInfo[0].courseName + ' Classes', // Subject line
                                     text: '', // plain text body
