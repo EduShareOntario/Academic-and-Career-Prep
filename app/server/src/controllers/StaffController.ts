@@ -69,7 +69,7 @@ class StaffController {
                                                       // setup email data with unicode symbols
                                                       let mailOptions = {
                                                         from: mail.user, // sender address
-                                                        to: staff.email, // list of receivers
+                                                        to: 'BA.ACP@georgiancollege.ca', // use staff.email
                                                         subject: 'Welcome!', // Subject line
                                                         text: '', // plain text body
                                                         html: 'Your username is <b>' + staff.username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
