@@ -57,7 +57,7 @@ export class TimetableComponent implements OnInit {
   }
 
   onPrint() {
-    window.print();
+    (window as any).print();
   }
 
   studentSelect() {

@@ -33,7 +33,7 @@ export class StaffManageComponent implements OnInit {
         this.staffService
           .getUsers()
           .then(users => {
-            if ((users as any).status === "403") {
+            if ((users as any).status === "403" || (users as any).error === "error") {
               this.users = null;
             } else {
               this.users = users;

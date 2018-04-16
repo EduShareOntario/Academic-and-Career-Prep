@@ -12,4 +12,5 @@ export class User {
     authLevel: string;
     error: string;
     success: string;
+    notify: boolean;
 }

@@ -272,14 +272,14 @@ export class StudentManageComponent implements OnInit {
     this.studentService
       .grantConsentEditPermission(student, permission)
       .then(res => {
-        if (res.status === 'granted') {
+        if ((res as any).status === 'granted') {
           this.studentView.editConsentRequest = false;
           swal(
             'Student Access Granted',
             'Student will be sent an email informing that they can now edit conesnt.',
             'success'
           );
-        } else if (res.status === 'denied') {
+        } else if ((res as any).status === 'denied') {
           this.studentView.editConsentRequest = false;
           swal(
             'Student Access Denied',
