@@ -49,7 +49,7 @@ export class StaffManageComponent implements OnInit {
     }
 
     gotoEdit(user: User, event: any) {
-        this.router.navigate(['/staff-details', user.userID]);
+        this.router.navigate(['/staff-details', user.userID[0]]);
     }
 
     addUser() {
