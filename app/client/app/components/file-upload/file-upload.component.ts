@@ -47,7 +47,7 @@ export class FileUploadComponent implements OnInit {
           .getClients()
           .then(clients => {
             console.log(clients);
-              this.clients = clients.clients;
+              this.clients = (clients as any).clients;
               for (let client of this.clients) {
                 console.log(client);
                 var info = { label: client.firstName + ' ' + client.lastName, value: client.userID };

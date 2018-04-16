@@ -58,7 +58,7 @@ class StaffController {
                             }
                             if (validated) {
                               new sql.Request(connection)
-                                  .query("INSERT INTO Users VALUES ('" + staff.username + "','" + staff.email + "','" + staff.password + "','" + staff.userType + "','false')")
+                                  .query("INSERT INTO Users VALUES ('" + staff.username + "','" + staff.email + "','" + staff.password + "','" + staff.userType + "','false','" + staff.notify + "')")
                                   .then(function() {
                                       new sql.Request(connection)
                                           .query("SELECT userID FROM Users WHERE username = '" + staff.username + "' AND password = '" + staff.password + "'")
@@ -67,15 +67,16 @@ class StaffController {
                                                   .query("INSERT INTO Staff VALUES ('" + id[0].userID + "','" + staff.firstName + "', '" + staff.lastName + "')")
                                                   .then(function() {
                                                       // setup email data with unicode symbols
-                                                      let mailOptions = {
-                                                        from: mail.user, // sender address
-                                                        to: 'BA.ACP@georgiancollege.ca', // use staff.email
-                                                        subject: 'Welcome!', // Subject line
-                                                        text: '', // plain text body
-                                                        html: 'Your username is <b>' + staff.username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
-                                                      };
-
-                                                      new MailService().sendMessage("Welcome Staff", mailOptions);
+                                                      if (staff.notify) {
+                                                        let mailOptions = {
+                                                          from: mail.user, // sender address
+                                                          to: staff.email, // recipient address
+                                                          subject: 'Welcome!', // Subject line
+                                                          text: '', // plain text body
+                                                          html: 'Your username is <b>' + staff.username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
+                                                        };
+                                                        new MailService().sendMessage("Welcome Staff", mailOptions);
+                                                      }
                                                       res.send({ "success": "success" });
                                                   }).catch(function(err) {
                                                       res.send({ "error": "error" });
@@ -126,14 +127,47 @@ class StaffController {
                     if (validated) {
                     sql.connect(db)
                     .then(function(connection) {
-                        new sql.Request(connection)
-                            .query("UPDATE Users SET userType='" + user.userType + "', email='" + user.email + "' WHERE userID = '" + _id + "'")
-                            .then(function() {
-                                res.send({ "success": "success" });
-                            }).catch(function(err) {
-                                res.send({ "error": "error" });
-                                console.log("Update user " + err);
-                            });
+                      new sql.Request(connection)
+                          .query("SELECT username, active, notify FROM Users WHERE userID = '" + _id + "'")
+                          .then(function(results) {
+                            console.log("Active: " + results[0].active);
+                            console.log("Notify: " + results[0].notify);
+                            if(!results[0].notify && !results[0].active && user.notify){
+                              console.log("SENDING CREDENTIALS!");
+                              var randomstring = Math.random().toString(36).slice(-8);
+                              randomstring = randomstring.charAt(0).toUpperCase() + randomstring.slice(1);
+                              var salt = bcrypt.genSaltSync(10);
+                              // Hash the password with the salt
+                              var password = bcrypt.hashSync(randomstring, salt);
+                              req.body.password = password;
+                              new sql.Request(connection)
+                                  .query("UPDATE Users SET password='" + password + "' WHERE userID = '" + _id + "'")
+                                  .then(function() {
+                                    let mailOptions = {
+                                      from: mail.user, // sender address
+                                      to: user.email, // recipient address
+                                      subject: 'Welcome!', // Subject line
+                                      text: '', // plain text body
+                                      html: 'Your username is <b>' + results[0].username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
+                                    };
+                                    new MailService().sendMessage("Welcome Staff", mailOptions);
+                                  }).catch(function(err) {
+                                      res.send({ "error": "error" });
+                                      console.log("Update user password " + err);
+                                  });
+                            }
+                            new sql.Request(connection)
+                                .query("UPDATE Users SET userType='" + user.userType + "', email='" + user.email + "', notify='" + user.notify + "' WHERE userID = '" + _id + "'")
+                                .then(function() {
+                                    res.send({ "success": "success" });
+                                }).catch(function(err) {
+                                    res.send({ "error": "error" });
+                                    console.log("Update user " + err);
+                                });
+                          }).catch(function(err) {
+                              res.send({ "error": "error" });
+                              console.log("Select notify and active from user " + err);
+                          });
                     }).catch(function(err) {
                         console.log(err);
                         res.send({ "error": "error in your request" });
@@ -194,7 +228,7 @@ class StaffController {
                     sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
-                            .query('SELECT Staff.*, Users.userType, Users.email, Users.active, Users.username FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
+                            .query('SELECT Staff.*, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
                             .then(function(recordset) {
                                 res.send(recordset);
                             }).catch(function(err) {
@@ -223,7 +257,7 @@ class StaffController {
                     sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
-                            .query("SELECT firstName, lastName, email, userType FROM Staff INNER JOIN Users ON Staff.userID = Users.userID WHERE Staff.userID = '" + _id + "'")
+                            .query("SELECT firstName, lastName, email, userType, active, notify FROM Staff INNER JOIN Users ON Staff.userID = Users.userID WHERE Staff.userID = '" + _id + "'")
                             .then(function(recordset) {
                                 res.send(recordset[0]);
                             }).catch(function(err) {

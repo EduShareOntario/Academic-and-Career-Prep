@@ -40,7 +40,7 @@ export class FilesService {
     return this.http.post('/api/download/' + filename, {responseType:'blob'}, options)
       .toPromise()
       .then(response => {
-        return this.base64ToArrayBuffer(response._body);
+        return this.base64ToArrayBuffer((response as any)._body);
       })
       .catch(err => err);
   }

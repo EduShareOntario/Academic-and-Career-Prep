@@ -29,8 +29,15 @@
         <label class="col-md-4 control-label"><span style="color:red">*</span> Email: </label>
         <div class="col-md-8">
             <input class="form-control" type="email" [(ngModel)]="user.email" placeholder="Email" required />
-            <p>* Welcome message with username and pass will be sent to the above email.</p>
         </div>
+    </div>
+    <div *ngIf="!user.active" class="form-group">
+      <label class="col-md-4 control-label">Send email notification? </label>
+      <div class="col-md-8"  style="margin-top:6px">
+        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="user.notify"></p-inputSwitch>
+        <p *ngIf="user.notify">* Welcome message with username and pass will be sent to the above email.</p>
+        <p *ngIf="!user.notify">* Credentials will not be sent. You will need to enable this at a later time in order for this user to login.</p>
+      </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-11 col-md-1">

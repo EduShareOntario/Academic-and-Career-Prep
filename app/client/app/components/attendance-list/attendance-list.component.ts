@@ -102,7 +102,7 @@ export class AttendanceListComponent implements OnInit {
             .getInstructorCourses(instructorID)
             .then(result => {
                 var isEmpty = (result || []).length === 0;
-                if (isEmpty || result.status === "403") {
+                if (isEmpty || (result as any).status === "403") {
                     console.log(result);
                     this.data = null;
                 } else {

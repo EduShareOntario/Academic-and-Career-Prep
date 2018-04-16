@@ -212,7 +212,7 @@ export class ConsentFormComponent {
       this.clientService
         .requestEditConsent()
         .then(result => {
-          if (result.status === 'success') {
+          if ((result as any).status === 'success') {
             swal(
               'Request Sent!',
               'You will receive an email once your request has been accepted.',
@@ -232,7 +232,7 @@ export class ConsentFormComponent {
       this.studentService
         .requestEditConsent()
         .then(result => {
-          if (result.status === 'success') {
+          if ((result as any).status === 'success') {
             swal(
               'Request Sent!',
               'You will receive an email once your request has been accepted.',

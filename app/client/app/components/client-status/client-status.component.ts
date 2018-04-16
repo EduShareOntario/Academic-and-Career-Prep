@@ -408,7 +408,7 @@ export class ClientStatusComponent implements OnInit {
                 .postNew(client)
                 .then(result => {
                   console.log(result);
-                  if (result.status === 'success') {
+                  if ((result as any).status === 'success') {
                     this.removeFromClientTable(client.userID);
                   } else {
                     swal(
@@ -634,14 +634,14 @@ export class ClientStatusComponent implements OnInit {
       this.clientService
         .grantConsentEditPermission(client, permission)
         .then( res => {
-          if (res.status === 'granted') {
+          if ((res as any).status === 'granted') {
             this.clientView.editConsentRequest = false;
             swal(
                 'Client Access Granted',
                 'Client will be sent an email informing that they can now edit conesnt.',
                 'success'
             );
-          } else if (res.status === 'denied') {
+          } else if ((res as any).status === 'denied') {
             this.clientView.editConsentRequest = false;
             swal(
                 'Client Access Denied',

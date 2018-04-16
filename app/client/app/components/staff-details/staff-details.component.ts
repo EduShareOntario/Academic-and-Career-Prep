@@ -35,6 +35,7 @@ export class StaffDetailsComponent implements OnInit {
       if (this.id === 'new') {
         this.newUser = true;
         this.user = new User();
+        this.user.notify = true;
       } else {
         this.newUser = false;
         this.staffService.getUser(this.id).then(user => {
