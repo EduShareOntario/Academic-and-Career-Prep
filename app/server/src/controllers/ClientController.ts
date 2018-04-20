@@ -53,7 +53,7 @@ class ClientController {
                       // setup email data with unicode symbols
                       mailOptions = {
                         from: mail.user, // sender address
-                        to: '', // client.email
+                        to: client.email, // client.email
                         subject: 'New Client Created', // Subject line
                         text: '', // plain text body
                         html: 'A new client has been created. Username is <b>' + client.username + '</b> and password is <b>Georgian2018</b><br />. Please assist the client when logging in for the first time at ' + site_settings.url + '. <br /><br /> Thankyou' // html body
@@ -81,7 +81,7 @@ class ClientController {
                   if (validated) {
 
                     new sql.Request(connection)
-                      .query("INSERT INTO Users VALUES ('" + client.username + "','" + client.email + "','" + client.password + "','Client','" + active + "')")
+                      .query("INSERT INTO Users VALUES ('" + client.username + "','" + client.email + "','" + client.password + "','Client','" + active + "','True')")
                       .then(function() {
                         new sql.Request(connection)
                           .query("SELECT userID FROM Users WHERE username = '" + client.username + "' AND password = '" + client.password + "'")

@@ -228,7 +228,7 @@ class StaffController {
                     sql.connect(db)
                     .then(function(connection) {
                         new sql.Request(connection)
-                            .query('SELECT Staff.*, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
+                            .query('SELECT Staff.firstName, Staff.lastName, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
                             .then(function(recordset) {
                                 res.send(recordset);
                             }).catch(function(err) {
