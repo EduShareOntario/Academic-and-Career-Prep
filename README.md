@@ -1,4 +1,7 @@
 # Academic and Career Preparation Administration Tool
+
+[![Build Status](https://georgiancollege-dev.visualstudio.com/_apis/public/build/definitions/fd8fc73f-58da-44d9-9f86-4aef3cefe817/4/badge)](https://georgiancollege-dev.visualstudio.com/Academic%20and%20Career%20Prep/_build/index?definitionId=4)
+
 Georgian College
 
 September 15, 2017
