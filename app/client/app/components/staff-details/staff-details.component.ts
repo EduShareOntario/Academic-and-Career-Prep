@@ -16,7 +16,7 @@ export class StaffDetailsComponent implements OnInit {
   error: any;
   navigated = false; // true if navigated here
   authLevels: any;
-  fselected: any [] = [];
+  fselected: any[] = [];
   id: any;
 
   constructor(private staffService: StaffService, private route: ActivatedRoute) {
@@ -38,12 +38,18 @@ export class StaffDetailsComponent implements OnInit {
         this.user.notify = true;
       } else {
         this.newUser = false;
-        this.staffService.getUser(this.id).then(user => {
-          this.user = user;
-          for (let item of this.user.userType.split(',')) {
-            this.fselected.push(item);
-          }
-        });
+        this.staffService
+          .getUser(this.id)
+          .then(user => {
+            if ((user as any).result === "error") {
+              this.displayErrorAlert((user as any));
+            } else {
+              this.user = user;
+              for (let item of this.user.userType.split(',')) {
+                this.fselected.push(item);
+              }
+            }
+          });
       }
     });
   }
@@ -58,28 +64,32 @@ export class StaffDetailsComponent implements OnInit {
         this.staffService
           .saveNew(this.user)
           .then(user => {
-            if (user.error === "username in use") {
+            if ((user as any).result === "error") {
+              this.displayErrorAlert((user as any));
+            } else if ((user as any).msg === "Username is already in use.") {
               swal(
                 'Username taken',
                 'Please enter a different username.',
                 'warning'
               );
-            } else if (user.error === "email in use") {
+            } else if ((user as any).msg === "Email is already in use.") {
               swal(
                 'Email in use',
                 'Please enter a different email.',
                 'warning'
               );
-            } else if (user.error === "incorrect email format") {
+            } else if ((user as any).msg === "Incorrect email format.") {
               swal(
                 'Incorrect email format',
                 'Please enter a proper email.',
                 'warning'
               );
-            } else if (user.success === "success") {
-              this.goBack();
-            } else {
-              this.user = user; // saved user, w/ id if new
+            } else if ((user as any).result === "success") {
+              swal(
+                (user as any).title,
+                (user as any).msg,
+                'success'
+              );
               this.goBack();
             }
           })
@@ -98,16 +108,32 @@ export class StaffDetailsComponent implements OnInit {
         this.staffService
           .update(this.user, this.id)
           .then(user => {
-            if (user.error === "incorrect email format") {
+            if ((user as any).result === "error") {
+              this.displayErrorAlert((user as any));
+            }  else if ((user as any).msg === "Username is already in use.") {
+              swal(
+                'Username taken',
+                'Please enter a different username.',
+                'warning'
+              );
+            } else if ((user as any).msg === "Email is already in use.") {
+              swal(
+                'Email in use',
+                'Please enter a different email.',
+                'warning'
+              );
+            } else if ((user as any).msg === "Incorrect email format.") {
               swal(
                 'Incorrect email format',
                 'Please enter a proper email.',
                 'warning'
               );
-            } else if (user.success === "success") {
-              this.goBack();
-            } else {
-              this.user = user; // saved user, w/ id if new
+            } else if ((user as any).result === "success") {
+              swal(
+                (user as any).title,
+                (user as any).msg,
+                'success'
+              );
               this.goBack();
             }
           })
@@ -121,6 +147,14 @@ export class StaffDetailsComponent implements OnInit {
       }
     }
 
+  }
+
+  displayErrorAlert(error) {
+    swal(
+        error.title,
+        error.msg,
+        'error'
+    );
   }
 
   goBack() {

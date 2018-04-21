@@ -33,8 +33,9 @@ export class StaffManageComponent implements OnInit {
         this.staffService
           .getUsers()
           .then(users => {
-            if ((users as any).status === "403" || (users as any).error === "error") {
+            if ((users as any).result === "error") {
               this.users = null;
+              this.displayErrorAlert((users as any));
             } else {
               this.users = users;
               for (let user of this.users) {
@@ -58,7 +59,7 @@ export class StaffManageComponent implements OnInit {
 
     deleteAlert(user: User, event: any) {
         swal({
-            title: 'Delete user (' + user.firstName + ' ' + user.lastName + ')?',
+            title: 'Delete ' + user.firstName + ' ' + user.lastName + '?',
             text: "You won't be able to revert this!",
             type: 'warning',
             showCancelButton: true,
@@ -81,6 +82,9 @@ export class StaffManageComponent implements OnInit {
         this.staffService
           .delete(user)
           .then(res => {
+            if ((res as any).result === "error") {
+              this.displayErrorAlert((res as any));
+            } else {
               this.users = this.users.filter(h => h !== user);
               this.usersBackup = this.users;
               this.usersLength = this.users.length;
@@ -90,16 +94,17 @@ export class StaffManageComponent implements OnInit {
                   'User has been deleted.',
                   'success'
               );
+            }
           })
           .catch(error => this.error = error);
     }
 
     updateStats() {
-      this.adminNumber = this.users.filter(x => x.userType === "Admin");
+      this.adminNumber = this.users.filter(x => x.userType.indexOf("Admin") !== -1);
       this.adminNumber = this.adminNumber.length;
-      this.staffNumber = this.users.filter(x => x.userType === "Staff");
+      this.staffNumber = this.users.filter(x => x.userType.indexOf("Staff") !== -1);
       this.staffNumber = this.staffNumber.length;
-      this.instructorNumber = this.users.filter(x => x.userType === "Instructor");
+      this.instructorNumber = this.users.filter(x => x.userType.indexOf("Instructor") !== -1);
       this.instructorNumber = this.instructorNumber.length;
     }
 
@@ -108,8 +113,16 @@ export class StaffManageComponent implements OnInit {
       if (userType === 'total') {
         this.users = this.usersBackup;
       } else {
-        this.users = this.users.filter(x => x.userType === userType);
+        this.users = this.users.filter(x => x.userType.indexOf(userType) !== -1);
       }
+    }
+
+    displayErrorAlert(error) {
+      swal(
+          error.title,
+          error.msg,
+          'error'
+      );
     }
 
     goBack() {

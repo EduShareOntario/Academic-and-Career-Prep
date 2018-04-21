@@ -8,25 +8,26 @@
     <hr>
     <div class="col-md-6">
     <div class="form-group">
-        <label class="col-md-4 control-label"><span style="color:red">*</span> Authorization Level: </label>
+        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Authorization Level: </label>
         <div class="col-md-8">
           <p-multiSelect [options]="authLevels" [(ngModel)]="fselected" optionLabel="name" ></p-multiSelect>
         </div>
     </div>
-    <div *ngIf="newUser" class="form-group">
-        <label class="col-md-4 control-label"><span style="color:red">*</span> First Name: </label>
+    <div class="form-group">
+        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> First Name: </label>
         <div class="col-md-8">
             <input class="form-control" [(ngModel)]="user.firstName" placeholder="First Name" required />
         </div>
     </div>
-    <div *ngIf="newUser" class="form-group">
-        <label class="col-md-4 control-label"><span style="color:red">*</span> Last Name: </label>
+    <div class="form-group">
+        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Last Name: </label>
         <div class="col-md-8">
             <input class="form-control" [(ngModel)]="user.lastName" placeholder="Last Name" required />
+            <p *ngIf="user.notify"><span style="color:red">*</span> A 'Username Update' email will be sent to this user if you update their name.</p>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-4 control-label"><span style="color:red">*</span> Email: </label>
+        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Email: </label>
         <div class="col-md-8">
             <input class="form-control" type="email" [(ngModel)]="user.email" placeholder="Email" required />
         </div>
@@ -35,8 +36,8 @@
       <label class="col-md-4 control-label">Send email notification? </label>
       <div class="col-md-8"  style="margin-top:6px">
         <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="user.notify"></p-inputSwitch>
-        <p *ngIf="user.notify">* Welcome message with username and pass will be sent to the above email.</p>
-        <p *ngIf="!user.notify">* Credentials will not be sent. You will need to enable this at a later time in order for this user to login.</p>
+        <p *ngIf="user.notify"><span style="color:red">*</span> Welcome message with username and pass will be sent to the above email.</p>
+        <p *ngIf="!user.notify"><span style="color:red">*</span> Notifications <b>DISABLED</b>. You will need to enable this at a later time in order for this user to login.</p>
       </div>
     </div>
     <div class="form-group">
