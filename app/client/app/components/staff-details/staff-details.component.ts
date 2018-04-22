@@ -91,6 +91,12 @@ export class StaffDetailsComponent implements OnInit {
                 'success'
               );
               this.goBack();
+            } else {
+              swal(
+                  'Error',
+                  'Something went wrong, please try again.',
+                  'error'
+              );
             }
           })
           .catch(error => this.error = error); // TODO: Display error message
@@ -135,6 +141,12 @@ export class StaffDetailsComponent implements OnInit {
                 'success'
               );
               this.goBack();
+            } else {
+              swal(
+                  'Error',
+                  'Something went wrong, please try again.',
+                  'error'
+              );
             }
           })
           .catch(error => this.error = error); // TODO: Display error message

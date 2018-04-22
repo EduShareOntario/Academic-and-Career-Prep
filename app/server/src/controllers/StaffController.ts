@@ -183,9 +183,9 @@ class StaffController {
                                       to: user.email, // recipient address
                                       subject: 'Username Update!', // Subject line
                                       text: '', // plain text body
-                                      html: 'Your username has been updated to <b>' + user.username + '</b>.<br /><br /> Login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
+                                      html: 'Your username has been changed to <b>' + user.username + '</b>.<br /><br /> Login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
                                     };
-                                    new MailService().sendMessage("Username Update", mailOptions);
+                                    new MailService().sendMessage("Staff Username Update", mailOptions);
                                   }
                                   res.send({ result: "success", title: "Update Success!", msg: "Staff user updated!", serverMsg: "" });
                                 }).catch(function(err) {

@@ -374,7 +374,7 @@ export class ClientStatusComponent implements OnInit {
           confirmButtonText: 'Save'
       }).then(isConfirm => {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
-          console.log(isConfirm.dismiss);
+          // canceled
         } else if (isConfirm) {
           client.studentNumber = isConfirm.value;
           this.removeAlert(client);
@@ -398,7 +398,7 @@ export class ClientStatusComponent implements OnInit {
             confirmButtonText: 'Yes, transfer!'
         }).then(isConfirm => {
           if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
-            console.log(isConfirm.dismiss);
+            // canceled
           } else if (isConfirm) {
             swal({
               title: 'Transferring...'
@@ -407,14 +407,15 @@ export class ClientStatusComponent implements OnInit {
             this.studentService
                 .postNew(client)
                 .then(result => {
-                  console.log(result);
-                  if ((result as any).status === 'success') {
+                  if ((result as any).result === 'error') {
+                    this.displayErrorAlert((result as any));
+                  } else if ((result as any).result === 'success') {
                     this.removeFromClientTable(client.userID);
                   } else {
                     swal(
                         'Error',
                         'Something went wrong, please try again.',
-                        'warning'
+                        'error'
                     );
                   }
                 })
@@ -687,6 +688,14 @@ export class ClientStatusComponent implements OnInit {
       this.showSuitability = false;
       this.showSuitabilityEdit = false;
       this.addSuitability = false;
+    }
+
+    displayErrorAlert(error) {
+      swal(
+          error.title,
+          error.msg,
+          'error'
+      );
     }
 
     goBack() {

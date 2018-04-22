@@ -84,7 +84,7 @@ export class StaffManageComponent implements OnInit {
           .then(res => {
             if ((res as any).result === "error") {
               this.displayErrorAlert((res as any));
-            } else {
+            } else if ((res as any).result === "success") {
               this.users = this.users.filter(h => h !== user);
               this.usersBackup = this.users;
               this.usersLength = this.users.length;
@@ -93,6 +93,12 @@ export class StaffManageComponent implements OnInit {
                   'Deleted!',
                   'User has been deleted.',
                   'success'
+              );
+            } else {
+              swal(
+                  'Error',
+                  'Something went wrong, please try again.',
+                  'error'
               );
             }
           })
