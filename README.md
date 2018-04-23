@@ -42,8 +42,8 @@ var mail = {
 };
 
 var site_settings = {
-		url: '', // site url
-		client_pass: '' // default pass for client users without email access
+    url: '', // site url
+    client_pass: '' // default pass for client users without email access
 };
 
 module.exports = {
