@@ -104,12 +104,13 @@
           <h3>Editing General Info for {{ studentEdit.firstName }}</h3>
           <hr>
           <div class="form-group">
-            <label class="control-label">Student Number: </label>
-            <input class="form-control" type="text" [(ngModel)]="studentEdit.studentNumber" />
+            <p><span style="color:red">* </span>Updating first or last name will automatically update this students username and notify them about the change.</p>
             <label class="control-label">First Name: </label>
             <input class="form-control" type="text" [(ngModel)]="studentEdit.firstName" />
             <label class="control-label">Last Name: </label>
             <input class="form-control" type="text" [(ngModel)]="studentEdit.lastName" />
+            <label class="control-label">Student Number: </label>
+            <input class="form-control" type="text" [(ngModel)]="studentEdit.studentNumber" />
             <label class="control-label">Email: </label>
             <input class="form-control" type="email" [(ngModel)]="studentEdit.email" />
             <!-- <label class="control-label">Birth Date: </label><br />

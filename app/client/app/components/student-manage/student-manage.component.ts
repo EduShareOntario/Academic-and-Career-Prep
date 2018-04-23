@@ -259,11 +259,43 @@ export class StudentManageComponent implements OnInit {
     swal.showLoading();
     this.studentService
       .updateGeneralInfo(this.studentEdit)
-      .then(res => {
-        this.getStudents();
-        this.showGeneralInfoEdit = false;
-        this.showGeneral = true;
-        swal.close();
+      .then(user => {
+        if ((user as any).result === "error") {
+          this.displayErrorAlert((user as any));
+        } else if ((user as any).msg === "Username is already in use.") {
+          swal(
+            'Username taken',
+            'Please enter a different username.',
+            'warning'
+          );
+        } else if ((user as any).msg === "Email is already in use.") {
+          swal(
+            'Email in use',
+            'Please enter a different email.',
+            'warning'
+          );
+        } else if ((user as any).msg === "Incorrect email format.") {
+          swal(
+            'Incorrect email format',
+            'Please enter a proper email.',
+            'warning'
+          );
+        } else if ((user as any).result === "success") {
+          swal(
+            (user as any).title,
+            (user as any).msg,
+            'success'
+          );
+          this.getStudents();
+          this.showGeneralInfoEdit = false;
+          this.showGeneral = true;
+        } else {
+          swal(
+              'Error',
+              'Something went wrong, please try again.',
+              'warning'
+          );
+        }
       })
       .catch();
   }
@@ -310,6 +342,14 @@ export class StudentManageComponent implements OnInit {
     this.showConsent = false;
     this.showLearningStyle = false;
     this.showFiles = false;
+  }
+
+  displayErrorAlert(error) {
+    swal(
+        error.title,
+        error.msg,
+        'error'
+    );
   }
 
   goBack() {

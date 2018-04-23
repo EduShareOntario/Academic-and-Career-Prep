@@ -17,10 +17,9 @@ September 15, 2017
 1. git clone repository
 2. cd
 3. npm install
-4. bower install
-5. setup config.ts in server/src (see example below)
-6. npm run quickstart
-7. http://localhost:3000
+4. setup config.ts in server/src (see example below)
+5. npm run quickstart
+6. http://localhost:3000
 
 
 ## /server/src/config.ts
@@ -37,14 +36,20 @@ var db = {
 };
 
 var mail = {
-  service: '', // service e.g. 'gmail'
-  user: '', //email
-  pass: '' // password
+    service: '', // service e.g. 'gmail'
+    user: '', //email
+    pass: '' // password
+};
+
+var site_settings = {
+    url: '', // site url
+    client_pass: '' // default pass for client users without email access
 };
 
 module.exports = {
     db: db,
-    mail: mail
+    mail: mail,
+    site_settings: site_settings
 };
 ```
 
