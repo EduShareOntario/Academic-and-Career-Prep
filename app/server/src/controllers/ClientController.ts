@@ -468,23 +468,24 @@ class ClientController {
                   new sql.Request(connection)
                     .query("UPDATE Users SET userType= 'Student' WHERE userID = '" + _id + "'")
                     .then(function() {
-                      res.send({ "success": "success" });
+                      res.send({ result: "success", title: "Transfer Successful!", msg: "Client is now a student user.", serverMsg: "" });
                     }).catch(function(err) {
-                      res.send({ "error": "error" }); console.log("Update user userType " + err);
+                      console.log("Update user userType " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error updating the userType.", serverMsg: err });
                     });
                 }).catch(function(err) {
-                  res.send({ "error": "error" }); console.log("Delete form client table with id " + _id + ". " + err);
+                   console.log("Delete form client table with id " + _id + ". " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error removing user from client table.", serverMsg: err });
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Remove from clients table and update userType to student: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error transferring client to student table.", serverMsg: err });
     }
   }
 

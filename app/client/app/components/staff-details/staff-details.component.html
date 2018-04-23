@@ -1,49 +1,52 @@
 <div *ngIf="user" class="staffEdit row form-horizontal">
-    <div *ngIf="!newUser">
-        <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span> Edit Details for {{user.firstName}}</h2>
-    </div>
-    <div *ngIf="newUser">
-        <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span> Add New User</h2>
-    </div>
-    <hr>
-    <div class="col-md-6">
+  <div *ngIf="!newUser">
+    <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span> Edit Details for {{user.firstName}}</h2>
+  </div>
+  <div *ngIf="newUser">
+    <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span> Add New User</h2>
+  </div>
+  <hr>
+  <div class="col-md-8">
     <div class="form-group">
-        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Authorization Level: </label>
-        <div class="col-md-8">
-          <p-multiSelect [options]="authLevels" [(ngModel)]="fselected" optionLabel="name" ></p-multiSelect>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> First Name: </label>
-        <div class="col-md-8">
-            <input class="form-control" [(ngModel)]="user.firstName" placeholder="First Name" required />
-        </div>
+      <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Authorization Level: </label>
+      <div class="col-md-8">
+        <p-multiSelect [options]="authLevels" [(ngModel)]="fselected" optionLabel="name"></p-multiSelect>
+      </div>
     </div>
     <div class="form-group">
-        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Last Name: </label>
-        <div class="col-md-8">
-            <input class="form-control" [(ngModel)]="user.lastName" placeholder="Last Name" required />
-            <p *ngIf="user.notify"><span style="color:red">*</span> A 'Username Update' email will be sent to this user if you update their name.</p>
-        </div>
+      <div class="col-md-offset-4 col-md-8">
+        <p *ngIf="user.notify"><span style="color:red">* </span>Updating first or last name will automatically update this users username and notify them about the change.</p>
+      </div>
+
+      <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> First Name: </label>
+      <div class="col-md-5">
+        <input class="form-control" [(ngModel)]="user.firstName" placeholder="First Name" required />
+      </div>
     </div>
     <div class="form-group">
-        <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Email: </label>
-        <div class="col-md-8">
-            <input class="form-control" type="email" [(ngModel)]="user.email" placeholder="Email" required />
-        </div>
+      <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Last Name: </label>
+      <div class="col-md-5">
+        <input class="form-control" [(ngModel)]="user.lastName" placeholder="Last Name" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Email: </label>
+      <div class="col-md-5">
+        <input class="form-control" type="email" [(ngModel)]="user.email" placeholder="Email" required />
+      </div>
     </div>
     <div *ngIf="!user.active" class="form-group">
       <label class="col-md-4 control-label">Send email notification? </label>
-      <div class="col-md-8"  style="margin-top:6px">
+      <div class="col-md-5" style="margin-top:6px">
         <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="user.notify"></p-inputSwitch>
         <p *ngIf="user.notify"><span style="color:red">*</span> Welcome message with username and pass will be sent to the above email.</p>
         <p *ngIf="!user.notify"><span style="color:red">*</span> Notifications <b>DISABLED</b>. You will need to enable this at a later time in order for this user to login.</p>
       </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-11 col-md-1">
-            <button (click)="save()" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
-        </div>
+      <div class="col-md-offset-9 col-md-1">
+        <button (click)="save()" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
+      </div>
     </div>
   </div>
 </div>
