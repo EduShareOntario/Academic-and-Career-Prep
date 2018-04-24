@@ -43,9 +43,7 @@ export class ClientService {
         return this.http
             .post(this.clientUrl, objects, options)
             .toPromise()
-            .then(response => {
-              return response.json();
-            })
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Create client"));
     }
 
@@ -151,9 +149,7 @@ export class ClientService {
         return this.http
             .post(url, suitabilityForm, options)
             .toPromise()
-            .then(response => {
-              return response.json();
-            })
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Add suitability"));
     }
 
@@ -167,9 +163,7 @@ export class ClientService {
         return this.http
             .put(url, client, options)
             .toPromise()
-            .then(response => {
-              return response.json();
-            })
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Update general info"));
     }
 
@@ -183,9 +177,7 @@ export class ClientService {
         return this.http
             .put(url, suitabilityForm, options)
             .toPromise()
-            .then(response => {
-              return response.json();
-            })
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Update suitability"));
     }
 
@@ -199,9 +191,7 @@ export class ClientService {
         return this.http
             .put(url, client, options)
             .toPromise()
-            .then(response => {
-              return response.json();
-            })
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Update banner/cam boolean values"));
     }
 
@@ -216,9 +206,7 @@ export class ClientService {
         return this.http
             .delete(url, options)
             .toPromise()
-            .then(result => {
-              console.log(result);
-            })
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Delete client"));
     }
 
@@ -232,6 +220,7 @@ export class ClientService {
         return this.http
             .delete(url, options)
             .toPromise()
+            .then(response => response.json())
             .catch(err => this.handleError(err, "Remove client"));
     }
 

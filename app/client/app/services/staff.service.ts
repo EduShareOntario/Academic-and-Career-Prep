@@ -43,9 +43,7 @@ export class StaffService {
     return this.http
       .post(this.usersUrl, user, options)
       .toPromise()
-      .then(response => {
-        return response.json();
-      })
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Save new faculty user"));
   }
 
@@ -59,9 +57,7 @@ export class StaffService {
     return this.http
       .put(url, user, options)
       .toPromise()
-      .then(response => {
-        return response.json();
-      })
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Update faculty user"));
   }
 
@@ -77,6 +73,7 @@ export class StaffService {
     return this.http
       .delete(url, options)
       .toPromise()
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Delete faculty user"));
   }
 

@@ -432,37 +432,27 @@ export class ClientStatusComponent implements OnInit {
     this.clientService
       .removeFromClientTable(userID)
       .then(result => {
-        this.data = this.data.filter(h => h.userID !== userID);
-        this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle);
-        this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-        this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
-        this.router.navigate(['/students']);
-        swal(
-          'Transfered',
-          'Client record has been transfered to the student table.',
-          'success'
-        );
-        // if ((result as any).result === 'error') {
-        //   this.displayErrorAlert((result as any));
-        // } else if ((result as any).result === 'success') {
-        //   this.data = this.data.filter(h => h.userID !== userID);
-        //   this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle);
-        //   this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-        //   this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
-        //   this.router.navigate(['/students']);
-        //   swal(
-        //     'Transfered',
-        //     'Client record has been transfered to the student table.',
-        //     'success'
-        //   );
-        //   //this.clientTotal = this.data.length;
-        // } else {
-        //   swal(
-        //     'Error',
-        //     'Something went wrong, please try again.',
-        //     'error'
-        //   );
-        // }
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert((result as any));
+        } else if ((result as any).result === 'success') {
+          this.data = this.data.filter(h => h.userID !== userID);
+          this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle);
+          this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+          this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
+          swal(
+            'Transfered',
+            'Client record has been transfered to the student table.',
+            'success'
+          );
+          //this.router.navigate(['/students']);
+          this.clientTotal = this.data.length;
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
       })
       .catch(error => this.error = error);
   }
