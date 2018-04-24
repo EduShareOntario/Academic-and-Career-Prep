@@ -82,6 +82,7 @@ export class StaffManageComponent implements OnInit {
         this.staffService
           .delete(user)
           .then(res => {
+            console.log(res);
             if ((res as any).result === "error") {
               this.displayErrorAlert((res as any));
             } else if ((res as any).result === "success") {
