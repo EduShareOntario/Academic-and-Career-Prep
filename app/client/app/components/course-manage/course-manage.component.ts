@@ -7,126 +7,147 @@ declare var swal: any;
 declare var moment: any;
 
 @Component({
-    selector: 'courseManage',
-    templateUrl: './app/components/course-manage/course-manage.component.html',
-    styleUrls: ['./app/components/course-manage/course-manage.component.css']
+  selector: 'courseManage',
+  templateUrl: './app/components/course-manage/course-manage.component.html',
+  styleUrls: ['./app/components/course-manage/course-manage.component.css']
 })
 
 
 export class CourseManageComponent implements OnInit {
-    courses: Course[];
-    error: any;
-    Campus: string[];
-    campusId: any;
-    professors: any[] = [];
-    //dropdown
-    campuses: SelectItem[] = [{ label: ' -- All --', value: '' }];
-    selectedCampusId: string;
+  courses: Course[];
+  error: any;
+  Campus: string[];
+  campusId: any;
+  professors: any[] = [];
+  //dropdown
+  campuses: SelectItem[] = [{ label: ' -- All --', value: '' }];
+  selectedCampusId: string;
 
-    constructor(private router: Router, private CourseService: CourseService) {
-    }
+  constructor(private router: Router, private CourseService: CourseService) {
+  }
 
-    ngOnInit() {
+  ngOnInit() {
+    this.getInstructors();
+    this.getCampuses();
+    this.getCourses();
+  }
 
-        // console.log(moment().format('YYYY-MM-DD hh:mm A'));
-        this.getProfessors();
-        this.getCampuses();
-        this.getCourses();
-    }
-
-    getCampuses() {
-        // get campuses
-        this.CourseService.getCampuses().then((result) => {
-            result.forEach((i) => {
-                this.campuses.push({
-                    label: i.campusName,
-                    value: i.campusId
-                });
-            });
+  getCampuses() {
+    this.CourseService
+    .getCampuses()
+    .then(res => {
+      if ((res as any).result === "error") {
+        this.displayErrorAlert(res);
+      } else {
+        res.forEach((i) => {
+          this.campuses.push({
+            label: i.campusName,
+            value: i.campusId
+          });
         });
-    }
+      }
 
-    getProfessors() {
-        // get professors
-        this.CourseService.getProfessors().then((result) => {
-            this.professors = result;
-        });
-    }
-    getCourses() {
-        this.CourseService
-            .getCourses()
-            .then(result => {
-                if ((result as any).status === "403") {
-                    this.courses = null;
-                } else {
-                    //format datetime
-                    result.forEach((item) => {
-                        item.courseStart = moment(item.courseStart).utcOffset(60).format('YYYY-MM-DD');
-                        item.courseEnd = moment(item.courseEnd).utcOffset(60).format('YYYY-MM-DD');
-                    });
-                    this.courses = result;
+    });
+  }
 
+  getInstructors() {
+    this.CourseService
+    .getInstructors()
+    .then((result) => {
+      this.professors = result;
+    });
+  }
 
-                }
-            })
-            .catch(error => this.error = error);
-    }
+  getCourses() {
+    this.CourseService
+      .getCourses()
+      .then(res => {
+        if ((res as any).result === "error") {
+          this.courses = null;
+          this.displayErrorAlert(res);
+        } else {
+          //format datetime
+          res.forEach((item) => {
+            item.courseStart = moment(item.courseStart).utcOffset(60).format('YYYY-MM-DD');
+            item.courseEnd = moment(item.courseEnd).utcOffset(60).format('YYYY-MM-DD');
+          });
+          this.courses = res;
+        }
+      })
+      .catch(error => this.error = error);
+  }
 
-    deleteAlert(course: Course, event: any) {
-        swal({
-            title: 'Delete course (' + course.courseName + ')?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then(isConfirm => {
-          if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
-            console.log(isConfirm.dismiss);
-          } else if (isConfirm) {
-            this.deleteCourse(course, event);
-          }
-        }).catch(error => {
-            console.log(error);
-        });
-    }
+  deleteAlert(course: Course, event: any) {
+    swal({
+      title: 'Delete course (' + course.courseName + ')?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(isConfirm => {
+      if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
+        console.log(isConfirm.dismiss);
+      } else if (isConfirm) {
+        this.deleteCourse(course, event);
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
-    deleteCourse(course: Course, event: any) {
-        event.stopPropagation();
-        this.CourseService
-            .delete(course)
-            .then(res => {
-                this.courses = this.courses.filter(h => h !== course);
-                swal(
-                    'Deleted!',
-                    'Course record has been deleted.',
-                    'success'
-                );
-            })
-            .catch(error => this.error = error);
-    }
+  deleteCourse(course: Course, event: any) {
+    event.stopPropagation();
+    this.CourseService
+      .delete(course)
+      .then(res => {
+        if ((res as any).result === "error") {
+          this.displayErrorAlert(res);
+        } else if ((res as any).result === "success") {
+          this.courses = this.courses.filter(h => h !== course);
+          swal(
+            'Deleted!',
+            'Course record has been deleted.',
+            'success'
+          );
+        } else {
+          swal(
+              'Error',
+              'Something went wrong, please try again.',
+              'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
+  }
 
-    gotoEdit(course: Course, event: any) {
+  gotoEdit(course: Course, event: any) {
+    this.router.navigate(['/course-edit', course.courseID]);
+  }
 
-        this.router.navigate(['/course-edit', course.courseID]);
-    }
+  addCourse() {
+    this.router.navigate(['/course-edit', 'new']);
+  }
 
-    addCourse() {
+  gotoStudentEnrollment(course: Course, event: any) {
+    this.router.navigate(['/student-enrollment', course.courseID, course.professorId, course.courseName]);
+  }
 
-        this.router.navigate(['/course-edit', 'new']);
-    }
+  filterCampus(cam) {
+    this.campusId = this.Campus.indexOf(cam) + 1;
+  }
 
-    gotoStudentEnrollment(course: Course, event: any) {
-        this.router.navigate(['/student-enrollment', course.courseID, course.professorId, course.courseName]);
-    }
+  displayErrorAlert(error) {
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
+  }
 
-    goBack() {
-        window.history.back();
-    }
-    filterCampus(cam) {
-        this.campusId = this.Campus.indexOf(cam) + 1;
-
-    }
+  goBack() {
+    window.history.back();
+  }
 
 }

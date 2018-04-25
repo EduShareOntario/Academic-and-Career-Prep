@@ -53,7 +53,6 @@ export class StaffService {
     let options = new RequestOptions({ headers: headers });
 
     let url = `${this.usersUrl}/${id}`;
-    console.log(user);
     return this.http
       .put(url, user, options)
       .toPromise()

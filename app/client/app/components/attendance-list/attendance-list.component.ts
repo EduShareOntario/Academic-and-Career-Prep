@@ -47,12 +47,12 @@ export class AttendanceListComponent implements OnInit {
         this.StaffService
             .getUsers()
             .then(instructors => {
-                this.instructors = instructors.filter(x => x.userType === 'Instructor');
+                this.instructors = instructors.filter(x => x.userType.indexOf("Instructor") !== -1);
+                swal.close();
             })
             .catch(error => {
               // do something
             });
-            swal.close();
       } else {
         this.getCourses(userID);
         this.StudentService

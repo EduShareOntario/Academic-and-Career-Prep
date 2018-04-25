@@ -41,23 +41,32 @@ export class CourseEditComponent implements OnInit {
   ngOnInit() {
     this.subscribeCourse();
 
-    // get professors
-    this.courseService.getProfessors().then((result) => {
-      result.forEach((i) => {
-        this.professors.push({
-          label: i.professorName,
-          value: i.userID
+    // get instructors
+    this.courseService.getInstructors().then((result) => {
+      if ((result as any).result === "error") {
+        this.displayErrorAlert(result);
+      } else {
+        result.forEach((i) => {
+          this.professors.push({
+            label: i.professorName,
+            value: i.userID
+          });
         });
-      });
+      }
     });
+
     // get campuses
     this.courseService.getCampuses().then((result) => {
-      result.forEach((i) => {
-        this.campuses.push({
-          label: i.campusName,
-          value: i.campusId
+      if ((result as any).result === "error") {
+        this.displayErrorAlert(result);
+      } else {
+        result.forEach((i) => {
+          this.campuses.push({
+            label: i.campusName,
+            value: i.campusId
+          });
         });
-      });
+      }
     });
 
     this.header = {
@@ -152,8 +161,6 @@ export class CourseEditComponent implements OnInit {
       this.event.end = this.event.title + ' ' + this.event.dayEnd_correct;
       if (this.checkExist(this.event.title)) {
         this.events.push(this.event);
-        console.log('adding event');
-        console.log(this.event);
       } else {
         alert('event exist');
       }
@@ -172,13 +179,9 @@ export class CourseEditComponent implements OnInit {
           this.events[index] = this.event;
         }
       }
-      console.log('editing event');
-      console.log(this.event);
     } else if (this.event.type === 'batchGen') {
 
       this.generateDays(this.weekDay, this.course.courseStart, this.course.courseEnd);
-      console.log('generating event done, printing the list');
-      console.log(this.events);
     }
 
     this.dialogVisible = false;
@@ -207,8 +210,6 @@ export class CourseEditComponent implements OnInit {
 
   // event handler for event click
   handleEventClick(e) {
-    console.log(e.calEvent);
-
     this.event = new MyEvent();
     this.event.type = 'edit';
     this.event.title = e.calEvent.title;
@@ -219,7 +220,6 @@ export class CourseEditComponent implements OnInit {
     this.event.id = e.calEvent.id;
     this.event.weekday = e.calEvent.weekday;
     this.dialogVisible = true;
-    console.log(this.event);
     // this.events = this.events.filter(result => result !== event );
   }
 
@@ -252,13 +252,17 @@ export class CourseEditComponent implements OnInit {
       } else {
         this.newCourse = false;
         this.courseService.getCourse(this.id).then((result) => {
-          result.forEach((item) => {
-            item.courseStart = moment(item.courseStart).isValid() ? moment(item.courseStart).add(1, 'day').format('YYYY-MM-DD ') : '';
-            item.courseEnd = moment(item.courseEnd).isValid() ? moment(item.courseEnd).add(1, 'day').format('YYYY-MM-DD') : '';
-          });
-          this.course = result[0];
-          if (this.course.classTimeStr !== null) {
-            this.events = this.detachCourseStr(this.course.classTimeStr);
+          if ((result as any).result === "error") {
+            this.displayErrorAlert(result);
+          } else {
+            result.forEach((item) => {
+              item.courseStart = moment(item.courseStart).isValid() ? moment(item.courseStart).add(1, 'day').format('YYYY-MM-DD ') : '';
+              item.courseEnd = moment(item.courseEnd).isValid() ? moment(item.courseEnd).add(1, 'day').format('YYYY-MM-DD') : '';
+            });
+            this.course = result[0];
+            if (this.course.classTimeStr !== null) {
+              this.events = this.detachCourseStr(this.course.classTimeStr);
+            }
           }
         });
       }
@@ -281,7 +285,6 @@ export class CourseEditComponent implements OnInit {
       myEvent.dayEnd = moment(myEvent.end).isValid() ? moment(myEvent.end).format() : '';
       myEvent.allDay = false;
       myEvents.push(myEvent);
-      console.log(myEvent);
     });
     return myEvents;
   }
@@ -302,23 +305,70 @@ export class CourseEditComponent implements OnInit {
   }
 
   save() {
-    if (!this.course.courseName || !this.course.courseStart || !this.course.courseEnd || !this.course.professorId || !this.course.campusId || !this.course.classroom) {
+    this.course.classTimeStr = this.generateClassTimeStr();
+    if (!this.course.courseName || !this.course.courseStart || !this.course.courseEnd || !this.course.professorId || !this.course.campusId || !this.course.classroom || !this.course.classTimeStr) {
       swal(
         'Form Incomplete',
         'Please fill out all fields in the form.',
         'warning'
       );
     } else {
-      this.course.classTimeStr = this.generateClassTimeStr();
       //**** need validation
-      this.courseService
-        .save(this.course)
-        .then(course => {
-          this.course = course; // saved user, w/ id if new
-          this.goBack();
-        })
-        .catch(error => this.error = error); // TODO: Display error message
+      if (this.id === 'new') {
+        this.courseService
+          .create(this.course)
+          .then(course => {
+            if ((course as any).result === "error") {
+              this.displayErrorAlert(course);
+            } else if ((course as any).result === "success") {
+              swal(
+                (course as any).title,
+                (course as any).msg,
+                'success'
+              );
+              this.goBack();
+            } else {
+              swal(
+                'Error',
+                'Something went wrong, please try again.',
+                'error'
+              );
+            }
+          })
+          .catch(error => this.error = error); // TODO: Display error message
+      } else {
+        this.courseService
+          .update(this.course)
+          .then(course => {
+            if ((course as any).result === "error") {
+              this.displayErrorAlert(course);
+            } else if ((course as any).result === "success") {
+              swal(
+                (course as any).title,
+                (course as any).msg,
+                'success'
+              );
+              this.goBack();
+            } else {
+              swal(
+                'Error',
+                'Something went wrong, please try again.',
+                'error'
+              );
+            }
+          })
+          .catch(error => this.error = error); // TODO: Display error message
+      }
+
     }
+  }
+
+  displayErrorAlert(error) {
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
   }
 
   goBack() {
