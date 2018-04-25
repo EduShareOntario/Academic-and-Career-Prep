@@ -19,7 +19,9 @@ class AuthController {
 
       sql.connect(db)
       .then(function(connection) {
-        sql.query`SELECT * FROM Users WHERE username = ${_username}`.then(function(user) {
+        sql.query
+        `SELECT * FROM Users WHERE username = ${_username}`
+        .then(function(user) {
             if (bcrypt.compareSync(_password, user[0].password)) {
               var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff");
               var statusToken = { status: 200, body: { token: token, userID: user[0].userID, username: user[0].username, userType: user[0].userType, active: user[0].active } };
@@ -29,18 +31,17 @@ class AuthController {
             }
             res.send(response);
           }).catch(function(err) {
-            response = { "error": err };
-            res.send(response);
+            console.log(" " + err);
+            res.send({ "error": "error" });
           });
       }).catch(function(err) {
-        response = { "error": err };
-        res.send(response);
+        console.log(" " + err);
+        res.send({ "error": "error" });
       });
 
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Login: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error logging in.", serverMsg: "" });
     }
   }
 
@@ -57,11 +58,11 @@ class AuthController {
             }
           }
           var _id = decoded.userid;
-          var query = "SELECT * FROM Users WHERE userID = '" + _id + "'";
+
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query(query)
+              .query(`SELECT * FROM Users WHERE userID = ${_id}`)
                 .then(function(user) {
                   var hasSome = data.requiredAuth.some(function(v){
                     return user[0].userType.indexOf(v) >= 0;
@@ -76,19 +77,22 @@ class AuthController {
                   } else {
                     res.send({ status: '403' });
                   }
-                }).catch(err => {
+                }).catch(function(err) {
+                  console.log("Error - Get user by id: " + err);
                   res.send({ "error": "error" });
-                  console.log(" " + err);
                 });
+            }).catch(function(err) {
+              console.log("DB Connection error - Authenticate user: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
+
         });
       } else {
         res.send({ error: "No auth header" });
       }
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Authenticate user: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error authenticating the current user.", serverMsg: "" });
     }
   }
 
@@ -102,8 +106,8 @@ class AuthController {
 
       sql.connect(db)
       .then(function(connection) {
-          new sql.Request(connection)
-            .query("UPDATE Users SET password='" + _password + "', active='true' WHERE userID='" + _userID + "'")
+            sql.query
+            `UPDATE Users SET password=${_password}, active='true' WHERE userID = ${_userID}`
             .then(function(recordset) {
               res.send({ "success": "success" });
             }).catch(function(err) {
@@ -114,9 +118,10 @@ class AuthController {
           console.log(err);
           res.send({ "error": "error" });
         });
+
     } catch (err) {
-      console.log(err);
-      res.send({ "error": "error in your request" });
+      console.log("Error - Reset password: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error resetting your password.", serverMsg: "" });
     }
   }
 
@@ -131,7 +136,9 @@ class AuthController {
 
       sql.connect(db)
       .then(function(connection) {
-          sql.query`UPDATE Users SET password= $ {_password}, active='false' WHERE email = ${_email}`.then(function(recordset) {
+          sql.query
+          `UPDATE Users SET password = ${_password}, active='false' WHERE email = ${_email}`
+          .then(function(recordset) {
               // setup email data with unicode symbols
               let mailOptions = {
                 from: mail.user, // sender address
@@ -144,16 +151,17 @@ class AuthController {
               new MailService().sendMessage(" Reset Password", mailOptions);
               res.send({ "success": "success" });
             }).catch(function(err) {
-              res.send({ "error": "error" });
               console.log("Update user password " + err);
+              res.send({ "error": "error" });
             });
         }).catch(function(err) {
           console.log(err);
           res.send({ "error": "error" });
         });
+
     } catch(err) {
-      console.log(err);
-      res.send({ "error": "error in your request" });
+      console.log("Error - Request password reset: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error requesting password reset.", serverMsg: "" });
     }
   }
 

@@ -21,7 +21,7 @@ export class CourseService {
     return this.http.get(this.courseUrl, options)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleError);
+      .catch(err => this.handleError(err, "Get Courses"));
   }
 
   getInstructorCourses(id: string): Promise<Course[]> {
@@ -34,7 +34,7 @@ export class CourseService {
     return this.http.get(url, options)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleError);
+      .catch(err => this.handleError(err, "Get Intructors Courses"));
   }
 
   getCourse(id: string) {
@@ -45,7 +45,7 @@ export class CourseService {
     return this.http.get(this.courseUrl + '/' + id, options)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleError);
+      .catch(err => this.handleError(err, "Get Course"));
   }
 
 
@@ -61,17 +61,11 @@ export class CourseService {
     return this.http
       .delete(url, options)
       .toPromise()
-      .catch(this.handleError);
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Delete Course"));
   }
 
-  save(course: Course): Promise<Course> {
-    if (course.courseID) {
-      return this.put(course);
-    }
-    return this.post(course);
-  }
-
-  private post(course: Course): Promise<Course> {
+  create(course: Course): Promise<Course> {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
@@ -79,11 +73,11 @@ export class CourseService {
     return this.http
       .post(this.courseUrl, course, options)
       .toPromise()
-      .then(response => response.json().data)
-      .catch(this.handleError);
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Create New Course"));
   }
 
-  private put(course: Course) {
+  update(course: Course) {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
@@ -92,15 +86,9 @@ export class CourseService {
     return this.http
       .put(url, course, options)
       .toPromise()
-      .then(() => course)
-      .catch(this.handleError);
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Update Course"));
   }
-
-  private handleError(error: any) {
-    console.log('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
 
   getCampuses() {
     // add authorization header with jwt token
@@ -110,20 +98,23 @@ export class CourseService {
     return this.http.get('api/getCampuses', options)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleError);
+      .catch(err => this.handleError(err, "Get Campuses"));
   }
 
 
-  getProfessors() {
+  getInstructors() {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.get('api/getProfessors', options)
+    return this.http.get('api/getInstructors', options)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleError);
+      .catch(err => this.handleError(err, "Get Instructors"));
   }
 
+  private handleError(error: any, name: any) {
+    console.log('An error occurred at ' + name, error);
+  }
 
 }
