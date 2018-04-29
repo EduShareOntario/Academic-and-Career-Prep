@@ -36,8 +36,12 @@ export class TimetableComponent implements OnInit {
       this.studentService
         .getStudents()
         .then(students => {
-          this.students = students;
-          this.getEventsById(this.selectedStudent[0].userID);
+          if ((students as any).result === 'error') {
+            this.displayErrorAlert(students);
+          } else {
+            this.students = students;
+            this.getEventsById(this.selectedStudent[0].userID);
+          }
         })
         .catch(error => {
           // do something
@@ -71,14 +75,26 @@ export class TimetableComponent implements OnInit {
 
   getEventsById(userID) {
     this.events = [];
-    this.studentService.getEventsById(userID).then(result => {
-      if (result.status === 'No Timetable Info') {
-        swal.close();
-        swal(
-          'No Timetable Info',
-          'This student has not been enrolled in a class yet.',
-          'warning'
-        );
+    this.studentService
+    .getEventsById(userID)
+    .then(result => {
+      if ((result as any).result === 'error') {
+        this.displayErrorAlert(result);
+      } else if ((result as any).msg === 'No Timetable Info') {
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser.userType !== "Student") {
+          swal(
+            'No Timetable Info',
+            'This student has not been enrolled in any classes yet.',
+            'warning'
+          );
+        } else {
+          swal(
+            'No Timetable Info',
+            'You have not been enrolled in any classes yet.',
+            'warning'
+          );
+        }
       } else {
         result.forEach((i) => {
           var classDay = 0;
@@ -124,6 +140,14 @@ export class TimetableComponent implements OnInit {
     }).catch(error => {
       console.log("Error getting events by id");
     });
+  }
+
+  displayErrorAlert(error) {
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
   }
 
   goBack() {

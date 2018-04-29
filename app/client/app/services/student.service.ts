@@ -18,7 +18,8 @@ export class StudentService {
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.get(this.studentsUrl, options)
+    return this.http
+      .get(this.studentsUrl, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get all students"));
@@ -29,7 +30,8 @@ export class StudentService {
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.get(this.studentsUrl + '/' + id, options)
+    return this.http
+      .get(this.studentsUrl + '/' + id, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "get student by id"));
@@ -57,9 +59,7 @@ export class StudentService {
       return this.http
           .put(url, student, options)
           .toPromise()
-          .then(response => {
-            return response.json();
-          })
+          .then(response => response.json())
           .catch(err => this.handleError(err, "Update General Info"));
   }
 
@@ -103,6 +103,7 @@ export class StudentService {
     return this.http
       .delete(url, options)
       .toPromise()
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Delete"));
   }
 
@@ -137,6 +138,7 @@ export class StudentService {
     return this.http
       .delete(url, options)
       .toPromise()
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Course drop"));
   }
 
@@ -228,6 +230,7 @@ export class StudentService {
     return this.http
       .delete(url, options)
       .toPromise()
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Delete notes"));
   }
 

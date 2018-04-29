@@ -65,8 +65,9 @@ export class StudentManageComponent implements OnInit {
     this.studentService
       .getStudents()
       .then(students => {
-        if ((students as any).status === "403") {
+        if ((students as any).result === 'error') {
           this.students = null;
+          this.displayErrorAlert(students);
         } else {
           this.students = students;
           for (let student of this.students) {
@@ -174,12 +175,22 @@ export class StudentManageComponent implements OnInit {
   populatePRF(student) {
     this.studentService
       .populatePRF(student.userID)
-      .then(response => {
-        swal(
-          'Sorry...',
-          'This feature is not yet available',
-          'info'
-        );
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            'Sorry...',
+            'This feature is not yet available',
+            'info'
+          );
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
       })
       .catch(error => console.log(error));
   }
@@ -197,10 +208,11 @@ export class StudentManageComponent implements OnInit {
     this.studentService
       .getAllFormsByID(student)
       .then(forms => {
-        if (forms.status === "403") {
+        if ((forms as any).result === 'error') {
           this.consentView = null;
           this.learningStyleView = null;
           this.suitabilityView = null;
+          this.displayErrorAlert(forms);
         } else {
           this.consentForms = forms.consentForm;
           this.learningStyleView = forms.learningStyleForm[0];
@@ -219,8 +231,14 @@ export class StudentManageComponent implements OnInit {
   }
 
   getTimetableById(userID) {
-    this.studentService.getEventsById(userID).then(result => {
-      this.studentCourses = result;
+    this.studentService
+    .getEventsById(userID)
+    .then(result => {
+      if ((result as any).result === 'error') {
+        this.displayErrorAlert(result);
+      } else {
+        this.studentCourses = result;
+      }
     }).catch(error => {
       console.log("Error getting timetable by id");
     });
@@ -303,22 +321,31 @@ export class StudentManageComponent implements OnInit {
   allowClientToEdit(student, permission) {
     this.studentService
       .grantConsentEditPermission(student, permission)
-      .then(res => {
-        if ((res as any).status === 'granted') {
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'granted') {
           this.studentView.editConsentRequest = false;
           swal(
             'Student Access Granted',
             'Student will be sent an email informing that they can now edit conesnt.',
             'success'
           );
-        } else if ((res as any).status === 'denied') {
+        } else if ((result as any).result === 'denied') {
           this.studentView.editConsentRequest = false;
           swal(
             'Student Access Denied',
             'Student will be sent an email informing that they can NOT edit conesnt.',
             'danger'
           );
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
         }
+
       }).catch();
   }
 

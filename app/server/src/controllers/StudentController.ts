@@ -98,12 +98,12 @@ class StudentController {
                         .query(studentsQuery)
                         .then(function(studentsResult) {
                           var usersQuery = "UPDATE Users SET email='" + student.email
-                          + "', username='" + student.username
-                          + "' WHERE userID = '" + student.userID + "'"
+                            + "', username='" + student.username
+                            + "' WHERE userID = '" + student.userID + "'"
                           new sql.Request(connection)
                             .query(usersQuery)
                             .then(function(usersResult) {
-                              if(currentUsername != student.username) {
+                              if (currentUsername != student.username) {
                                 let mailOptions = {
                                   from: mail.user, // sender address
                                   to: student.email, // recipient address
@@ -162,8 +162,8 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
-                  console.log("(GET STUDENTS BY ID) Error selecting students " + err);
-                  res.send({ status: "error" });
+                  console.log("Error - Get student by id: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving student by ID.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -190,14 +190,14 @@ class StudentController {
                   new sql.Request(connection)
                     .query("DELETE FROM Users WHERE userID = '" + _id + "'")
                     .then(function() {
-                      res.send({ "success": "success" });
+                      res.send({ result: "success", title: "Student Deleted", msg: "Student user has been successfully deleted.", serverMsg: "" });
                     }).catch(function(err) {
-                      console.log("(DELETE USER) Error deleting user with id " + _id + ". " + err);
-                      res.send({ "error": "error" });
+                      console.log("Error - Delete user with id " + _id + ": " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error deleteing student from users table.", serverMsg: err });
                     });
                 }).catch(function(err) {
-                  console.log("(DELETE USER) Error deleting student with id " + _id + ". " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Delete student with id " + _id + ": " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error deleteing student from students table.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -205,9 +205,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(DELETE STUDENT) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Delete student: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error deleteing student.", serverMsg: err });
     }
   }
 
@@ -222,8 +222,8 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
-                  console.log("(RETRIEVE STUDENTS) Error getting all students " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get all students: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all students.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -231,9 +231,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(RETRIEVE STUDENTS) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Retrieve all students: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all students.", serverMsg: err });
     }
   }
 
@@ -249,8 +249,8 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset[0]);
                 }).catch(function(err) {
-                  console.log("(FIND STUDENT BY ID) Error getting student by id " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Find student by id: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving student by id.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -258,44 +258,53 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(FIND STUDENT BY ID) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Find student by id: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving student by id.", serverMsg: err });
     }
   }
 
   editConsentRequest(req: express.Request, res: express.Response) {
-    var _id: string = req.params._id;
-    sql.connect(db)
-      .then(function(connection) {
-        new sql.Request(connection)
-          .query('SELECT firstName, lastName FROM Students WHERE userID = ' + _id + '')
-          .then(function(student) {
-            new sql.Request(connection)
-              .query("UPDATE Students SET editConsentRequest = 'true' WHERE userID = " + _id + "")
-              .then(function(result) {
-                student = student[0];
-                var mailOptions = {
-                  from: mail.user, // sender address
-                  to: mail.user, // reciever TBD
-                  subject: student.firstName + ' ' + student.lastName + ' Request to Edit Consent (Student)', // Subject line
-                  text: '', // plain text body
-                  html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: ' + site_settings.url + '/#/students. Search for ' + student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
-                };
-                new MailService().sendMessage("Request to Edit Consent", mailOptions);
-                res.send({ status: "success" });
-              }).catch(function(err) {
-                console.log("editConsentRequest: Update request to edit" + err);
-                res.send({ status: "error" });
-              });
-          }).catch(function(err) {
-            console.log("editConsentRequest: Select first and last name" + err);
-            res.send({ status: "error" });
-          });
-      }).catch(function(err) {
-        console.log("DB Connection error: " + err);
-        res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: ["Admin", "Staff", "Instructor", "Student", "Client"], done: function() {
+          var _id: string = req.params._id;
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query('SELECT firstName, lastName FROM Students WHERE userID = ' + _id + '')
+                .then(function(student) {
+                  new sql.Request(connection)
+                    .query("UPDATE Students SET editConsentRequest = 'true' WHERE userID = " + _id + "")
+                    .then(function(result) {
+                      student = student[0];
+                      var mailOptions = {
+                        from: mail.user, // sender address
+                        to: mail.user, // reciever TBD
+                        subject: student.firstName + ' ' + student.lastName + ' Request to Edit Consent (Student)', // Subject line
+                        text: '', // plain text body
+                        html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: ' + site_settings.url + '/#/students. Search for ' + student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
+                      };
+                      new MailService().sendMessage("Request to Edit Consent", mailOptions);
+                      res.send({ result: "success", title: "Request Sent", msg: "Your request to edit consent has been sent!", serverMsg: "" });
+                    }).catch(function(err) {
+                      console.log("Error - Update request to edit" + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error sending edit request.", serverMsg: "" });
+                    });
+                }).catch(function(err) {
+                  console.log("Error -  Select first and last name from students: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error sending edit request.", serverMsg: "" });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: "" });
+            });
+        }
       });
+    } catch (err) {
+      console.log("Error - Edit consent request: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error sending edit request.", serverMsg: "" });
+    }
   }
 
   grantConsentEditPermission(req: express.Request, res: express.Response) {
@@ -326,31 +335,31 @@ class StudentController {
                               html: 'You can now login at: https://gcacademicprep.azurewebsites.net and make changes to your consent form.'// html body
                             };
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
-                            res.send({ status: "granted" });
+                            res.send({ result: "granted", title: "Request Granted", msg: "Student has been granted access to edit their consent form.", serverMsg: "" });
                           }).catch(function(err) {
-                            console.log("grantConsentEditPermission: Get email for user. " + err);
-                            res.send({ "error": "error" });
+                            console.log("Error - Get email from users. " + err);
+                            res.send({ result: "error", title: "Error", msg: "There was an error retrieving email from users table.", serverMsg: err });
                           });
                       }).catch(function(err) {
-                        console.log("grantConsentEditPermission: Set consent equal to true(needs to be completed). " + err);
-                        res.send({ "error": "error" });
+                        console.log("Error - Set editConsentPermission equal to true. " + err);
+                        res.send({ result: "error", title: "Error", msg: "There was an error setting consent edit permission to true.", serverMsg: err });
                       });
                   }).catch(function(err) {
-                    console.log("grantConsentEditPermission: Set editConsentRequest equal to false. " + err);
-                    res.send({ "error": "error" });
+                    console.log("Error - Set editConsentRequest equal to false. " + err);
+                    res.send({ result: "error", title: "Error", msg: "There was an error setting consent edit request to false.", serverMsg: err });
                   });
               }).catch(function(err) {
                 console.log("DB Connection error: " + err);
                 res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
               });
           } else {
-            res.send({ status: "denied" });
+            res.send({ result: "denied", title: "Request Denied", msg: "Student has been denied access to edit their consent form.", serverMsg: ""});
           }
         }
       });
-    } catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Grant consent edit permission: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error granting consent edit permission.", serverMsg: err });
     }
   }
 
@@ -367,18 +376,18 @@ class StudentController {
           new sql.Request(connection)
             .query("INSERT INTO Timetables (userID,startDate,endDate,courseID,instructorID) VALUES ('" + _userID + "','" + _startDate + "','" + _endDate + "','" + _courseID + "','" + _instructorID + "')")
             .then(function() {
-              res.send({ "success": "success" });
+              res.send({ result: "success", title: "Student Enrolled", msg: "Student user has been added to course.", serverMsg: "" });
             }).catch(function(err) {
-              console.log("insert into timetable " + err);
-              res.send({ "error": "error" });
+              console.log("Error - Insert into timetable: " + err);
+              res.send({ result: "error", title: "Error", msg: "There was an error adding student to timetable.", serverMsg: err });
             });
         }).catch(function(err) {
           console.log("DB Connection error: " + err);
           res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
         });
-    } catch (e) {
-      console.log('(ADD TO TIMETABLE) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Add student to timetable: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error adding student to timetable.", serverMsg: err });
     }
   }
 
@@ -391,18 +400,18 @@ class StudentController {
           new sql.Request(connection)
             .query("DELETE FROM Timetables WHERE userID = ('" + _userID + "') AND courseID = ('" + _courseID + "')")
             .then(function() {
-              res.send({ "success": "success" });
+              res.send({ result: "success", title: "Student Removed", msg: "Student has been removed from course.", serverMsg: "" });
             }).catch(function(err) {
-              console.log("(REMOVE FROM TIMETABLES) Error removing from timetables " + err);
-              res.send({ "error": "error" });
+              console.log("Error - Remove student from timetable: " + err);
+              res.send({ result: "error", title: "Error", msg: "There was an error removing student from timetable.", serverMsg: err });
             });
         }).catch(function(err) {
           console.log("DB Connection error: " + err);
           res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
         });
-    } catch (e) {
-      console.log('(REMOVE FROM TIMETABLES) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Remove student from timetable: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error removing student from timetable.", serverMsg: err });
     }
   }
 
@@ -417,8 +426,8 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
-                  console.log("(GET TIMETABLES) Error getting student timetables " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get student timetables: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -426,9 +435,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(GET TIMETABLES) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Get student timetables: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables.", serverMsg: err });
     }
   }
 
@@ -444,8 +453,8 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
-                  console.log("(GET TIMETABLES BY COURSE ID ) Get timetables by courseID " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get timetables by courseID: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by course id.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -453,9 +462,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(GET TIMETABLES BY COURSE ID) Connection Error ' + e);
-      res.send({ status: "error in your request" });
+    } catch (err) {
+      console.log("Error - Get timetables by course id: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by course id.", serverMsg: err });
     }
   }
 
@@ -483,15 +492,15 @@ class StudentController {
                       .then((result) => {
                         res.send(result);
                       }).catch(function(err) {
-                        console.log("(GET TIMETABLE BY USER ID) There was an error selecting courses " + err);
-                        res.send({ "status": "error" });
+                        console.log("Error - Select from courses: " + err);
+                        res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by user id.", serverMsg: err });
                       });
                   } else {
-                    res.send({ "status": 'No Timetable Info' });
+                    res.send({ result: "success", title: "No Timetable Info", msg: "No timtable info for this student.", serverMsg: "" });
                   }
                 }).catch(function(err) {
-                  console.log("(GET TIMETABLE BY USER ID) There was an error selecting timetables " + err);
-                  res.send({ "status": "error" });
+                  console.log("Error - Select from timetables: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by user id.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -499,9 +508,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(GET TIMETABLES BY USER ID) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Get timetables by user id: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by user id.", serverMsg: err });
     }
   }
 
@@ -519,10 +528,10 @@ class StudentController {
               new sql.Request(connection)
                 .query("INSERT INTO CaseNotes VALUES ('" + _id + "', '" + caseNote + "', '" + dateTime + "')")
                 .then(function() {
-                  res.send({ "success": "success" });
+                  res.send({ result: "success", title: "Note Created!", msg: "Note has been created for this student.", serverMsg: "" });
                 }).catch(function(err) {
-                  console.log("(CREATE NOTE) Error inserting new note " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Insert new note " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error creating note for student.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -530,9 +539,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(CREATE NOTE) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Create note: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error creating note for student.", serverMsg: err });
     }
   }
 
@@ -548,8 +557,8 @@ class StudentController {
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
-                  console.log("Get case note by id " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get case note by id: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving notes for this student.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -557,9 +566,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(GET NOTE) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Get student notes: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving notes for this student.", serverMsg: err });
     }
   }
 
@@ -573,10 +582,10 @@ class StudentController {
               new sql.Request(connection)
                 .query("DELETE FROM caseNotes WHERE caseNoteID = '" + _id + "'")
                 .then(function() {
-                  res.send({ "success": "success" });
+                  res.send({ result: "success", title: "Note Deleted", msg: "Note has been deleted for this student.", serverMsg: "" });
                 }).catch(function(err) {
-                  console.log("note removed " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Delete student note: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error deleting this note.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -584,9 +593,9 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(DELETE NOTE) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Delete student note: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error deleting this note.", serverMsg: err });
     }
   }
 
@@ -616,8 +625,8 @@ class StudentController {
                     console.log("attendance record inserted");
                     res.send(recordset);
                   }).catch(function(err) {
-                    console.log("Attendance " + err);
-                    res.send({ "error": "error" });
+                    console.log("Error - Insert attendance: " + err);
+                    res.send({ result: "error", title: "Error", msg: "There was an error inserting attendance for student.", serverMsg: err });
                   });
               }).catch(function(err) {
                 console.log("DB Connection error: " + err);
@@ -629,9 +638,9 @@ class StudentController {
           }
         }
       });
-    } catch (e) {
-      console.log('(INSERT ATTENDANCE) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Insert attendance: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error inserting attendance for student.", serverMsg: err });
     }
   }
 
@@ -649,8 +658,8 @@ class StudentController {
                   }
                   res.send(recordset);
                 }).catch(function(err) {
-                  console.log("Get all attendance " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get all attendance: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all student attendance records.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -658,34 +667,39 @@ class StudentController {
             });
         }
       });
-    } catch (e) {
-      console.log('(GET ALL ATTENDANCE) Connection Error ' + e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Get all attendance: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all student attendance records.", serverMsg: err });
     }
   }
 
   populatePRF(req: express.Request, res: express.Response): void {
-    console.log("Populating PRF...");
-    new AuthController().authUser(req, res, {
-      requiredAuth: auth, done: function() {
-        var _id: string = req.params._id;
-        sql.connect(db)
-          .then(function(connection) {
-            new sql.Request(connection)
-              .query("SELECT * FROM Clients C INNER JOIN SuitabilityForm S ON C.userID = S.userID WHERE C.userID = '" + _id + "' AND S.userID = '" + _id + "'")
-              .then(function(recordset) {
-                new PRFService().populatePRF(recordset[0]);
-                res.send({ "success": "success" });
-              }).catch(function(err) {
-                console.log("Get client by id for prf " + err);
-                res.send({ "error": "error" });
-              });
-          }).catch(function(err) {
-            console.log("DB Connection error: " + err);
-            res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
-          });
-      }
-    });
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          var _id: string = req.params._id;
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query("SELECT * FROM Clients C INNER JOIN SuitabilityForm S ON C.userID = S.userID WHERE C.userID = '" + _id + "' AND S.userID = '" + _id + "'")
+                .then(function(recordset) {
+                  new PRFService().populatePRF(recordset[0]);
+                  res.send({ result: "success", title: "PRF Populated!", msg: "PRF form has been populated with student info.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Error - Get client by id for prf: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error populating PRF with student info.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+        }
+      });
+    } catch (err) {
+      console.log("Error - Populate PRF: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error populating PRF with student info.", serverMsg: err });
+    }
   }
+
 }
 export = StudentController;

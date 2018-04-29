@@ -31,8 +31,9 @@ export class CaseNotesComponent implements OnInit {
     this.studentService
       .getStudents()
       .then(students => {
-        if ((students as any).status === "403") {
+        if ((students as any).result === 'error') {
           this.data = null;
+          this.displayErrorAlert(students);
         } else {
           this.data = students;
           for (let student of this.data) {
@@ -48,8 +49,18 @@ export class CaseNotesComponent implements OnInit {
     this.studentService
         .saveNewNote(this.note, studentID)
         .then(note => {
+          if ((note as any).result === 'error') {
+            this.displayErrorAlert(note);
+          } else if ((note as any).result === 'success') {
             this.note = '';
             this.showNotes(studentID);
+          } else {
+            swal(
+              'Error',
+              'Something went wrong, please try again.',
+              'error'
+            );
+          }
         })
         .catch(error => this.error = error); // TODO: Display error message
 
@@ -65,7 +76,11 @@ export class CaseNotesComponent implements OnInit {
     this.studentService
         .getNotes(studentID)
         .then(notes => {
-          this.notes = notes;
+          if ((notes as any).result === 'error') {
+            this.displayErrorAlert(notes);
+          } else {
+            this.notes = notes;
+          }
         })
         .catch(error => console.log(error));
   }
@@ -74,13 +89,23 @@ export class CaseNotesComponent implements OnInit {
       event.stopPropagation();
       this.studentService
           .deleteNote(noteID)
-          .then(res => {
+          .then(result => {
+            if ((result as any).result === 'error') {
+              this.displayErrorAlert(result);
+            } else if ((result as any).result === 'success') {
               this.notes = this.notes.filter(h => h.caseNoteID !== noteID);
               swal(
                   'Deleted!',
                   'Case note has been successfully removed.',
                   'success'
               );
+            } else {
+              swal(
+                'Error',
+                'Something went wrong, please try again.',
+                'error'
+              );
+            }
           })
           .catch(error => this.error = error);
   }
@@ -103,6 +128,14 @@ export class CaseNotesComponent implements OnInit {
       }).catch(error => {
         console.log(error);
       });
+  }
+
+  displayErrorAlert(error) {
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
   }
 
   goBack() {
