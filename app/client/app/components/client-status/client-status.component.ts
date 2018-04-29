@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Client } from "../../models/client";
 import { Student } from "../../models/student";
@@ -9,6 +9,7 @@ import { ClientService } from "../../services/client.service";
 import { StudentService } from "../../services/student.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
+import { DOCUMENT } from '@angular/platform-browser';
 declare var swal: any;
 declare var FileSaver: any;
 
@@ -29,6 +30,7 @@ export class ClientStatusComponent implements OnInit {
   error: any;
 
   clientView: Client;
+  currentClientEmail: string;
   clientEdit: Client;
   consentView: ConsentForm;
   selectedConsentForm: string;
@@ -79,7 +81,13 @@ export class ClientStatusComponent implements OnInit {
   barChartData: any;
   barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
 
-  constructor(private router: Router, private clientService: ClientService, private studentService: StudentService, private authService: AuthService, private filesService: FilesService) {
+  constructor(
+  @Inject(DOCUMENT) private document: Document,
+  private router: Router,
+  private clientService: ClientService,
+  private studentService: StudentService,
+  private authService: AuthService,
+  private filesService: FilesService) {
   }
 
   ngOnInit() {
@@ -94,14 +102,8 @@ export class ClientStatusComponent implements OnInit {
         if ((objects as any).result === 'error') {
           this.data = null;
           this.displayErrorAlert(objects);
-        } else if ((objects as any).result === 'success') {
-          this.setData(objects);
         } else {
-          swal(
-            'Error',
-            'Something went wrong, please try again.',
-            'error'
-          );
+          this.setData(objects);
         }
       })
       .catch(error => this.error = error);
@@ -271,6 +273,7 @@ export class ClientStatusComponent implements OnInit {
   }
 
   showClientView(client: Client) {
+    this.currentClientEmail = client.email;
     this.clientView = client;
     this.resetView();
     this.showGeneral = true;
@@ -533,11 +536,32 @@ export class ClientStatusComponent implements OnInit {
       .then(result => {
         if ((result as any).result === 'error') {
           this.displayErrorAlert((result as any));
+        } else if ((result as any).msg === "Username is already in use.") {
+          swal(
+            'Username taken',
+            'Please enter a different username.',
+            'warning'
+          );
+        } else if ((result as any).msg === "Email is already in use.") {
+          swal(
+            'Email in use',
+            'Please enter a different email.',
+            'warning'
+          );
+        } else if ((result as any).msg === "Incorrect email format.") {
+          swal(
+            'Incorrect email format',
+            'Please enter a proper email.',
+            'warning'
+          );
+          this.clientView.email = this.currentClientEmail;
         } else if ((result as any).result === 'success') {
-          this.getClients();
-          this.showGeneralInfoEdit = false;
-          this.showGeneral = true;
-          swal.close();
+          this.showStatusReport();
+          swal(
+            'Success!',
+            'Client information has been updated!',
+            'success'
+          );
         } else {
           swal(
             'Error',
@@ -583,10 +607,14 @@ export class ClientStatusComponent implements OnInit {
           if ((result as any).result === 'error') {
             this.displayErrorAlert((result as any));
           } else if ((result as any).result === 'success') {
-            this.showSuitabilityEdit = false;
-            this.clientView = null;
-            this.ngOnInit();
-            swal.close();
+            this.getClients();
+            this.showStatusReport();
+            this.document.body.scrollTop = 0;
+            swal(
+              'Success!',
+              'Suitability form updated!',
+              'success'
+            );
           } else {
             swal(
               'Error',
@@ -605,10 +633,16 @@ export class ClientStatusComponent implements OnInit {
           if ((result as any).result === 'error') {
             this.displayErrorAlert((result as any));
           } else if ((result as any).result === 'success') {
-            this.showSuitabilityEdit = false;
-            this.clientView = null;
-            this.ngOnInit();
-            swal.close();
+            this.getClients();
+            this.showStatusReport();
+            // var updatedClient = this.allClients.filter(x => x.userID === this.clientView.userID);
+            // this.showClientView(updatedClient[0]);
+            this.document.body.scrollTop = 0;
+            swal(
+              'Success!',
+              'Suitability form initialized!',
+              'success'
+            );
           } else {
             swal(
               'Error',

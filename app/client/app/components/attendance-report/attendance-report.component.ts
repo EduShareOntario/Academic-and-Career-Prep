@@ -83,8 +83,8 @@ export class AttendanceReportComponent implements OnInit {
           for (let student of this.students) {
             student.fullName = student.firstName + " " + student.lastName;
           }
+          this.getCourses();
         }
-        this.getCourses();
       })
       .catch(error => console.log(error));
   }
@@ -107,7 +107,6 @@ export class AttendanceReportComponent implements OnInit {
           this.courses = result;
           this.getTimetables();
         }
-
       })
       .catch(error => console.log(error));
   }

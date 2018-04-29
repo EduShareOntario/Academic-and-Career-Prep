@@ -80,7 +80,7 @@ export class TimetableComponent implements OnInit {
     .then(result => {
       if ((result as any).result === 'error') {
         this.displayErrorAlert(result);
-      } else if ((result as any).msg === 'No Timetable Info') {
+      } else if ((result as any).title === 'No Timetable Info') {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser.userType !== "Student") {
           swal(

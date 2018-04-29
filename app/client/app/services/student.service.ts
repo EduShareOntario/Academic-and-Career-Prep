@@ -194,7 +194,7 @@ export class StudentService {
 
   saveNewNote(caseNote, studentID) {
     var caseNoteObject = { caseNote: caseNote, dateTime: moment().format('YYYY-MM-DD HH:mm:ss a') };
-    console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
@@ -203,7 +203,7 @@ export class StudentService {
     return this.http
       .post(url, caseNoteObject, options)
       .toPromise()
-      .then(response => response.json().data)
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Save new note"));
   }
 

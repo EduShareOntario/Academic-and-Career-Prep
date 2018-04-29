@@ -23,7 +23,7 @@
   position: absolute;
   top:-78px;
   cursor:pointer;
-  color: #333f48;
+  color: black;
   display: inline;
   padding: 0 10 0 10;
   border: 0px solid;
@@ -31,7 +31,7 @@
 }
 
 .nextButton:hover {
-  background-color: #333f48;
+  background-color: #004B87;
   color:  #fff;
   border: 0px solid;
   transition: .2s;

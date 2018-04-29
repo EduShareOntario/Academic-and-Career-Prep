@@ -335,10 +335,9 @@ export class SuitabilityFormComponent {
           .create(this.client, this.suitabilityForm)
           .then(client => {
             console.log(client);
-            if (client.msg === "username in use") {
+            if (client.result === "error") {
               this.displayErrorAlert(client);
             } else if (client.msg === "username in use") {
-              swal.close();
               swal(
                   'Username taken',
                   'Please enter a different first and last name.',
@@ -346,7 +345,6 @@ export class SuitabilityFormComponent {
               );
               this.clicked('section1');
             } else if (client.msg === "email in use") {
-              swal.close();
               swal(
                   'Email already in use',
                   'Please enter a different email.',
@@ -354,8 +352,8 @@ export class SuitabilityFormComponent {
               );
               this.clicked('section1');
             } else if (client.msg === "incorrect email format") {
-              swal.close();
               if (this.client.email == null) {
+                swal.close();
                 this.router.navigate(['/clients']);
               } else {
                 swal(
@@ -367,11 +365,8 @@ export class SuitabilityFormComponent {
               }
             }  else if (client.result === "success") {
               swal.close();
-              console.log("success");
               this.router.navigate(['/clients']);
             } else {
-              console.log("something went wrong...");
-              swal.close();
               swal(
                   'Error',
                   'Something went wrong, please try again.',

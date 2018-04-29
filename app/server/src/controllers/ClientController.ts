@@ -53,7 +53,7 @@ class ClientController {
                       // setup email data with unicode symbols
                       mailOptions = {
                         from: mail.user, // sender address
-                        to: client.email, // client.email
+                        to: '', // client.email
                         subject: 'New Client Created', // Subject line
                         text: '', // plain text body
                         html: 'A new client has been created. Username is <b>' + client.username + '</b> and password is <b>Georgian2018</b><br />. Please assist the client when logging in for the first time at ' + site_settings.url + '. <br /><br /> Thankyou' // html body
@@ -79,7 +79,6 @@ class ClientController {
                     error = "incorrect email format";
                   }
                   if (validated) {
-
                     new sql.Request(connection)
                       .query("INSERT INTO Users VALUES ('" + client.username + "','" + client.email + "','" + client.password + "','Client','" + active + "','True')")
                       .then(function() {
@@ -271,12 +270,14 @@ class ClientController {
                   new sql.Request(connection)
                     .query("UPDATE Clients SET suitability = 'false' WHERE userID = " + _id + "")
                     .then(function() {
-                      res.send({ "success": "success" });
+                      res.send({ result: "success", title: "Success!", msg: "Client suitability has been initialized!", serverMsg: "" });
                     }).catch(function(err) {
-                      res.send({ "error": "error" });
+                      console.log("Error - Update suitability: " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error adding suitability for client.", serverMsg: err });
                     });
                 }).catch(function(err) {
-                  res.send({ "error": "error" });
+                  console.log("Error - Insert suitability: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error adding suitability for client.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Add suitability: " + err);
@@ -300,10 +301,10 @@ class ClientController {
               new sql.Request(connection)
                 .query("UPDATE Clients SET banner='" + client.banner + "', cam='" + client.cam + "' WHERE clientID = '" + client.clientID + "'")
                 .then(function(recordset) {
-                  res.send({ "success": "success" });
+                  res.send({ result: "success", title: "Success!", msg: "Banner/CAM checkboxes updated.", serverMsg: "" });
                 }).catch(function(err) {
-                  res.send({ "error": "error" });
-                  console.log("Update banner and cam booleans " + err);
+                  console.log("Error - Update banner/cam booleans: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error updating Banner/CAM checks.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Update Banner/CAM booleans: " + err);
@@ -322,31 +323,79 @@ class ClientController {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
           var client = req.body;
-          sql.connect(db)
-            .then(function(connection) {
-              var clientsQuery = "UPDATE Clients SET studentNumber='" + client.studentNumber
-                + "', firstName='" + client.firstName
-                + "', lastName='" + client.lastName
-                + "' WHERE clientID = '" + client.clientID + "'"
-              new sql.Request(connection)
-                .query(clientsQuery)
-                .then(function(clientsResult) {
-                  var usersQuery = "UPDATE Users SET email='" + client.email
-                    + "' WHERE userID = '" + client.userID + "'"
-                  new sql.Request(connection)
-                    .query(usersQuery)
-                    .then(function(usersResult) {
-                      res.send({ "success": "success" });
+          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          var emailValidation = re.test(client.email);
+          if (!emailValidation) {
+            res.send({ result: "invalid", title: "Invalid Input", msg: "Incorrect email format.", serverMsg: "" });
+          } else {
+            sql.connect(db)
+              .then(function(connection) {
+                new sql.Request(connection)
+                  .query("SELECT userID, username, email FROM Users")
+                  .then(function(users) {
+                    var validated = true;
+                    var error;
+                    var currentUsername = users.filter(x => x.userID === client.userID);
+                    currentUsername = currentUsername[0].username;
+                    users = users.filter(x => x.userID !== client.userID);
+                    client.username = client.firstName + client.lastName;
+                    client.username = client.username.toLowerCase();
+                    client.username = client.username.replace(/\s+/g, '');
+                    for (let record of users) {
+                      if (record.username === client.username) {
+                        validated = false;
+                        error = "Username is already in use.";
+                        break;
+                      } else if (record.email === client.email && record.email !== "BA.ACP@georgiancollege.ca" && record.email !== "OR.ACP@georgiancollege.ca" && record.email !== "OS.ACP@georgiancollege.ca") {
+                        validated = false;
+                        error = "Email is already in use.";
+                        break;
+                      }
+                    }
+                    if (!validated) {
+                      res.send({ result: "invalid", title: "Invalid Input", msg: error, serverMsg: "" });
+                    } else {
+                      var clientsQuery = "UPDATE Clients SET studentNumber='" + client.studentNumber
+                        + "', firstName='" + client.firstName
+                        + "', lastName='" + client.lastName
+                        + "' WHERE clientID = '" + client.clientID + "'"
+                      new sql.Request(connection)
+                        .query(clientsQuery)
+                        .then(function(clientsResult) {
+                          var usersQuery = "UPDATE Users SET email='" + client.email
+                            + "', username='" + client.username +"' WHERE userID = '" + client.userID + "'"
+                          new sql.Request(connection)
+                            .query(usersQuery)
+                            .then(function(usersResult) {
+                              if (currentUsername != client.username) {
+                                let mailOptions = {
+                                  from: mail.user, // sender address
+                                  to: client.email, // recipient address
+                                  subject: 'Username Update!', // Subject line
+                                  text: '', // plain text body
+                                  html: 'Your username has been changed to <b>' + client.username + '</b>.<br /><br /> Login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
+                                };
+                                new MailService().sendMessage("Client Username Update", mailOptions);
+                              }
+                              res.send({ result: "success", title: "Success!", msg: "Client general info updated!", serverMsg: "" });
+                            }).catch(function(err) {
+                              console.log("Error - Update user info: " + err);
+                              res.send({ result: "error", title: "Error", msg: "There was an error updating client user info.", serverMsg: err });
+                            });
+                        }).catch(function(err) {
+                          console.log("Error - Update client gerneal info: " + err);
+                          res.send({ result: "error", title: "Error", msg: "There was an error updating client general info.", serverMsg: err });
+                        });
+                      }
                     }).catch(function(err) {
-                      res.send({ "error": "error" }); console.log("Update student general info " + err);
+                      console.log("Error - Get userID, username and email from users table: " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error retrieving user info.", serverMsg: err });
                     });
-                }).catch(function(err) {
-                  res.send({ "error": "error" }); console.log("Update client gerneal info " + err);
-                });
-            }).catch(function(err) {
-              console.log("DB Connection error - Update client general info: " + err);
-              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
-            });
+              }).catch(function(err) {
+                console.log("DB Connection error - Update client general info: " + err);
+                res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+              });
+          }
         }
       });
     } catch (err) {
@@ -402,10 +451,10 @@ class ClientController {
               new sql.Request(connection)
                 .query(query)
                 .then(function(recordset) {
-                  res.send({ "success": "success" });
+                  res.send({ result: "success", title: "Success!", msg: "Suitability updated.", serverMsg: "" });
                 }).catch(function(err) {
-                  console.log("Update suitability " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Update suitability: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error updating suitability.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Update suitability: " + err);
@@ -433,14 +482,14 @@ class ClientController {
                   new sql.Request(connection)
                     .query("DELETE FROM Users WHERE userID = '" + _id + "'")
                     .then(function() {
-                      res.send({ "success": "success" });
+                      res.send({ result: "success", title: "Success!", msg: "Client deleted.", serverMsg: "" });
                     }).catch(function(err) {
-                      console.log("Delete user with id " + _id + ". " + err);
-                      res.send({ "error": "error" });
+                      console.log("Error - Delete user with id " + _id + ": " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error deleting client.", serverMsg: err });
                     });
                 }).catch(function(err) {
-                  console.log("Delete client with id " + _id + ". " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Delete client with id " + _id + ": " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error deleting client.", serverMsg: err });
                 });
 
             }).catch(function(err) {
@@ -514,20 +563,20 @@ class ClientController {
                                 learningStyleForms: learningStyleForms
                               });
                             }).catch(function(err) {
-                              console.log("Get learningStyleForms " + err);
-                              res.send({ "error": "error" });
+                              console.log("Error - Get learningStyleForms: " + err);
+                              res.send({ result: "error", title: "Error", msg: "There was an error retrieving all learning style forms.", serverMsg: err });
                             });
                         }).catch(function(err) {
-                          console.log("Get consentForms " + err);
-                          res.send({ "error": "error" });
+                          console.log("Error - Get consentForms: " + err);
+                          res.send({ result: "error", title: "Error", msg: "There was an error retrieving all consent forms.", serverMsg: err });
                         });
                     }).catch(function(err) {
-                      console.log("Get suitabilityForms " + err);
-                      res.send({ "error": "error" });
+                      console.log("Error - Get suitabilityForms: " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all suitability forms.", serverMsg: err });
                     });
                 }).catch(function(err) {
-                  console.log("Get clients " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get clients: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all clients.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Retrieve all clients: " + err);
@@ -551,10 +600,10 @@ class ClientController {
               new sql.Request(connection)
                 .query("SELECT * FROM Clients WHERE userID = '" + _id + "'")
                 .then(function(client) {
-                  res.send({ client: client });
+                  res.send(client);
                 }).catch(function(err) {
-                  console.log("Get client by id " + err);
-                  res.send({ "error": "error" });
+                  console.log("Error - Get client by id: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving client by id.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Find client by id: " + err);

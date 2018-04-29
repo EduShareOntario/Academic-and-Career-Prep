@@ -45,26 +45,35 @@ export class CaseNotesComponent implements OnInit {
   }
 
   saveNote(studentID) {
-    console.log(this.note);
-    this.studentService
-        .saveNewNote(this.note, studentID)
-        .then(note => {
-          if ((note as any).result === 'error') {
-            this.displayErrorAlert(note);
-          } else if ((note as any).result === 'success') {
-            this.note = '';
-            this.showNotes(studentID);
-          } else {
-            swal(
-              'Error',
-              'Something went wrong, please try again.',
-              'error'
-            );
-          }
-        })
-        .catch(error => this.error = error); // TODO: Display error message
+    if (this.note == null) {
+      swal(
+        'Empty Input',
+        'Type something in the text area to save new note.',
+        'warning'
+      );
+    } else {
+      this.studentService
+          .saveNewNote(this.note, studentID)
+          .then(note => {
+            console.log(note);
+            if ((note as any).result === 'error') {
+              this.displayErrorAlert(note);
+            } else if ((note as any).result === 'success') {
+              console.log("is work");
+              this.note = '';
+              this.showNotes(studentID);
+            } else {
+              swal(
+                'Error',
+                'Something went wrong, please try again.',
+                'error'
+              );
+            }
+          })
+          .catch(error => this.error = error); // TODO: Display error message
 
-    this.newNote = false;
+      this.newNote = false;
+    }
   }
 
   showCaseNotes(student: Student) {
@@ -94,11 +103,6 @@ export class CaseNotesComponent implements OnInit {
               this.displayErrorAlert(result);
             } else if ((result as any).result === 'success') {
               this.notes = this.notes.filter(h => h.caseNoteID !== noteID);
-              swal(
-                  'Deleted!',
-                  'Case note has been successfully removed.',
-                  'success'
-              );
             } else {
               swal(
                 'Error',
