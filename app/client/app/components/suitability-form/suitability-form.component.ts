@@ -335,7 +335,9 @@ export class SuitabilityFormComponent {
           .create(this.client, this.suitabilityForm)
           .then(client => {
             console.log(client);
-            if (client.error === "username in use") {
+            if (client.msg === "username in use") {
+              this.displayErrorAlert(client);
+            } else if (client.msg === "username in use") {
               swal.close();
               swal(
                   'Username taken',
@@ -343,7 +345,7 @@ export class SuitabilityFormComponent {
                   'warning'
               );
               this.clicked('section1');
-            } else if (client.error === "email in use") {
+            } else if (client.msg === "email in use") {
               swal.close();
               swal(
                   'Email already in use',
@@ -351,7 +353,7 @@ export class SuitabilityFormComponent {
                   'warning'
               );
               this.clicked('section1');
-            } else if (client.error === "incorrect email format") {
+            } else if (client.msg === "incorrect email format") {
               swal.close();
               if (this.client.email == null) {
                 this.router.navigate(['/clients']);
@@ -363,7 +365,7 @@ export class SuitabilityFormComponent {
                 );
                 this.clicked('section1');
               }
-            }  else if (client.success === "success") {
+            }  else if (client.result === "success") {
               swal.close();
               console.log("success");
               this.router.navigate(['/clients']);
@@ -381,6 +383,14 @@ export class SuitabilityFormComponent {
           .catch(error => {
             console.log("Error " + error );
           });
+    }
+
+    displayErrorAlert(error) {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
     }
 
     goBack() {

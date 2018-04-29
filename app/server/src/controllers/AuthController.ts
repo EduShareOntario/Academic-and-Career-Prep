@@ -35,8 +35,8 @@ class AuthController {
             res.send({ "error": "error" });
           });
       }).catch(function(err) {
-        console.log(" " + err);
-        res.send({ "error": "error" });
+        console.log("DB Connection error - Login: " + err);
+        res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
       });
 
     } catch (err) {

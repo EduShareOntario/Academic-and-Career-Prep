@@ -33,7 +33,7 @@ class ClientController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query("SELECT * FROM Users")
+                .query("SELECT username, email FROM Users")
                 .then(function(users) {
                   var validated = true;
                   var error;
@@ -165,57 +165,54 @@ class ClientController {
                                     new sql.Request(connection)
                                       .query("UPDATE Clients SET suitability= 'false' WHERE userID = '" + id[0].userID + "'")
                                       .then(function() {
-                                        res.send({ "success": "success" });
+                                        res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
                                       }).catch(function(err) {
-                                        res.send({ "error": "error" });
                                         console.log("Update client " + err);
+                                        res.send({ result: "error", title: "Error", msg: "There was an error creating new client.", serverMsg: err });
                                       });
                                   }).catch(function(err) {
-                                    res.send({ "error": "error" });
                                     console.log("insert suitabilityForm " + err);
+                                    res.send({ result: "error", title: "Error", msg: "There was an error adding users suitability info.", serverMsg: err });
                                   });
                               } else {
-                                res.send({ "success": "success" });
                                 console.log("Suitability not provided.");
+                                res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
                               }
                             }).catch(function(err) {
-                              res.send({ "error": "error" });
-                              console.log("insert client " + err);
+                              console.log("Error - insert client, removing from users table: " + err);
                               new sql.Request(connection)
                                 .query("DELETE FROM Users WHERE userID = '" + id[0].userID + "'")
                                 .then(function() {
-                                  res.send({ "success": "success" });
-                                  console.log()
+                                  res.send({ result: "error", title: "Error", msg: "There was an error creating this client.", serverMsg: err });
                                 }).catch(function(err) {
-                                  res.send({ "error": "error" });
-                                  console.log("Delete user with id " + id[0].userID + ". " + err);
+                                  console.log("Error - Delete user with id " + id[0].userID + ": " + err);
+                                  res.send({ result: "error", title: "Error", msg: "There was an error removing client from users table.", serverMsg: err });
                                 });
                             });
                           }).catch(function(err) {
-                            res.send({ "error": "error selecting user from users" });
-                            console.log("get user " + err);
+                            console.log("Error - get client from users table: " + err);
+                            res.send({ result: "error", title: "Error", msg: "There was an error getting user info for this client.", serverMsg: err })
                           });
                       }).catch(function(err) {
-                        res.send({ "error": "error inserting user" });
-                        console.log("insert user " + err);
+                        console.log("Error - insert client users table: " + err);
+                        res.send({ result: "error", title: "Error", msg: "There was an error inserting this client into the users table.", serverMsg: err })
                       });
                   } else {
-                    res.send({ "error": error });
+                    res.send({ result: "invalid", title: "Invalid", msg: error, serverMsg: "" })
                   }
                 }).catch(function(err) {
                   console.log(err);
-                  res.send({ "error": "error selecting all users" });
+                  res.send({ result: "error", title: "Error", msg: "There was an error selecting all users.", serverMsg: err })
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Create new client: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Create new client: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error creating new client.", serverMsg: err });
     }
   }
 
@@ -275,18 +272,21 @@ class ClientController {
                     .query("UPDATE Clients SET suitability = 'false' WHERE userID = " + _id + "")
                     .then(function() {
                       res.send({ "success": "success" });
-                    }).catch();
-                }).catch();
+                    }).catch(function(err) {
+                      res.send({ "error": "error" });
+                    });
+                }).catch(function(err) {
+                  res.send({ "error": "error" });
+                });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Add suitability: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Add suitability: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error adding suitability for client.", serverMsg: err });
     }
   }
 
@@ -306,15 +306,14 @@ class ClientController {
                   console.log("Update banner and cam booleans " + err);
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Update Banner/CAM booleans: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Update Banner/CAM booleans: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error updating Banner/CAM checks.", serverMsg: err });
     }
   }
 
@@ -345,15 +344,14 @@ class ClientController {
                   res.send({ "error": "error" }); console.log("Update client gerneal info " + err);
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Update client general info: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Update client general info: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error updating client general info.", serverMsg: err });
     }
   }
 
@@ -406,18 +404,19 @@ class ClientController {
                 .then(function(recordset) {
                   res.send({ "success": "success" });
                 }).catch(function(err) {
-                  res.send({ "error": "error" }); console.log("Update suitability " + err);
+                  console.log("Update suitability " + err);
+                  res.send({ "error": "error" });
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Update suitability: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
     }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    catch (err) {
+      console.log("Error - Update suitability: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error updating suitability.", serverMsg: err });
     }
   }
 
@@ -436,22 +435,23 @@ class ClientController {
                     .then(function() {
                       res.send({ "success": "success" });
                     }).catch(function(err) {
-                      res.send({ "error": "error" }); console.log("Delete user with id " + _id + ". " + err);
+                      console.log("Delete user with id " + _id + ". " + err);
+                      res.send({ "error": "error" });
                     });
                 }).catch(function(err) {
-                  res.send({ "error": "error" }); console.log("Delete client with id " + _id + ". " + err);
+                  console.log("Delete client with id " + _id + ". " + err);
+                  res.send({ "error": "error" });
                 });
 
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Delete client user: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Delete client: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error deleting client.", serverMsg: err });
     }
   }
 
@@ -474,11 +474,11 @@ class ClientController {
                       res.send({ result: "error", title: "Error", msg: "There was an error updating the userType.", serverMsg: err });
                     });
                 }).catch(function(err) {
-                   console.log("Delete form client table with id " + _id + ". " + err);
+                  console.log("Delete form client table with id " + _id + ". " + err);
                   res.send({ result: "error", title: "Error", msg: "There was an error removing user from client table.", serverMsg: err });
                 });
             }).catch(function(err) {
-              console.log("DB Connection error: " + err);
+              console.log("DB Connection error - Remove client from clients table:" + err);
               res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
@@ -514,27 +514,30 @@ class ClientController {
                                 learningStyleForms: learningStyleForms
                               });
                             }).catch(function(err) {
-                              res.send({ "error": "error" }); console.log("Get learningStyleForms " + err);
+                              console.log("Get learningStyleForms " + err);
+                              res.send({ "error": "error" });
                             });
                         }).catch(function(err) {
-                          res.send({ "error": "error" }); console.log("Get consentForms " + err);
+                          console.log("Get consentForms " + err);
+                          res.send({ "error": "error" });
                         });
                     }).catch(function(err) {
-                      res.send({ "error": "error" }); console.log("Get suitabilityForms " + err);
+                      console.log("Get suitabilityForms " + err);
+                      res.send({ "error": "error" });
                     });
                 }).catch(function(err) {
-                  res.send({ "error": "error" }); console.log("Get clients " + err);
+                  console.log("Get clients " + err);
+                  res.send({ "error": "error" });
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Retrieve all clients: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Retrieve all clients: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all clients.", serverMsg: err });
     }
   }
 
@@ -554,15 +557,14 @@ class ClientController {
                   res.send({ "error": "error" });
                 });
             }).catch(function(err) {
-              console.log(err);
-              res.send({ "error": "error" });
+              console.log("DB Connection error - Find client by id: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
             });
         }
       });
-    }
-    catch (e) {
-      console.log(e);
-      res.send({ "error": "error in your request" });
+    } catch (err) {
+      console.log("Error - Find client by id: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving client by id.", serverMsg: err });
     }
   }
 

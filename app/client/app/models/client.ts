@@ -23,6 +23,8 @@ export class Client {
     consent: boolean;
     learningStyle: boolean;
     error: string;
+    msg: string;
+    result: string;
     success: string;
     banner: boolean;
     cam: boolean;

@@ -160,7 +160,7 @@ class ClientFormsController {
                               html: 'You can now login at: ' + site_settings.url + ' and make changes to your consent form.'// html body
                             };
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
-                            res.send({status: "granted"});
+                            res.send({result: "granted"});
                           }).catch(function(err) {
                             res.send({ "error": "error" });
                             console.log("grantConsentEditPermission: Get email for user. " + err);
@@ -175,7 +175,7 @@ class ClientFormsController {
                   });
               });
           } else {
-            res.send({status: "denied"});
+            res.send({result: "denied"});
           }
         }
       });

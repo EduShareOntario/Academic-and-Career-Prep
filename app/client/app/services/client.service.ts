@@ -19,7 +19,8 @@ export class ClientService {
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(this.clientUrl, options)
+        return this.http
+            .get(this.clientUrl, options)
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Get clients"));
@@ -29,7 +30,8 @@ export class ClientService {
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(this.clientUrl + '/' + id, options)
+        return this.http
+            .get(this.clientUrl + '/' + id, options)
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Get client"));
