@@ -93,6 +93,13 @@ class StudentController {
                       var studentsQuery = "UPDATE Students SET studentNumber='" + student.studentNumber
                         + "', firstName='" + student.firstName
                         + "', lastName='" + student.lastName
+                        + "', phone='" + student.phone
+                        + "', okayToText='" + student.okayToText
+                        + "', allowDetailedMessage='" + student.allowDetailedMessage
+                        + "', alternateNumber='" + student.alternateNumber
+                        + "', okayToTextAlternate='" + student.okayToTextAlternate
+                        + "', allowDetailedMessageAlternate='" + student.allowDetailedMessageAlternate
+                        + "', comments='" + student.comments
                         + "' WHERE studentID = '" + student.studentID + "'"
                       new sql.Request(connection)
                         .query(studentsQuery)

@@ -33,6 +33,10 @@ export class StudentManageComponent implements OnInit {
   showGeneral: boolean = true;
   studentEdit: Student;
   showGeneralInfoEdit: boolean = false;
+  phone1: boolean = false;
+  phone2: boolean = false;
+  long1: boolean = false;
+  long2: boolean = false;
   showSuitability: boolean;
   showConsent: boolean;
   showLearningStyle: boolean;
@@ -152,7 +156,7 @@ export class StudentManageComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Archive it!'
+      confirmButtonText: 'Yes, Archive!'
     }).then(isConfirm => {
       if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
         console.log(isConfirm.dismiss);
@@ -266,6 +270,42 @@ export class StudentManageComponent implements OnInit {
 
   editGeneralInfo(student) {
     this.studentEdit = student;
+    var splitPhone = this.studentEdit.phone.split(' ');
+    if (this.studentEdit.phone.indexOf('+1') !== -1) {
+      this.long1 = true;
+      this.studentEdit.phone = splitPhone[1] + " " + splitPhone[2];
+      if (splitPhone[3] === 'Home') {
+        this.phone1 = false;
+      } else {
+        this.phone1 = true;
+      }
+    } else {
+      this.long1 = false;
+      this.studentEdit.phone = splitPhone[0] + " " + splitPhone[1];
+      if (splitPhone[2] === 'Home') {
+        this.phone1 = false;
+      } else {
+        this.phone1 = true;
+      }
+    }
+    var splitAlternate = this.studentEdit.alternateNumber.split(' ');
+    if (this.studentEdit.alternateNumber.indexOf('+1') !== -1) {
+      this.long2 = true;
+      this.studentEdit.alternateNumber = splitAlternate[1] + " " + splitAlternate[2];
+      if (splitAlternate[3] === 'Home') {
+        this.phone2 = false;
+      } else {
+        this.phone2 = true;
+      }
+    } else {
+      this.long2 = false;
+      this.studentEdit.alternateNumber = splitAlternate[0] + " " + splitAlternate[1];
+      if (splitAlternate[2] === 'Home') {
+        this.phone2 = false;
+      } else {
+        this.phone2 = true;
+      }
+    }
     this.showGeneral = false;
     this.showGeneralInfoEdit = true;
   }
@@ -275,6 +315,26 @@ export class StudentManageComponent implements OnInit {
       title: 'Updating...'
     });
     swal.showLoading();
+    var phoneSplit = this.studentEdit.phone.split(' ');
+    this.studentEdit.phone = phoneSplit[0] + " " + phoneSplit[1];
+    if (this.phone1 === true) {
+      this.studentEdit.phone = this.studentEdit.phone + " Cell";
+    } else if (this.phone1 === false) {
+      this.studentEdit.phone = this.studentEdit.phone + " Home";
+    }
+    if (this.long1 === true) {
+      this.studentEdit.phone = "+1 " + this.studentEdit.phone;
+    }
+    var alternateSplit = this.studentEdit.alternateNumber.split(' ');
+    this.studentEdit.alternateNumber = alternateSplit[0] + " " + alternateSplit[1];
+    if (this.phone2 === true) {
+      this.studentEdit.alternateNumber = this.studentEdit.alternateNumber + " Cell";
+    } else if (this.phone2 === false) {
+      this.studentEdit.alternateNumber = this.studentEdit.alternateNumber + " Home";
+    }
+    if (this.long2 === true) {
+      this.studentEdit.alternateNumber = "+1 " + this.studentEdit.alternateNumber;
+    }
     this.studentService
       .updateGeneralInfo(this.studentEdit)
       .then(user => {

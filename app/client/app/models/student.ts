@@ -11,6 +11,14 @@ export class Student {
     birthdate: string;
     email: string;
     phone: string;
+    okayToText: boolean;
+    allowDetailedMessage: boolean;
+    longDistance: boolean;
+    alternateNumber: string;
+    okayToTextAlternate: boolean;
+    allowDetailedMessageAlternate: boolean;
+    longDistanceAlternate: boolean;
+    comments: string;
     enrolled: boolean;
     absent: boolean;
     studentStartDate: Date;

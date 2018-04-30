@@ -70,7 +70,7 @@
                   <li><a (click)="showClientView(data)"><i class="fa fa-info-circle" aria-hidden="true"></i> View Info</a></li>
                   <li *ngIf="!data.suitability && !data.consent && !data.learningStyle && data.banner && data.cam"><a (click)="createAsStudent(data)"><i class="fa fa-check" aria-hidden="true"></i> Create as Student</a></li>
                   <li *ngIf="data.suitability"><a (click)="addSuitabilityInfo(data)"><i class="fa fa-check" aria-hidden="true"></i> Add Suitability Info</a></li>
-                  <li><a (click)="addAssessmetResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Enter Assessment Results</a></li>
+                  <li><a (click)="addAssessmentResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Enter Assessment Results</a></li>
                   <li class="deleteClient"><a (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
                 </ul>
               </div>
@@ -148,30 +148,38 @@
                     <h3>Editing General Info for {{ clientEdit.firstName }}</h3>
                     <hr>
                     <div class="form-group">
-                      <label class="control-label">Student Number: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.studentNumber" />
+                      <p><span style="color:red">* </span>Updating first or last name will automatically update this clients username and notify them about the change.</p>
                       <label class="control-label">First Name: </label>
                       <input class="form-control" type="text" [(ngModel)]="clientEdit.firstName" />
                       <label class="control-label">Last Name: </label>
                       <input class="form-control" type="text" [(ngModel)]="clientEdit.lastName" />
+                      <label class="control-label">Student Number: </label>
+                      <input class="form-control" type="text" [(ngModel)]="clientEdit.studentNumber" />
                       <label class="control-label">Email: </label>
-                      <input class="form-control" type="email" [(ngModel)]="clientEdit.email" />
-                      <!-- <label class="control-label">Birth Date: </label><br />
-                      <p-calendar [(ngModel)]="clientEdit.birthday" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar> <span style="margin-left:35px">{{clientEdit.birthday|date}}</span> (E.g. DD/MM/YYYY)<br />
-                      <label class="control-label">Phone: </label><br />
-                      <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.phone" placeholder="(999) 999-9999"></p-inputMask> -->
-                      <!-- <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.okayToText"/>
-                      <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.allowDetailedMessage"/>
-                      <label class="control-label">Alternate Phone: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.alternateNumber"/>
-                      <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.okayToTextAlternate"/>
-                      <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.allowDetailedMessageAlternate"/>
+                      <input class="form-control" type="email" [(ngModel)]="clientEdit.email" /><br />
+                      <div class="well">
+                        <label class="control-label">Phone: </label><br />
+                        <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.phone" placeholder="(999) 999-9999"></p-inputMask>
+                        <p-checkbox [(ngModel)]="phone1" binary="true" class="checkboxPadding"></p-checkbox> Cell
+                        <p-checkbox [(ngModel)]="long1" binary="true" class="checkboxPadding"></p-checkbox> +1<br /><br />
+                        <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="clientEdit.okayToText"></p-inputSwitch><br />
+                        <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="clientEdit.allowDetailedMessage"></p-inputSwitch><br />
+                      </div>
+                      <div class="well">
+                        <label class="control-label">Alternate Phone: </label><br />
+                        <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.alternateNumber" placeholder="(999) 999-9999"></p-inputMask>
+                        <p-checkbox [(ngModel)]="phone2" binary="true" class="checkboxPadding"></p-checkbox> Cell
+                        <p-checkbox [(ngModel)]="long2" binary="true" class="checkboxPadding"></p-checkbox> +1<br /><br />
+                        <!-- <input class="form-control" type="text" [(ngModel)]="clientEdit.alternateNumber"/> -->
+                        <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="clientEdit.okayToTextAlternate"></p-inputSwitch><br />
+                        <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="clientEdit.allowDetailedMessageAlternate"></p-inputSwitch><br />
+                      </div>
                       <label class="control-label">Comments: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.comments"/> -->
+                      <input class="form-control" type="text" [(ngModel)]="clientEdit.comments"/>
                       <div class="form-group">
                         <div class="col-sm-offset-10 col-sm-1">
                           <button (click)="updateGeneralInfo()" class="btn btn-success" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>
@@ -677,6 +685,17 @@
                         <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
                       </div>
                     </div>
+                  </div>
+                  <div *ngIf="showAssessmentResults">
+                    <h3>Enter Assessment Results for {{ clientView.firstName }}</h3>
+                    <br />
+                    <label class="control-label">Result #1: </label>
+                    <input class="form-control" type="text" [(ngModel)]="result1" />
+                    <label class="control-label">Result #2: </label>
+                    <input class="form-control" type="text" [(ngModel)]="result2" />
+                    <label class="control-label">Result #3: </label>
+                    <input class="form-control" type="text" [(ngModel)]="result3" />
+                    <button class="btn btn-success marginBottomButton" title="Submit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
                   </div>
                   <div *ngIf="showFiles">
                     <h3>Viewing Files for {{ clientView.firstName }}</h3>

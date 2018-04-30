@@ -358,6 +358,13 @@ class ClientController {
                       var clientsQuery = "UPDATE Clients SET studentNumber='" + client.studentNumber
                         + "', firstName='" + client.firstName
                         + "', lastName='" + client.lastName
+                        + "', phone='" + client.phone
+                        + "', allowDetailedMessage ='" + client.allowDetailedMessage
+                        + "', okayToText='" + client.okayToText
+                        + "', alternateNumber='" + client.alternateNumber
+                        + "', allowDetailedMessageAlternate='" + client.allowDetailedMessageAlternate
+                        + "', okayToTextAlternate='" + client.okayToTextAlternate
+                        + "', comments='" + client.comments
                         + "' WHERE clientID = '" + client.clientID + "'"
                       new sql.Request(connection)
                         .query(clientsQuery)

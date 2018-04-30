@@ -113,23 +113,30 @@
                       <label class="control-label">Student Number: </label>
                       <input class="form-control" type="text" [(ngModel)]="studentEdit.studentNumber" />
                       <label class="control-label">Email: </label>
-                      <input class="form-control" type="email" [(ngModel)]="studentEdit.email" />
-                      <!-- <label class="control-label">Birth Date: </label><br />
-                      <p-calendar [(ngModel)]="clientEdit.birthday" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar> <span style="margin-left:35px">{{clientEdit.birthday|date}}</span> (E.g. DD/MM/YYYY)<br />
-                      <label class="control-label">Phone: </label><br />
-                      <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.phone" placeholder="(999) 999-9999"></p-inputMask> -->
-                      <!-- <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.okayToText"/>
-                      <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.allowDetailedMessage"/>
-                      <label class="control-label">Alternate Phone: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.alternateNumber"/>
-                      <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.okayToTextAlternate"/>
-                      <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.allowDetailedMessageAlternate"/>
+                      <input class="form-control" type="email" [(ngModel)]="studentEdit.email" /><br />
+                      <div class="well">
+                        <label class="control-label">Phone: </label><br />
+                        <p-inputMask mask="(999) 999-9999" [(ngModel)]="studentEdit.phone" placeholder="(999) 999-9999"></p-inputMask>
+                        <p-checkbox [(ngModel)]="phone1" binary="true" class="checkboxPadding"></p-checkbox> Cell
+                        <p-checkbox [(ngModel)]="long1" binary="true" class="checkboxPadding"></p-checkbox> +1<br /><br />
+                        <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="studentEdit.okayToText"></p-inputSwitch><br />
+                        <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="studentEdit.allowDetailedMessage"></p-inputSwitch><br />
+                      </div>
+                      <div class="well">
+                        <label class="control-label">Alternate Phone: </label><br />
+                        <p-inputMask mask="(999) 999-9999" [(ngModel)]="studentEdit.alternateNumber" placeholder="(999) 999-9999"></p-inputMask>
+                        <p-checkbox [(ngModel)]="phone2" binary="true" class="checkboxPadding"></p-checkbox> Cell
+                        <p-checkbox [(ngModel)]="long2" binary="true" class="checkboxPadding"></p-checkbox> +1<br /><br />
+                        <!-- <input class="form-control" type="text" [(ngModel)]="clientEdit.alternateNumber"/> -->
+                        <label class="control-label" style="margin-left:15px">- Okay to Text?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="studentEdit.okayToTextAlternate"></p-inputSwitch><br />
+                        <label class="control-label" style="margin-left:15px">- Detailed Message?: </label>
+                        <p-inputSwitch onLabel="Yes" offLabel="No" [(ngModel)]="studentEdit.allowDetailedMessageAlternate"></p-inputSwitch><br />
+                      </div>
                       <label class="control-label">Comments: </label>
-                      <input class="form-control" type="text" [(ngModel)]="clientEdit.comments"/> -->
+                      <input class="form-control" type="text" [(ngModel)]="studentEdit.comments"/>
                       <div class="form-group">
                         <div class="col-sm-offset-10 col-sm-1">
                           <button (click)="updateGeneralInfo()" class="btn btn-success" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>

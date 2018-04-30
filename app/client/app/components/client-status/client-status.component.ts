@@ -32,6 +32,10 @@ export class ClientStatusComponent implements OnInit {
   clientView: Client;
   currentClientEmail: string;
   clientEdit: Client;
+  phone1: boolean = false;
+  phone2: boolean = false;
+  long1: boolean = false;
+  long2: boolean = false;
   consentView: ConsentForm;
   selectedConsentForm: string;
   clientConsentForms: ConsentForm[];
@@ -40,6 +44,7 @@ export class ClientStatusComponent implements OnInit {
 
   showSuitabilityEdit: boolean;
   showGeneralInfoEdit: boolean;
+  showAssessmentResults: boolean;
 
   addSuitability: boolean = false;
   @Input() suitabilityForm: SuitabilityForm;
@@ -522,6 +527,42 @@ export class ClientStatusComponent implements OnInit {
   editGeneralInfo(client) {
     this.statusReport = false;
     this.clientEdit = client;
+    var splitPhone = this.clientEdit.phone.split(' ');
+    if (this.clientEdit.phone.indexOf('+1') !== -1) {
+      this.long1 = true;
+      this.clientEdit.phone = splitPhone[1] + " " + splitPhone[2];
+      if (splitPhone[3] === 'Home') {
+        this.phone1 = false;
+      } else {
+        this.phone1 = true;
+      }
+    } else {
+      this.long1 = false;
+      this.clientEdit.phone = splitPhone[0] + " " + splitPhone[1];
+      if (splitPhone[2] === 'Home') {
+        this.phone1 = false;
+      } else {
+        this.phone1 = true;
+      }
+    }
+    var splitAlternate = this.clientEdit.alternateNumber.split(' ');
+    if (this.clientEdit.alternateNumber.indexOf('+1') !== -1) {
+      this.long2 = true;
+      this.clientEdit.alternateNumber = splitAlternate[1] + " " + splitAlternate[2];
+      if (splitAlternate[3] === 'Home') {
+        this.phone2 = false;
+      } else {
+        this.phone2 = true;
+      }
+    } else {
+      this.long2 = false;
+      this.clientEdit.alternateNumber = splitAlternate[0] + " " + splitAlternate[1];
+      if (splitAlternate[2] === 'Home') {
+        this.phone2 = false;
+      } else {
+        this.phone2 = true;
+      }
+    }
     this.showGeneral = false;
     this.showGeneralInfoEdit = true;
   }
@@ -531,6 +572,26 @@ export class ClientStatusComponent implements OnInit {
       title: 'Updating...'
     });
     swal.showLoading();
+    var phoneSplit = this.clientEdit.phone.split(' ');
+    this.clientEdit.phone = phoneSplit[0] + " " + phoneSplit[1];
+    if (this.phone1 === true) {
+      this.clientEdit.phone = this.clientEdit.phone + " Cell";
+    } else if (this.phone1 === false) {
+      this.clientEdit.phone = this.clientEdit.phone + " Home";
+    }
+    if (this.long1 === true) {
+      this.clientEdit.phone = "+1 " + this.clientEdit.phone;
+    }
+    var alternateSplit = this.clientEdit.alternateNumber.split(' ');
+    this.clientEdit.alternateNumber = alternateSplit[0] + " " + alternateSplit[1];
+    if (this.phone2 === true) {
+      this.clientEdit.alternateNumber = this.clientEdit.alternateNumber + " Cell";
+    } else if (this.phone2 === false) {
+      this.clientEdit.alternateNumber = this.clientEdit.alternateNumber + " Home";
+    }
+    if (this.long2 === true) {
+      this.clientEdit.alternateNumber = "+1 " + this.clientEdit.alternateNumber;
+    }
     this.clientService
       .updateGeneralInfo(this.clientEdit)
       .then(result => {
@@ -793,8 +854,15 @@ export class ClientStatusComponent implements OnInit {
     this.consentView = consentForm[0];
   }
 
+  addAssessmentResults(client) {
+    this.showClientView(client);
+    this.resetView();
+    this.showAssessmentResults = true;
+  }
+
   resetView() {
     this.consentView = null;
+    this.showAssessmentResults = false;
     this.showFiles = false;
     this.statusReport = false;
     this.showGeneral = false;
