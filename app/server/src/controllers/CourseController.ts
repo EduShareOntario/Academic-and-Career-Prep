@@ -13,6 +13,7 @@ class CourseController {
 
   // select
   retrieve(req: express.Request, res: express.Response): void {
+  console.log('RETRIEVING ALL COURSES');
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
@@ -260,6 +261,34 @@ class CourseController {
     } catch (err) {
       console.log("Error - Get Instructors: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving all instructors.", serverMsg: err });
+    }
+  }
+
+  getWaitList(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query(`SELECT * FROM WaitList`)
+                .then(function(recordset) {
+                  res.send(recordset);
+                }).catch(function(err) {
+                  console.log("Error - Get wait list: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Get instructors: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
     }
   }
 

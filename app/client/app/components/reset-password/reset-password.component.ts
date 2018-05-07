@@ -76,8 +76,21 @@ export class ResetPasswordComponent {
   resetPassword() {
     this.authService.resetPassword(this.currentUser.userID, this.password1)
     .then(result => {
-      if (result) {
-        this.router.navigate(['/login']);
+      if ((result as any).result === 'error') {
+        this.displayErrorAlert(result);
+      } else if ((result as any).result === 'invalid') {
+        swal(
+            (result as any).title,
+            (result as any).msg,
+            'error'
+        );
+      } else if ((result as any).result === 'success') {
+        swal(
+            (result as any).title,
+            (result as any).msg,
+            'success'
+        );
+        window.history.back();
       } else {
         console.log("There was an error with your request...");
       }
@@ -96,8 +109,22 @@ export class ResetPasswordComponent {
     } else {
       this.authService.requestReset(this.email)
       .then(result => {
-        if (result) {
-          this.router.navigate(['/login']);
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'invalid') {
+          swal(
+              (result as any).title,
+              (result as any).msg,
+              'error'
+          );
+        } else if ((result as any).result === 'success') {
+          swal(
+              (result as any).title,
+              (result as any).msg,
+              'success'
+          );
+          //this.router.navigate(['/login']);
+          window.history.back();
         } else {
           console.log("There was an error with your request...");
         }
@@ -105,6 +132,14 @@ export class ResetPasswordComponent {
         console.log(error);
       });
     }
+  }
+
+  displayErrorAlert(error) {
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
   }
 
   goBack() {

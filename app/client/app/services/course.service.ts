@@ -48,6 +48,16 @@ export class CourseService {
       .catch(err => this.handleError(err, "Get Course"));
   }
 
+  getWaitList() {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.get('api/wait-list', options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get waitlist"));
+  }
 
   delete(course: Course) {
     // add authorization header with jwt token

@@ -9,6 +9,9 @@ export class Student {
     firstName: string;
     lastName: string;
     birthdate: string;
+    courseID: string;
+    professorId: string;
+    courseName : string;
     email: string;
     phone: string;
     okayToText: boolean;

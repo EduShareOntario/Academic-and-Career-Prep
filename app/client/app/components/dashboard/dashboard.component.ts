@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
     attendanceList = false;
     attendanceReport = false;
     files = false;
+    waitList = false;
 
     userType: any;
 
@@ -65,6 +66,7 @@ export class DashboardComponent implements OnInit {
             this.consent = true;
             this.learningStyle = true;
             this.files = true;
+            this.waitList = true;
         }
         if (userType.indexOf('Staff') >= 0) {
             this.clientStatus = true;
@@ -75,6 +77,7 @@ export class DashboardComponent implements OnInit {
             this.manageCourses = true;
             this.attendanceReport = true;
             this.files = true;
+            this.waitList = true;
         }
         if (userType.indexOf('Instructor') >= 0) {
             this.attendanceList = true;

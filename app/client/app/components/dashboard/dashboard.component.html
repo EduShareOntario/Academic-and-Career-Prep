@@ -56,6 +56,18 @@
                 </a>
             </div>
         </div>
+        <div class="col-md-4 dashboardItem" *ngIf="waitList">
+            <div class="itemBorder">
+                <a routerLink="/wait-list" routerLinkActive="active">
+                    <div>
+                        <i class="fa fa-clock-o fa-lg-icon" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h1 class="dashboardItemText">Wait List</h1>
+                    </div>
+                </a>
+            </div>
+        </div>
         <div class="col-md-4 dashboardItem" *ngIf="suitability">
             <div class="itemBorder">
                 <a routerLink="/suitability" routerLinkActive="active">

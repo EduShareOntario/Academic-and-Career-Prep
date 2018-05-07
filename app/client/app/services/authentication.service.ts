@@ -79,13 +79,8 @@ export class AuthService {
       let url = `api/requestReset/${email}`;
       return this.http.get(url, {headers:headers})
       .toPromise()
-      .then((response: Response) => {
-        if (response.status === 200) {
-          return true;
-        } else {
-          return false;
-        }
-      }).catch((err) => {
+      .then(response => response.json())
+      .catch((err) => {
         console.log("Request reset " + err);
       });
     }

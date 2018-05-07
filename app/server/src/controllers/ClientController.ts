@@ -3,6 +3,7 @@ import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
 const MailService = require("../services/MailService");
+const ActivityService = require("../services/ActivityService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff"];
 const config = require('../config');
@@ -164,6 +165,7 @@ class ClientController {
                                     new sql.Request(connection)
                                       .query("UPDATE Clients SET suitability= 'false' WHERE userID = '" + id[0].userID + "'")
                                       .then(function() {
+                                        new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
                                         res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
                                       }).catch(function(err) {
                                         console.log("Update client " + err);
@@ -175,6 +177,7 @@ class ClientController {
                                   });
                               } else {
                                 console.log("Suitability not provided.");
+                                new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  id[0].firstName + ' ' + id[0].lastName + ' has been created as a new client user.');
                                 res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
                               }
                             }).catch(function(err) {
@@ -190,18 +193,18 @@ class ClientController {
                             });
                           }).catch(function(err) {
                             console.log("Error - get client from users table: " + err);
-                            res.send({ result: "error", title: "Error", msg: "There was an error getting user info for this client.", serverMsg: err })
+                            res.send({ result: "error", title: "Error", msg: "There was an error getting user info for this client.", serverMsg: err });
                           });
                       }).catch(function(err) {
                         console.log("Error - insert client users table: " + err);
-                        res.send({ result: "error", title: "Error", msg: "There was an error inserting this client into the users table.", serverMsg: err })
+                        res.send({ result: "error", title: "Error", msg: "There was an error inserting this client into the users table.", serverMsg: err });
                       });
                   } else {
-                    res.send({ result: "invalid", title: "Invalid", msg: error, serverMsg: "" })
+                    res.send({ result: "invalid", title: "Invalid", msg: error, serverMsg: "" });
                   }
                 }).catch(function(err) {
                   console.log(err);
-                  res.send({ result: "error", title: "Error", msg: "There was an error selecting all users.", serverMsg: err })
+                  res.send({ result: "error", title: "Error", msg: "There was an error selecting all users.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Create new client: " + err);

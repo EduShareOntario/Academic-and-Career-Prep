@@ -43,18 +43,12 @@ export class StudentEnrollmentComponent implements OnInit {
         if ((result as any).result === 'error') {
           this.students = null;
           this.displayErrorAlert(result);
-        } else if ((result as any).result === 'success') {
+        } else {
           this.students = result;
           for (let student of this.students) {
             student.fullName = student.firstName + " " + student.lastName;
           }
           this.getTimetables();
-        } else {
-          swal(
-            'Error',
-            'Something went wrong, please try again.',
-            'error'
-          );
         }
       }).catch(error => error);
   }
@@ -65,15 +59,9 @@ export class StudentEnrollmentComponent implements OnInit {
       .then(result => {
         if ((result as any).result === 'error') {
           this.displayErrorAlert(result);
-        } else if ((result as any).result === 'success') {
+        } else {
           this.studentTimetables = result;
           this.compareTimetables();
-        } else {
-          swal(
-            'Error',
-            'Something went wrong, please try again.',
-            'error'
-          );
         }
       })
       .catch(error => error);
@@ -135,7 +123,7 @@ export class StudentEnrollmentComponent implements OnInit {
           } else {
             swal(
               'Error',
-              'Something went wrong, please try again.',
+              'Something went wrong while enrolling student.',
               'error'
             );
           }

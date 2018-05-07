@@ -88,7 +88,7 @@
           </div>
           <br />
           <div *ngIf="consentForm.employmentServices" class="col-md-offset-4 col-md-4">
-            <h4 class="underline">Employement Services:</h4>
+            <h4 class="underline">Employment Services:</h4>
             <div style="padding-left:15px;">
               Agency Name: <input class="form-control" [disabled]="!editConsentPermission" [(ngModel)]="consentForm.esAgencyName" placeholder="Employment Serivce Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission"
                 [(ngModel)]="consentForm.esContactName" placeholder="Employment Serivce Contact Name" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esEmail" placeholder="Employment Serivce Email"
