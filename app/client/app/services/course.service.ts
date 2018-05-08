@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import { Course } from "../models/course";
+import { Student } from "../models/student";
 import { AuthService } from './authentication.service';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/toPromise';
@@ -57,6 +58,22 @@ export class CourseService {
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get waitlist"));
+  }
+
+  addToWaitList(userID, courseID, date) {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+    var info = {
+      userID: userID,
+      courseID: courseID,
+      date: date
+    };
+    return this.http
+      .post('/api/addToWaitList', info, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "addToWaitList"));
   }
 
   delete(course: Course) {

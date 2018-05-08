@@ -44,13 +44,13 @@ import { HelpComponent } from './components/help/help.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { WaitListComponent } from './components/wait-list/wait-list.component';
 
-
 //Import pipes
 import { UserFilterPipe } from "./pipes/user-filter.pipe";
 import { CourseFilterPipe } from "./pipes/course-filter.pipe";
 import { CampusFilterPipe } from "./pipes/campus-filter.pipe";
 import { StudentSelectItemPipe } from "./pipes/student-to-select-item.pipe";
 import { InstructorSelectItemPipe } from "./pipes/instructor-to-select-item.pipe";
+import { CourseSelectItemPipe } from "./pipes/course-to-select-item.pipe";
 
 //Import services
 import { AuthGuard } from './guards/auth.guard';
@@ -110,6 +110,7 @@ import { FilesService } from "./services/files.service";
     CampusFilterPipe,
     StudentSelectItemPipe,
     InstructorSelectItemPipe,
+    CourseSelectItemPipe,
     AttendanceListComponent,
     AttendanceReportComponent,
     ResetPasswordComponent,

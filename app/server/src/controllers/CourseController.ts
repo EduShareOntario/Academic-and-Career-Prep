@@ -13,7 +13,6 @@ class CourseController {
 
   // select
   retrieve(req: express.Request, res: express.Response): void {
-  console.log('RETRIEVING ALL COURSES');
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
@@ -289,6 +288,40 @@ class CourseController {
     } catch (err) {
       console.log("Error - Get wait list: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+    }
+  }
+
+  addToWaitList(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          // get course from req url
+          var course = req.body;
+          var userID = course.userID;
+          var courseID = course.courseID;
+          var date = course.date;
+          sql.connect(db)
+            .then(function() {
+              sql.query
+                `INSERT INTO WaitList (courseID, studentID, date)
+        VALUES(${courseID}, ${userID}, ${date})`
+                .then(function(result) {
+                  res.send({ result: "success", title: "Success!", msg: "Student has been added to the wait list.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Error - Add to wait list: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error while adding student to the wait list.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Create course: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Add to wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error while adding student to the wait list.", serverMsg: err });
     }
   }
 
