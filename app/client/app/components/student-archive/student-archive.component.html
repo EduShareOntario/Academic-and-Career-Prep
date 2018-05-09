@@ -1,0 +1,32 @@
+<div *ngIf="!archive" class="cs-loader doNotPrint">
+  <div class="cs-loader-inner">
+    <label>	L</label>
+    <label>	O</label>
+    <label>	A</label>
+    <label>	D</label>
+    <label>	I</label>
+    <label>	N</label>
+    <label>	G</label>
+    <label>	.</label>
+    <label>	.</label>
+    <label>	.</label>
+  </div>
+</div>
+<div class="row">
+  <div class="doNotPrint">
+    <div class="col-md-10">
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Student Archive</strong></h1>
+      <hr>
+    </div>
+  </div>
+
+  <div *ngIf="archive" class="col-md-12">
+    <p-dataTable [value]="archive" [responsive]="true">
+      <p-column field="studentNumber" header="Student #" [sortable]="true"></p-column>
+      <p-column field="firstName" header="First Name" [sortable]="true"></p-column>
+      <p-column field="lastName" header="Last Name" [sortable]="true"></p-column>
+      <p-column field="email" header="Email" [sortable]="true"></p-column>
+      <p-column field="phone" header="Phone" [sortable]="true"></p-column>
+    </p-dataTable>
+  </div>
+</div>

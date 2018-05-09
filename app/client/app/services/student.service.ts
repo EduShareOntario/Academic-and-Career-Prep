@@ -49,6 +49,31 @@ export class StudentService {
       .catch(err => this.handleError(err, "postNew"));
   }
 
+  archiveStudent(student: Student): Promise<Student> {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http
+      .post('api/archive-student', student, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "archiveStudent"));
+  }
+
+  getStudentArchive() {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    let url = `api/get-student-archive`;
+
+    return this.http.get(url, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get all student archive"));
+  }
+
   updateGeneralInfo(student: Student): Promise<Student> {
       // add authorization header with jwt token
       let headers = new Headers({ authorization: this.authService.token });
@@ -91,20 +116,6 @@ export class StudentService {
         .toPromise()
         .then(response => response.json())
         .catch(err => this.handleError(err, "Grant permission to edit consent"));
-  }
-
-  delete(student: Student) {
-    // add authorization header with jwt token
-    let headers = new Headers({ authorization: this.authService.token });
-    let options = new RequestOptions({ headers: headers });
-
-    let url = `${this.studentsUrl}/${student.userID}`;
-
-    return this.http
-      .delete(url, options)
-      .toPromise()
-      .then(response => response.json())
-      .catch(err => this.handleError(err, "Delete"));
   }
 
   courseEnroll(userID, startDate, endDate, courseID, instructorID) {

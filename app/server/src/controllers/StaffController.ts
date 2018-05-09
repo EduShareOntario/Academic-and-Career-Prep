@@ -3,6 +3,7 @@ import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
 const MailService = require("../services/MailService");
+const ActivityService = require("../services/ActivityService");
 var sql = require('mssql');
 var auth = ["Admin"];
 const config = require('../config');
@@ -261,7 +262,7 @@ class StaffController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query('SELECT Staff.firstName, Staff.lastName, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
+                .query("SELECT Staff.firstName, Staff.lastName, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID WHERE username != 'adminuser'")
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
@@ -277,6 +278,32 @@ class StaffController {
     } catch (err) {
       console.log("Get all staff records from Staff table: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving all staff information.", serverMsg: err });
+    }
+  }
+
+  getSiteActivity(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query('SELECT * FROM ActivityReport ORDER BY timestamp DESC')
+                .then(function(recordset) {
+                  res.send(recordset);
+                }).catch(function(err) {
+                  console.log("Error - Select all site activity: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all site activity.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get site activity: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all site activity.", serverMsg: err });
     }
   }
 

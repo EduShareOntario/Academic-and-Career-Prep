@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { LearningStyleForm } from "../../models/learningStyleForm";
 import { ClientService } from "../../services/client.service";
+import { StudentService } from "../../services/student.service";
 import { AuthService } from '../../services/authentication.service';
 declare var swal: any;
 
@@ -22,17 +23,11 @@ export class LearningStyleComponent {
   currentUser: any;
   submitVisible: boolean = true;
 
-  constructor(private clientService: ClientService, private router: Router, private authService: AuthService) {
+  constructor(private clientService: ClientService, private studentService: StudentService, private router: Router, private authService: AuthService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.learningStyleForm = new LearningStyleForm();
 
-    if (this.currentUser.userType !== "Client") {
-      swal(
-          'Read Only',
-          "You are logged in as '" + this.currentUser.userType + "'. Only clients can submit this form.",
-          'warning'
-      );
-    } else {
+    if (this.currentUser.userType === "Client") {
       swal({
         title: 'Loading...'
       });
@@ -40,7 +35,7 @@ export class LearningStyleComponent {
       this.clientService
       .getClient(this.currentUser.userID)
       .then(result => {
-        if (!result.client[0].learningStyle) {
+        if (!result[0].learningStyle) {
           this.clientService
           .getLearningStyleById()
           .then(result => {
@@ -62,6 +57,42 @@ export class LearningStyleComponent {
       .catch(err => {
         console.log(err);
       });
+    } else if (this.currentUser.userType === "Student") {
+      swal({
+        title: 'Loading...'
+      });
+      swal.showLoading();
+      this.studentService
+      .getStudent(this.currentUser.userID)
+      .then(result => {
+        if (!result.learningStyle) {
+          this.clientService
+          .getLearningStyleById()
+          .then(result => {
+            this.submitVisible = false;
+            swal.close();
+            swal(
+                'Read Only',
+                "You have already submitted this form.",
+                'warning'
+            );
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        } else {
+          swal.close();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    } else {
+      swal(
+          'Read Only',
+          "You are logged in as '" + this.currentUser.userType + "'. Only clients can submit this form.",
+          'warning'
+      );
     }
   }
 

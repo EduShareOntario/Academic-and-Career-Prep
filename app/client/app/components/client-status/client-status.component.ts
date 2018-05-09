@@ -131,10 +131,10 @@ export class ClientStatusComponent implements OnInit {
     this.consentForms = objects.consentForms;
     this.learningStyleForms = objects.learningStyleForms;
     this.stage1 = this.data.filter(x => x.suitability);
-    this.stage2 = this.data.filter(x => !x.suitability && x.consent && x.learningStyle);
-    this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
-    this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-    this.doughnutChartLabels = ['Suitability', 'Consent/Learning Style', 'Banner/CAM', 'Transfer Ready'];
+    this.stage2 = this.data.filter(x => !x.suitability && x.consent);
+    this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
+    this.stage4 = this.data.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
+    this.doughnutChartLabels = ['Suitability', 'Consent', 'Banner/CAM', 'Transfer Ready'];
     this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
     this.doughnutChartType = 'doughnut';
     this.addSuitability = false;
@@ -256,9 +256,9 @@ export class ClientStatusComponent implements OnInit {
           this.data = this.data.filter(h => h !== client);
           this.allClients = this.allClients.filter(h => h !== client);
           this.stage1 = this.data.filter(x => x.suitability);
-          this.stage2 = this.data.filter(x => !x.suitability && x.consent && x.learningStyle);
-          this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
-          this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+          this.stage2 = this.data.filter(x => !x.suitability && x.consent);
+          this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
+          this.stage4 = this.data.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
           this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
           swal(
             'Deleted!',
@@ -355,11 +355,11 @@ export class ClientStatusComponent implements OnInit {
       if (index === 0) {
         this.data = this.allClients.filter(x => x.suitability);
       } else if (index === 1) {
-        this.data = this.allClients.filter(x => !x.suitability && x.consent && x.learningStyle);
+        this.data = this.allClients.filter(x => !x.suitability && x.consent);
       } else if (index === 2) {
-        this.data = this.allClients.filter(x => !x.suitability && !x.consent && !x.learningStyle);
+        this.data = this.allClients.filter(x => !x.suitability && !x.consent);
       } else if (index === 3) {
-        this.data = this.allClients.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+        this.data = this.allClients.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
       }
     } catch (err) {
       this.data = this.allClients;
@@ -475,8 +475,8 @@ export class ClientStatusComponent implements OnInit {
           this.displayErrorAlert((result as any));
         } else if ((result as any).result === 'success') {
           this.data = this.data.filter(h => h.userID !== userID);
-          this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle);
-          this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+          this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent);
+          this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && x.banner && x.cam);
           this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
           swal(
             'Transfered',
@@ -827,7 +827,9 @@ export class ClientStatusComponent implements OnInit {
         if ((result as any).result === 'error') {
           this.displayErrorAlert(result);
         } else if ((result as any).result === 'success') {
-          this.ngOnInit();
+          this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
+          this.stage4 = this.data.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
+          this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
         } else {
           swal(
             'Error',
@@ -837,16 +839,6 @@ export class ClientStatusComponent implements OnInit {
         }
       })
       .catch(error => this.error = error);
-
-    if (client.banner && client.cam) {
-      this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && !x.banner && !x.cam);
-      this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-    } else {
-      this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
-      this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-    }
-
-    this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
   }
 
   onSelectChange(event) {

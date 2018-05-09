@@ -3,6 +3,7 @@ import jwt = require('jsonwebtoken');
 import AuthController = require("../controllers/AuthController");
 const PRFService = require("../services/PRFService");
 const MailService = require("../services/MailService");
+const ActivityService = require("../services/ActivityService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
 const config = require('../config');
@@ -184,27 +185,77 @@ class StudentController {
     }
   }
 
-  delete(req: express.Request, res: express.Response): void {
+  archiveStudent(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: auth, done: function() {
-          var _id: string = req.params._id;
+          var student = req.body;
+          sql.connect(db)
+            .then(function(connection) {
+              var userID = student.userID;
+              var email = student.email;
+              var studentNumber = student.studentNumber;
+              var firstName = student.firstName;
+              var lastName = student.lastName;
+              var inquiryDate = student.inquiryDate;
+              var birthdate = student.birthdate;
+              var phone = student.phone;
+              var allowDetailedMessage = student.allowDetailedMessage;
+              var okayToText = student.okayToText;
+              var alternateNumber = student.alternateNumber;
+              var allowDetailedMessageAlternate = student.allowDetailedMessageAlternate;
+              var okayToTextAlternate = student.okayToTextAlternate;
+              var editConsentRequest = student.editConsentRequest;
+              var editConsentPermission = student.editConsentPermission;
+              var comments = student.comments;
+                sql.query`INSERT INTO StudentArchive (userID, email, studentNumber, firstName, lastName, inquiryDate, birthdate, phone, allowDetailedMessage, okayToText, alternateNumber, allowDetailedMessageAlternate, okayToTextAlternate, editConsentRequest, editConsentPermission, comments)
+                VALUES(${userID}, ${email}, ${studentNumber}, ${firstName}, ${lastName}, ${inquiryDate}, ${birthdate}, ${phone}, ${allowDetailedMessage}, ${okayToText}, ${alternateNumber}, ${allowDetailedMessageAlternate}, ${okayToTextAlternate}, ${editConsentRequest}, ${editConsentPermission}, ${comments})`
+                .then(function(result) {
+                  console.log(result);
+                  new sql.Request(connection)
+                    .query("DELETE FROM Students WHERE userID = '" + student.userID + "'")
+                    .then(function() {
+                      new sql.Request(connection)
+                        .query("DELETE FROM Users WHERE userID = '" + student.userID + "'")
+                        .then(function() {
+                          res.send({ result: "success", title: "Student Archived", msg: "Student user has been successfully archived.", serverMsg: "" });
+                        }).catch(function(err) {
+                          console.log("Error - Archive user with id " + student.userID + ": " + err);
+                          res.send({ result: "error", title: "Error", msg: "There was an error while archiving student.", serverMsg: err });
+                        });
+                    }).catch(function(err) {
+                      console.log("Error - Archive student with id " + student.userID + ": " + err);
+                      res.send({ result: "error", title: "Error", msg: "There was an error while removing student from students table.", serverMsg: err });
+                    });
+                }).catch(function(err) {
+                  console.log("Error - Archive user with id " + student.userID + ": " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error while adding student information to the archive table.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error while connecting to the database.", serverMsg: err });
+            });
+        }
+      });
+    } catch (err) {
+      console.log("Error - Archive student: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error while archiving student.", serverMsg: err });
+    }
+  }
+
+  getStudentArchive(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query("DELETE FROM Students WHERE userID = '" + _id + "'")
-                .then(function() {
-                  new sql.Request(connection)
-                    .query("DELETE FROM Users WHERE userID = '" + _id + "'")
-                    .then(function() {
-                      res.send({ result: "success", title: "Student Deleted", msg: "Student user has been successfully deleted.", serverMsg: "" });
-                    }).catch(function(err) {
-                      console.log("Error - Delete user with id " + _id + ": " + err);
-                      res.send({ result: "error", title: "Error", msg: "There was an error deleteing student from users table.", serverMsg: err });
-                    });
+                .query('SELECT * FROM StudentArchive')
+                .then(function(recordset) {
+                  res.send(recordset);
                 }).catch(function(err) {
-                  console.log("Error - Delete student with id " + _id + ": " + err);
-                  res.send({ result: "error", title: "Error", msg: "There was an error deleteing student from students table.", serverMsg: err });
+                  console.log("Error - Get all archived students: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all students from archive.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error: " + err);
@@ -213,8 +264,8 @@ class StudentController {
         }
       });
     } catch (err) {
-      console.log("Error - Delete student: " + err);
-      res.send({ result: "error", title: "Error", msg: "There was an error deleteing student.", serverMsg: err });
+      console.log("Error - Retrieve all students from archive: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all students from archive.", serverMsg: err });
     }
   }
 
@@ -360,7 +411,7 @@ class StudentController {
                 res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
               });
           } else {
-            res.send({ result: "denied", title: "Request Denied", msg: "Student has been denied access to edit their consent form.", serverMsg: ""});
+            res.send({ result: "denied", title: "Request Denied", msg: "Student has been denied access to edit their consent form.", serverMsg: "" });
           }
         }
       });

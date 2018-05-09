@@ -6,6 +6,7 @@ import { SuitabilityForm } from "../../models/suitabilityForm";
 import { LearningStyleForm } from "../../models/learningStyleForm";
 import { Router } from '@angular/router';
 import { StudentService } from "../../services/student.service";
+import { CourseService } from "../../services/course.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
 declare var swal: any;
@@ -24,6 +25,7 @@ export class StudentManageComponent implements OnInit {
   studentView: Student;
   studentCoursesView: Student;
   studentCourses: any[];
+  waitList: any[];
   consentForms: ConsentForm[];
   consentView: ConsentForm;
   selectedConsentForm: string;
@@ -56,7 +58,12 @@ export class StudentManageComponent implements OnInit {
   files: any[];
   studentsFiles: any[];
 
-  constructor(private router: Router, private ngZone: NgZone, private studentService: StudentService, private authService: AuthService, private filesService: FilesService) {
+  constructor(private router: Router,
+    private ngZone: NgZone,
+    private studentService: StudentService,
+    private courseService: CourseService,
+    private authService: AuthService,
+    private filesService: FilesService) {
 
   }
 
@@ -169,11 +176,31 @@ export class StudentManageComponent implements OnInit {
   }
 
   archiveStudent(student, event): void {
-    swal(
-      'Sorry...',
-      'This functionality is not yet available',
-      'info'
-    );
+    this.studentService
+      .archiveStudent(student)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.getStudents();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => console.log(error));
+  }
+
+  goToStudentArchive() {
+    this.router.navigate(['/student-archive']);
   }
 
   populatePRF(student) {
@@ -232,6 +259,7 @@ export class StudentManageComponent implements OnInit {
     this.resetView();
     this.studentCoursesView = student;
     this.getTimetableById(student.userID);
+    this.getWaitListById(student);
   }
 
   getTimetableById(userID) {
@@ -240,12 +268,42 @@ export class StudentManageComponent implements OnInit {
     .then(result => {
       if ((result as any).result === 'error') {
         this.displayErrorAlert(result);
+        this.studentCourses = null;
+      } else if ((result as any).result === 'success') {
+        this.studentCourses = null;
+        // swal(
+        //     result.title,
+        //     result.msg,
+        //     'info'
+        // );
       } else {
         this.studentCourses = result;
       }
     }).catch(error => {
       console.log("Error getting timetable by id");
     });
+  }
+
+  getWaitListById(student: Student) {
+    this.waitList = null;
+    this.courseService
+      .getWaitListById(student.userID)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+          this.waitList = null;
+        } else if ((result as any).result === 'success') {
+          this.waitList = null;
+          // swal(
+          //     result.title,
+          //     result.msg,
+          //     'info'
+          // );
+        } else {
+          this.waitList = result;
+        }
+      })
+      .catch(error => console.log("Error - Get wait list by id: " + error));
   }
 
   overallStatus() {

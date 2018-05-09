@@ -2,6 +2,7 @@ import express = require("express");
 import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
+const ActivityService = require("../services/ActivityService");
 const sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
 const config = require('../config');
@@ -274,6 +275,55 @@ class CourseController {
                 .query(`SELECT * FROM WaitList`)
                 .then(function(recordset) {
                   res.send(recordset);
+                }).catch(function(err) {
+                  console.log("Error - Get wait list: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Get instructors: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+    }
+  }
+
+  getWaitListById(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          var _id: string = req.params._id;
+
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query(`SELECT * FROM WaitList WHERE studentID = ${_id}`)
+                .then(function(result) {
+                  if (result.length > 0) {
+                    let query = 'select * from course where';
+                    for (let i = 0; i < result.length; i++) {
+                      if (i === 0) {
+                        query += ' courseId = ' + result[i].courseID;
+                      } else {
+                        query += " OR courseId = " + result[i].courseID;
+                      }
+                    }
+                    new sql.Request(connection)
+                      .query(query)
+                      .then((result) => {
+                        res.send(result);
+                      }).catch(function(err) {
+                        console.log("Error - Select from courses: " + err);
+                        res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by user id.", serverMsg: err });
+                      });
+                  } else {
+                    res.send({ result: "success", title: "No Timetable Info", msg: "No wait lsit info for this student.", serverMsg: "" });
+                  }
                 }).catch(function(err) {
                   console.log("Error - Get wait list: " + err);
                   res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });

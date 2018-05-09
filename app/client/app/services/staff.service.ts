@@ -76,6 +76,17 @@ export class StaffService {
       .catch(err => this.handleError(err, "Delete faculty user"));
   }
 
+  getSiteActivity() {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.get('api/site-activity', options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get all site activity"));
+  }
+
   private handleError(error: any, name: any) {
     console.log('An error occurred', error);
   }

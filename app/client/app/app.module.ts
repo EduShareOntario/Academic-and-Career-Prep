@@ -43,6 +43,8 @@ import { FilesComponent } from './components/files/files.component';
 import { HelpComponent } from './components/help/help.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { WaitListComponent } from './components/wait-list/wait-list.component';
+import { SiteActivityComponent } from './components/site-activity/site-activity.component';
+import { StudentArchiveComponent } from './components/student-archive/student-archive.component';
 
 //Import pipes
 import { UserFilterPipe } from "./pipes/user-filter.pipe";
@@ -118,7 +120,9 @@ import { FilesService } from "./services/files.service";
     FilesComponent,
     HelpComponent,
     NotFoundComponent,
-    WaitListComponent
+    WaitListComponent,
+    SiteActivityComponent,
+    StudentArchiveComponent
   ],
   providers: [
     AuthGuard,

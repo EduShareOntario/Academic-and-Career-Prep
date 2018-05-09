@@ -5,6 +5,7 @@ import AuthController = require("../controllers/AuthController");
 import ClientController = require("../controllers/ClientController");
 const MailService = require("../services/MailService");
 const PRFService = require("../services/PRFService");
+const ActivityService = require("../services/ActivityService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Client"];
 const config = require('../config');

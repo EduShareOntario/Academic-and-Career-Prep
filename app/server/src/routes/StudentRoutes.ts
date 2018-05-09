@@ -12,13 +12,14 @@ class StudentRoutes {
         var controller = this._studentController;
 
         router.get("/students", controller.retrieve);
+        router.get("/get-student-archive", controller.getStudentArchive);
         router.post("/students", controller.create);
+        router.post("/archive-student", controller.archiveStudent);
         router.post("/get-students-id", controller.getStudentsById);
         router.put("/students/general-info-update", controller.updateGeneralInfo);
         router.put("/students/:_id/requestEditConsent", controller.editConsentRequest);
         router.put("/students/grantConsentEditPermission", controller.grantConsentEditPermission);
         router.get("/students/:_id", controller.findById);
-        router.delete("/students/:_id", controller.delete);
         router.post("/enroll", controller.addToTimetable);
         router.delete("/drop/:_userID/:_courseID", controller.removeFromTimetable);
         router.get("/timetables", controller.getTimetables);

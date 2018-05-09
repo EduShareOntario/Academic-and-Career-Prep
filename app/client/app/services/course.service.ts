@@ -60,6 +60,19 @@ export class CourseService {
       .catch(err => this.handleError(err, "Get waitlist"));
   }
 
+  getWaitListById(userID) {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    let url = "api/wait-list-by-id/" + userID;
+
+    return this.http.get(url, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get course wait list by id"));
+  }
+
   addToWaitList(userID, courseID, date) {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });

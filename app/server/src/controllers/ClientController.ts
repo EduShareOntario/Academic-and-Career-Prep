@@ -177,7 +177,7 @@ class ClientController {
                                   });
                               } else {
                                 console.log("Suitability not provided.");
-                                new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  id[0].firstName + ' ' + id[0].lastName + ' has been created as a new client user.');
+                                new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
                                 res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
                               }
                             }).catch(function(err) {
@@ -273,6 +273,7 @@ class ClientController {
                   new sql.Request(connection)
                     .query("UPDATE Clients SET suitability = 'false' WHERE userID = " + _id + "")
                     .then(function() {
+                      new ActivityService().reportActivity('Suitability Added', 'success', _id, 'Suitability has been created for client with user ID: ' + _id);
                       res.send({ result: "success", title: "Success!", msg: "Client suitability has been initialized!", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Error - Update suitability: " + err);
@@ -387,6 +388,7 @@ class ClientController {
                                 };
                                 new MailService().sendMessage("Client Username Update", mailOptions);
                               }
+                              new ActivityService().reportActivity('General Info Update', 'success', client.userID,  'General info for ' + client.fullName + ' has been updated.');
                               res.send({ result: "success", title: "Success!", msg: "Client general info updated!", serverMsg: "" });
                             }).catch(function(err) {
                               console.log("Error - Update user info: " + err);
@@ -461,6 +463,7 @@ class ClientController {
               new sql.Request(connection)
                 .query(query)
                 .then(function(recordset) {
+                  new ActivityService().reportActivity('Suitability Update', 'success', suitability.suitabilityID,  'Suitability has been updated for client with user ID: ' + suitability.suitabilityID);
                   res.send({ result: "success", title: "Success!", msg: "Suitability updated.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Update suitability: " + err);
@@ -492,6 +495,7 @@ class ClientController {
                   new sql.Request(connection)
                     .query("DELETE FROM Users WHERE userID = '" + _id + "'")
                     .then(function() {
+                      new ActivityService().reportActivity('Client Deleted', 'success', _id,  'Client with user ID ' + _id + ' has been deleted.');
                       res.send({ result: "success", title: "Success!", msg: "Client deleted.", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Error - Delete user with id " + _id + ": " + err);
@@ -527,6 +531,7 @@ class ClientController {
                   new sql.Request(connection)
                     .query("UPDATE Users SET userType= 'Student' WHERE userID = '" + _id + "'")
                     .then(function() {
+                      new ActivityService().reportActivity('Client Transfered', 'success', _id,  'Client with id: ' + _id + ' has been transferred to the students table.');
                       res.send({ result: "success", title: "Transfer Successful!", msg: "Client is now a student user.", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Update user userType " + err);

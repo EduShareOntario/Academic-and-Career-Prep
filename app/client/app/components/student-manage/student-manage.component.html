@@ -1,6 +1,11 @@
-<div class="students">
-  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Students</strong></h1>
-  <hr>
+<div class="students row">
+  <div class="col-md-11">
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Students</strong></h1>
+    <hr>
+  </div>
+  <div class="col-md-1" style="margin-top:20px">
+    <button class="btn btn-info" (click)="goToStudentArchive()" title="Student Archive"><i class="fa fa-archive" aria-hidden="true"></i> Archive</button>
+  </div>
   <div class="" *ngIf="!students">
     <div class="cs-loader">
       <div class="cs-loader-inner">
@@ -17,7 +22,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="students">
+  <div *ngIf="students">
     <div class="col-md-12">
       <div class="error" *ngIf="error">{{error}}</div>
     </div>
@@ -58,10 +63,20 @@
       <h2>Courses for {{studentCoursesView.firstName + " " + studentCoursesView.lastName}}</h2>
       <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
       <hr>
-      <p-dataTable [value]="studentCourses" [responsive]="true">
-        <p-column field="courseID" header="Course ID" [sortable]="true" [style]="{'width': '120px'}"></p-column>
-        <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
-      </p-dataTable>
+      <div *ngIf="studentCourses">
+        <h3>Currently enrolled in: </h3>
+        <p-dataTable [value]="studentCourses" [responsive]="true">
+          <p-column field="courseID" header="Course ID" [sortable]="true" [style]="{'width': '120px'}"></p-column>
+          <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
+        </p-dataTable>
+      </div>
+      <div *ngIf="waitList">
+        <h3>Waiting to be enrolled in: </h3>
+        <p-dataTable [value]="waitList" [responsive]="true">
+          <p-column field="courseID" header="Course ID" [sortable]="true" [style]="{'width': '120px'}"></p-column>
+          <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
+        </p-dataTable>
+      </div>
     </div>
     <div *ngIf="studentInfoView" class="col-md-5">
       <h2>Information for {{studentView.firstName + " " + studentView.lastName}}</h2>

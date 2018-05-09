@@ -35,10 +35,10 @@
     <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
     <p-dataTable [value]="courses | courseFilter : filterQuery" [responsive]="true">
       <p-column field="courseName" header="Name" [sortable]="true"></p-column>
-      <p-column header="Action" [style]="{'width': '145px'}">
+      <p-column header="Action" [style]="{'width': '58px'}">
         <template let-data="rowData" pTemplate="body">
-                <button class="btn btn-primary" style="background-color:#EBEDF0; border-color:e3e3e3; color:black;" (click)="viewCourseWaitList(data, $event)">View Wait List</button>
-              </template>
+          <button class="btn btn-primary" style="background-color:#EBEDF0; border-color:e3e3e3; color:black;" title="View wait list for this course." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </template>
       </p-column>
     </p-dataTable>
   </div>
@@ -53,7 +53,7 @@
       <p-column field="date" header="Date Added" [sortable]="true"></p-column>
       <p-column header="Action" [style]="{'width': '125px'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-warning" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
+          <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
         </template>
       </p-column>
     </p-dataTable>
@@ -67,7 +67,7 @@
       <p-column field="date" header="Date Added" [sortable]="true"></p-column>
       <p-column header="Action" [style]="{'width': '125px'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-warning" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
+          <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
         </template>
       </p-column>
     </p-dataTable>

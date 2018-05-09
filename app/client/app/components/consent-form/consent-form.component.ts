@@ -45,11 +45,12 @@ export class ConsentFormComponent {
       this.clientService
         .getClient(userID)
         .then(result => {
-          this.clientName = result.client[0].firstName + " " + result.client[0].lastName;
-          this.editConsentRequest = result.client[0].editConsentRequest;
-          this.editConsentPermission = result.client[0].editConsentPermission;
-          this.completeConsentForm = result.client[0].consent;
-          if (!result.client[0].consent) {
+          console.log(result);
+          this.clientName = result[0].firstName + " " + result[0].lastName;
+          this.editConsentRequest = result[0].editConsentRequest;
+          this.editConsentPermission = result[0].editConsentPermission;
+          this.completeConsentForm = result[0].consent;
+          if (!result[0].consent) {
             this.clientService
               .getConsentById()
               .then(result => {
@@ -111,7 +112,6 @@ export class ConsentFormComponent {
               .getConsentById()
               .then(result => {
                 this.consentForm = result[0];
-                console.log(this.consentForm);
                 this.loading = false;
                 if (this.editConsentRequest && !this.editConsentPermission) {
                   swal(
