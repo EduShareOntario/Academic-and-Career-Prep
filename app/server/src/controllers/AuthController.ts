@@ -25,12 +25,12 @@ class AuthController {
             .then(function(user) {
               if (user.length > 0) {
                 if (bcrypt.compareSync(_password, user[0].password)) {
-                  new ActivityService().reportActivity('Login', 'success', user[0].userID, _username + ' was successfully logged in.');
+                  new ActivityService().reportActivity(user[0].userType + ' Login', 'success', user[0].userID, _username + ' was successfully logged in.');
                   var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff");
                   var statusToken = { status: 200, body: { token: token, userID: user[0].userID, username: user[0].username, userType: user[0].userType, active: user[0].active } };
                   response = JSON.stringify(statusToken);
                 } else {
-                  new ActivityService().reportActivity('Login', 'fail', user[0].userID, _username + ' attempted to log in but entered the wrong password.');
+                  new ActivityService().reportActivity(user[0].userType + ' Login', 'fail', user[0].userID, _username + ' attempted to log in but entered the wrong password.');
                   response = false;
                 }
               } else {

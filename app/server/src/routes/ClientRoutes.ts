@@ -20,6 +20,7 @@ class ClientRoutes {
         router.get("/clients/:_id", controller.findById);
         router.delete("/clients/:_id", controller.delete);
         router.delete("/clients/:_id/remove", controller.removeFromTable);
+        router.post("/submit-assessment-results", controller.submitAssessmentResults);
         return router;
     }
 

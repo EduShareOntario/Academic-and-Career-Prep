@@ -571,12 +571,20 @@ class ClientController {
                           new sql.Request(connection)
                             .query('SELECT * FROM LearningStyle')
                             .then(function(learningStyleForms) {
-                              res.send({
-                                clients: clients,
-                                suitabilityForms: suitabilityForms,
-                                consentForms: consentForms,
-                                learningStyleForms: learningStyleForms
-                              });
+                              new sql.Request(connection)
+                                .query('SELECT * FROM AssessmentResults')
+                                .then(function(assessmentResults) {
+                                  res.send({
+                                    clients: clients,
+                                    suitabilityForms: suitabilityForms,
+                                    consentForms: consentForms,
+                                    learningStyleForms: learningStyleForms,
+                                    assessmentResults: assessmentResults
+                                  });
+                                }).catch(function(err) {
+                                  console.log("Error - Get assessmentResults: " + err);
+                                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all assessmentResults.", serverMsg: err });
+                                });
                             }).catch(function(err) {
                               console.log("Error - Get learningStyleForms: " + err);
                               res.send({ result: "error", title: "Error", msg: "There was an error retrieving all learning style forms.", serverMsg: err });
@@ -629,6 +637,40 @@ class ClientController {
     } catch (err) {
       console.log("Error - Find client by id: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving client by id.", serverMsg: err });
+    }
+  }
+
+  submitAssessmentResults(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: ["Admin", "Staff"], done: function() {
+          var assessmentResults = req.body;
+          sql.connect(db)
+            .then(function(connection) {
+              var assessmentResultsQuery = "'" + assessmentResults.userID + "', '" +
+                assessmentResults.readingComp1 + "', '" +
+                assessmentResults.readingComp2 + "', '" +
+                assessmentResults.readingComp3 + "', '" +
+                assessmentResults.numeracy + "', '" +
+                assessmentResults.digital + "'";
+              new sql.Request(connection)
+                .query("INSERT INTO AssessmentResults VALUES (" + assessmentResultsQuery + ")")
+                .then(function() {
+                  new ActivityService().reportActivity('Form Submitted', 'success', assessmentResults.userID, 'Assessment results submitted.');
+                    res.send({ result: "success", title: "Results Submitted", msg: "Assessment results have been successfully submitted.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Submit Assessment Results form : " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error submitting assessment results.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Submit Assessment Results: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+        }
+      });
+    } catch (err) {
+      console.log("Error - Submit Assessment Results: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error submitting assessment results.", serverMsg: err });
     }
   }
 

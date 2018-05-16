@@ -5,6 +5,7 @@ import { Student } from "../../models/student";
 import { SuitabilityForm } from "../../models/suitabilityForm";
 import { ConsentForm } from "../../models/consentForm";
 import { LearningStyleForm } from "../../models/learningStyleForm";
+import { AssessmentResults } from "../../models/assessmentResults";
 import { ClientService } from "../../services/client.service";
 import { StudentService } from "../../services/student.service";
 import { AuthService } from "../../services/authentication.service";
@@ -20,6 +21,7 @@ declare var FileSaver: any;
 })
 
 export class ClientStatusComponent implements OnInit {
+  @Input() assessmentResults: AssessmentResults;
   data: any[];
   allClients: Client[];
   suitabilityForms: SuitabilityForm[];
@@ -93,6 +95,7 @@ export class ClientStatusComponent implements OnInit {
   private studentService: StudentService,
   private authService: AuthService,
   private filesService: FilesService) {
+
   }
 
   ngOnInit() {
@@ -130,6 +133,7 @@ export class ClientStatusComponent implements OnInit {
     this.suitabilityForms = objects.suitabilityForms;
     this.consentForms = objects.consentForms;
     this.learningStyleForms = objects.learningStyleForms;
+    this.assessmentResults = objects.assessmentResults;
     this.stage1 = this.data.filter(x => x.suitability);
     this.stage2 = this.data.filter(x => !x.suitability && x.consent);
     this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
@@ -847,6 +851,7 @@ export class ClientStatusComponent implements OnInit {
   }
 
   addAssessmentResults(client) {
+    this.assessmentResults = new AssessmentResults();
     this.showClientView(client);
     this.resetView();
     this.showAssessmentResults = true;
@@ -864,6 +869,32 @@ export class ClientStatusComponent implements OnInit {
     this.showSuitability = false;
     this.showSuitabilityEdit = false;
     this.addSuitability = false;
+  }
+
+  submitAssessmentResults(userID) {
+    this.assessmentResults.userID = userID;
+    this.clientService
+      .submitAssessmentResults(this.assessmentResults)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.getClients();
+          this.showStatusReport();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
   }
 
   displayErrorAlert(error) {

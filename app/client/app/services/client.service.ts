@@ -6,6 +6,7 @@ import { Client } from "../models/client";
 import { ConsentForm } from "../models/consentForm";
 import { LearningStyleForm } from "../models/learningStyleForm";
 import { SuitabilityForm } from "../models/suitabilityForm";
+import { AssessmentResults } from "../models/assessmentResults";
 
 @Injectable()
 export class ClientService {
@@ -224,6 +225,17 @@ export class ClientService {
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Remove client"));
+    }
+
+    submitAssessmentResults(assessmentResults: AssessmentResults): Promise<AssessmentResults> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+        return this.http
+            .post('api/submit-assessment-results', assessmentResults, options)
+            .toPromise()
+            .then(response => response.json())
+            .catch(err => this.handleError(err, "Submit Assessment Results"));
     }
 
     private handleError(error: any, name: any) {

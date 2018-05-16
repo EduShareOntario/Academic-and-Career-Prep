@@ -99,18 +99,18 @@ export class DashboardComponent implements OnInit {
             this.checkFormStatus(userType, userID);
         }
         if (userType === 'Client') {
-            swal({
-              title: 'Loading...'
-            });
-            swal.showLoading();
             this.consent = true;
             this.learningStyle = true;
             //this.maesdprf = true;
-            this.checkFormStatus('client', userID);
+            this.checkFormStatus(userType, userID);
         }
     }
 
     checkFormStatus(type, userID) {
+      swal({
+        title: 'Loading...'
+      });
+      swal.showLoading();
       if (type === 'Client') {
         this.clientService
             .getClient(userID)
@@ -130,7 +130,6 @@ export class DashboardComponent implements OnInit {
         this.studentService
             .getStudent(userID)
             .then(object => {
-              console.log(object);
                 if ((object as any).result === "error") {
                     this.student = null;
                     this.displayErrorAlert(object);

@@ -7,6 +7,10 @@ html, body {
   background-color: #F5F5F5;
 }
 
+.well {
+    background-color: #EFF0F1;
+}
+
 li>a>i {
   min-width: 20px;
   text-align: center;

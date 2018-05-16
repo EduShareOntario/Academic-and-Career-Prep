@@ -87,6 +87,7 @@ class CourseController {
               sql.query
                 `DELETE FROM Course WHERE courseID = ${_id}`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Deleted', 'success', _id, 'Course has been deleted.');
                   res.send({ result: "success", title: "Course Deleted", msg: "Course has been deleted successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update course " + err);
@@ -120,6 +121,7 @@ class CourseController {
           campusId = ${course.campusId},classroom = ${course.classroom},courseStart = ${course.courseStart},
           courseEnd = ${course.courseEnd},classTimeStr = ${course.classTimeStr} WHERE courseID = ${_id}`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Updated', 'success', _id, 'Course has been updated.');
                   res.send({ result: "success", title: "Course Updated!", msg: "Course has been updated successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update course " + err);
@@ -187,6 +189,7 @@ class CourseController {
         VALUES(${course.courseName}, ${course.professorId}, ${course.campusId}, ${course.classroom}, ${course.classTimeStr},
           ${course.courseStart},${course.courseEnd})`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Created', 'success', '', "Course name '" + course.courseName + "' has been successfully created." );
                   res.send({ result: "success", title: "Course Created!", msg: "Course has been created successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Create course: " + err);
@@ -357,6 +360,7 @@ class CourseController {
                 `INSERT INTO WaitList (courseID, studentID, date)
         VALUES(${courseID}, ${userID}, ${date})`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Wait List', 'success', userID, 'Student has been added to the course wait list.');
                   res.send({ result: "success", title: "Success!", msg: "Student has been added to the wait list.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Add to wait list: " + err);

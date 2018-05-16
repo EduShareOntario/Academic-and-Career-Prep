@@ -1,11 +1,13 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, Input } from '@angular/core';
 import { Student } from "../../models/student";
 import { Course } from "../../models/course";
 import { ConsentForm } from "../../models/consentForm";
 import { SuitabilityForm } from "../../models/suitabilityForm";
 import { LearningStyleForm } from "../../models/learningStyleForm";
+import { AssessmentResults } from "../../models/assessmentResults";
 import { Router } from '@angular/router';
 import { StudentService } from "../../services/student.service";
+import { ClientService } from "../../services/client.service";
 import { CourseService } from "../../services/course.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
@@ -31,7 +33,7 @@ export class StudentManageComponent implements OnInit {
   selectedConsentForm: string;
   suitabilityView: SuitabilityForm;
   learningStyleView: LearningStyleForm;
-
+  @Input() assessmentResults: AssessmentResults;
   showGeneral: boolean = true;
   studentEdit: Student;
   showGeneralInfoEdit: boolean = false;
@@ -39,10 +41,12 @@ export class StudentManageComponent implements OnInit {
   phone2: boolean = false;
   long1: boolean = false;
   long2: boolean = false;
+
   showSuitability: boolean;
   showConsent: boolean;
   showLearningStyle: boolean;
   showFiles: boolean;
+  showAssessmentResults: boolean;
 
   //bar chart (learning style)
   barChartOptions: any = {
@@ -61,6 +65,7 @@ export class StudentManageComponent implements OnInit {
   constructor(private router: Router,
     private ngZone: NgZone,
     private studentService: StudentService,
+    private clientService: ClientService,
     private courseService: CourseService,
     private authService: AuthService,
     private filesService: FilesService) {
@@ -248,6 +253,9 @@ export class StudentManageComponent implements OnInit {
           this.consentForms = forms.consentForm;
           this.learningStyleView = forms.learningStyleForm[0];
           this.suitabilityView = forms.suitabilityForm[0];
+          if (forms.assessmentResults[0] != null) {
+            this.assessmentResults = forms.assessmentResults[0];
+          }
           this.barChartData = [{ data: [this.learningStyleView.hearing, this.learningStyleView.seeing, this.learningStyleView.doing] }];
         }
         swal.close();
@@ -264,24 +272,24 @@ export class StudentManageComponent implements OnInit {
 
   getTimetableById(userID) {
     this.studentService
-    .getEventsById(userID)
-    .then(result => {
-      if ((result as any).result === 'error') {
-        this.displayErrorAlert(result);
-        this.studentCourses = null;
-      } else if ((result as any).result === 'success') {
-        this.studentCourses = null;
-        // swal(
-        //     result.title,
-        //     result.msg,
-        //     'info'
-        // );
-      } else {
-        this.studentCourses = result;
-      }
-    }).catch(error => {
-      console.log("Error getting timetable by id");
-    });
+      .getEventsById(userID)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+          this.studentCourses = null;
+        } else if ((result as any).result === 'success') {
+          this.studentCourses = null;
+          // swal(
+          //     result.title,
+          //     result.msg,
+          //     'info'
+          // );
+        } else {
+          this.studentCourses = result;
+        }
+      }).catch(error => {
+        console.log("Error getting timetable by id");
+      });
   }
 
   getWaitListById(student: Student) {
@@ -427,9 +435,9 @@ export class StudentManageComponent implements OnInit {
           this.showGeneral = true;
         } else {
           swal(
-              'Error',
-              'Something went wrong, please try again.',
-              'warning'
+            'Error',
+            'Something went wrong, please try again.',
+            'warning'
           );
         }
       })
@@ -480,6 +488,7 @@ export class StudentManageComponent implements OnInit {
 
   resetView() {
     this.studentCoursesView = null;
+    this.showAssessmentResults = false;
     this.showGeneralInfoEdit = false;
     this.studentInfoView = false;
     this.showGeneral = false;
@@ -489,11 +498,45 @@ export class StudentManageComponent implements OnInit {
     this.showFiles = false;
   }
 
+  addAssessmentResults(student) {
+    this.viewInfo(student);
+    this.assessmentResults = new AssessmentResults();
+    this.resetView();
+    this.studentInfoView = true;
+    this.studentView = student;
+    this.showAssessmentResults = true;
+  }
+
+  submitAssessmentResults(userID) {
+    this.assessmentResults.userID = userID;
+    this.clientService
+      .submitAssessmentResults(this.assessmentResults)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.resetView();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
+  }
+
   displayErrorAlert(error) {
     swal(
-        error.title,
-        error.msg,
-        'error'
+      error.title,
+      error.msg,
+      'error'
     );
   }
 

@@ -1,3 +1,4 @@
+import moment = require("moment");
 var sql = require('mssql');
 var config = require('../config');
 const db = config.db;
@@ -5,11 +6,11 @@ const db = config.db;
 class ActivityService {
 
 reportActivity(action, result, userID, info) {
-  var timestamp = new Date();
+  var CurrentDate = moment().format();
   sql.connect(db)
     .then(function(connection) {
       new sql.Request(connection)
-      .query("INSERT INTO ActivityReport VALUES ('" + userID + "', '" + timestamp + "','" + action + "','" + result + "','" + info + "')")
+      .query("INSERT INTO SiteActivity VALUES ('" + userID + "', '" + CurrentDate + "','" + action + "','" + result + "','" + info + "')")
         .then(function(user) {
         }).catch(function(err) {
           console.log("Error - Insert new record into activity table: " + err);

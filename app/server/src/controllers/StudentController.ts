@@ -121,6 +121,7 @@ class StudentController {
                                 };
                                 new MailService().sendMessage("Student Username Update", mailOptions);
                               }
+                              new ActivityService().reportActivity('Student User Updated', 'success', student.userID, 'Student user has been updated.');
                               res.send({ result: "success", title: "Update Success!", msg: "Student user updated!", serverMsg: "" });
                             }).catch(function(err) {
                               console.log("Error - Update user: " + err);
@@ -218,6 +219,7 @@ class StudentController {
                       new sql.Request(connection)
                         .query("DELETE FROM Users WHERE userID = '" + student.userID + "'")
                         .then(function() {
+                          new ActivityService().reportActivity('Student User Archived', 'success', "Student '" + firstName + " " + lastName + "' has been archived.");
                           res.send({ result: "success", title: "Student Archived", msg: "Student user has been successfully archived.", serverMsg: "" });
                         }).catch(function(err) {
                           console.log("Error - Archive user with id " + student.userID + ": " + err);
@@ -343,6 +345,7 @@ class StudentController {
                         text: '', // plain text body
                         html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: ' + site_settings.url + '/#/students. Search for ' + student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                       };
+                      new ActivityService().reportActivity('Form Edit Request', 'success', _id, 'Student is requesting permission to edit their consent form.');
                       new MailService().sendMessage("Request to Edit Consent", mailOptions);
                       res.send({ result: "success", title: "Request Sent", msg: "Your request to edit consent has been sent!", serverMsg: "" });
                     }).catch(function(err) {
@@ -392,6 +395,7 @@ class StudentController {
                               text: '', // plain text body
                               html: 'You can now login at: https://gcacademicprep.azurewebsites.net and make changes to your consent form.'// html body
                             };
+                            new ActivityService().reportActivity('Permission Granted', 'success', student.userID, 'Student has been granted permission to edit their consent form.');
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
                             res.send({ result: "granted", title: "Request Granted", msg: "Student has been granted access to edit their consent form.", serverMsg: "" });
                           }).catch(function(err) {
@@ -434,6 +438,7 @@ class StudentController {
           new sql.Request(connection)
             .query("INSERT INTO Timetables (userID,startDate,endDate,courseID,instructorID) VALUES ('" + _userID + "','" + _startDate + "','" + _endDate + "','" + _courseID + "','" + _instructorID + "')")
             .then(function() {
+              new ActivityService().reportActivity('Student Enrolled In Course', 'success', _userID, 'Student enrolled in course with course ID: ' + _courseID + '.');
               res.send({ result: "success", title: "Student Enrolled", msg: "Student user has been added to course.", serverMsg: "" });
             }).catch(function(err) {
               console.log("Error - Insert into timetable: " + err);
@@ -458,6 +463,7 @@ class StudentController {
           new sql.Request(connection)
             .query("DELETE FROM Timetables WHERE userID = ('" + _userID + "') AND courseID = ('" + _courseID + "')")
             .then(function() {
+              new ActivityService().reportActivity('Student Removed From Course', 'success', _userID, 'Student removed from course with course ID: ' + _courseID + '.');
               res.send({ result: "success", title: "Student Removed", msg: "Student has been removed from course.", serverMsg: "" });
             }).catch(function(err) {
               console.log("Error - Remove student from timetable: " + err);
@@ -586,6 +592,7 @@ class StudentController {
               new sql.Request(connection)
                 .query("INSERT INTO CaseNotes VALUES ('" + _id + "', '" + caseNote + "', '" + dateTime + "')")
                 .then(function() {
+                  new ActivityService().reportActivity('New Student Note', 'success', _id, 'New student note submitted.');
                   res.send({ result: "success", title: "Note Created!", msg: "Note has been created for this student.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Insert new note " + err);
@@ -640,6 +647,7 @@ class StudentController {
               new sql.Request(connection)
                 .query("DELETE FROM caseNotes WHERE caseNoteID = '" + _id + "'")
                 .then(function() {
+                  new ActivityService().reportActivity('Student Note Deleted', 'success', '', 'A student note has been deleted.');
                   res.send({ result: "success", title: "Note Deleted", msg: "Note has been deleted for this student.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Delete student note: " + err);
@@ -680,7 +688,7 @@ class StudentController {
                   .query(query)
                   .then(function(recordset) {
                     // set schedule check on DB
-                    console.log("attendance record inserted");
+                    new ActivityService().reportActivity('Attendance Submitted', 'success', attendance.instructorID, 'Instructor has submitted attendance for course with course ID of ' + attendance.courseID);
                     res.send(recordset);
                   }).catch(function(err) {
                     console.log("Error - Insert attendance: " + err);
@@ -739,9 +747,10 @@ class StudentController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query("SELECT * FROM Clients C INNER JOIN SuitabilityForm S ON C.userID = S.userID WHERE C.userID = '" + _id + "' AND S.userID = '" + _id + "'")
+                .query("SELECT * FROM Users C INNER JOIN SuitabilityForm S ON C.userID = S.userID WHERE C.userID = '" + _id + "' AND S.userID = '" + _id + "'")
                 .then(function(recordset) {
                   new PRFService().populatePRF(recordset[0]);
+                  new ActivityService().reportActivity('PRF Populated', 'success', _id, 'PRF has been generated for student.');
                   res.send({ result: "success", title: "PRF Populated!", msg: "PRF form has been populated with student info.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Get client by id for prf: " + err);

@@ -326,6 +326,7 @@ export class SuitabilityFormComponent {
     }
 
     saveClient() {
+      console.log(this.client);
       swal({
         title: 'Saving...',
         allowOutsideClick: false
@@ -334,7 +335,6 @@ export class SuitabilityFormComponent {
       this.clientService
           .create(this.client, this.suitabilityForm)
           .then(client => {
-            console.log(client);
             if (client.result === "error") {
               this.displayErrorAlert(client);
             } else if (client.msg === "username in use") {
