@@ -27,6 +27,8 @@ export class ClientStatusComponent implements OnInit {
   suitabilityForms: SuitabilityForm[];
   consentForms: ConsentForm[];
   learningStyleForms: LearningStyleForm[];
+  allAssessmentResults: AssessmentResults[];
+  editAssessment: boolean;
   clientTotal: any;
   actionItems: any[];
   error: any;
@@ -133,7 +135,7 @@ export class ClientStatusComponent implements OnInit {
     this.suitabilityForms = objects.suitabilityForms;
     this.consentForms = objects.consentForms;
     this.learningStyleForms = objects.learningStyleForms;
-    this.assessmentResults = objects.assessmentResults;
+    this.allAssessmentResults = objects.assessmentResults;
     this.stage1 = this.data.filter(x => x.suitability);
     this.stage2 = this.data.filter(x => !x.suitability && x.consent);
     this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
@@ -850,8 +852,16 @@ export class ClientStatusComponent implements OnInit {
     this.consentView = consentForm[0];
   }
 
-  addAssessmentResults(client) {
-    this.assessmentResults = new AssessmentResults();
+  viewAssessmentResults(client) {
+    var assessmentResults = this.allAssessmentResults.filter(x => x.userID === client.userID);
+    var isEmpty = (assessmentResults || []).length === 0;
+    if (isEmpty) {
+      this.editAssessment = false;
+      this.assessmentResults = new AssessmentResults;
+    } else {
+      this.editAssessment = true;
+      this.assessmentResults = assessmentResults[0];
+    }
     this.showClientView(client);
     this.resetView();
     this.showAssessmentResults = true;
@@ -871,10 +881,11 @@ export class ClientStatusComponent implements OnInit {
     this.addSuitability = false;
   }
 
-  submitAssessmentResults(userID) {
+  addAssessmentResults(userID) {
+
     this.assessmentResults.userID = userID;
     this.clientService
-      .submitAssessmentResults(this.assessmentResults)
+      .addAssessmentResults(this.assessmentResults)
       .then(result => {
         if ((result as any).result === 'error') {
           this.displayErrorAlert(result);
@@ -886,6 +897,30 @@ export class ClientStatusComponent implements OnInit {
           );
           this.getClients();
           this.showStatusReport();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
+  }
+
+  editAssessmentResults(userID) {
+    this.clientService
+      .editAssessmentResults(this.assessmentResults)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.resetView();
         } else {
           swal(
             'Error',

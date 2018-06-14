@@ -227,12 +227,23 @@ export class ClientService {
             .catch(err => this.handleError(err, "Remove client"));
     }
 
-    submitAssessmentResults(assessmentResults: AssessmentResults): Promise<AssessmentResults> {
+    addAssessmentResults(assessmentResults: AssessmentResults): Promise<AssessmentResults> {
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
         return this.http
-            .post('api/submit-assessment-results', assessmentResults, options)
+            .post('api/add-assessment-results', assessmentResults, options)
+            .toPromise()
+            .then(response => response.json())
+            .catch(err => this.handleError(err, "Submit Assessment Results"));
+    }
+
+    editAssessmentResults(assessmentResults: AssessmentResults): Promise<AssessmentResults> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+        return this.http
+            .put('api/edit-assessment-results', assessmentResults, options)
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Submit Assessment Results"));

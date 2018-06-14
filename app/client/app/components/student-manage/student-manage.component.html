@@ -44,7 +44,7 @@
               <ul class="dropdown-menu" role="menu" style="position:absolute;">
                 <li><a (click)="viewInfo(data)"><i class="fa fa-info-circle" aria-hidden="true"></i> View Info</a></li>
                 <li><a (click)="viewCourses(data)"><i class="fa fa-book" aria-hidden="true"></i> View Courses</a></li>
-                <li><a (click)="addAssessmentResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Assessment Results</a></li>
+                <li><a (click)="viewAssessmentResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Assessment Results</a></li>
                 <!-- <li><a (click)="populatePRF(data)"><i class="fa fa-eye" aria-hidden="true"></i> Generate PRF</a></li> -->
                 <li><a (click)="archiveAlert(data, $event)"><i class="fa fa-archive" aria-hidden="true"></i> Archive</a></li>
               </ul>
@@ -266,8 +266,9 @@
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="showAssessmentResults">
-                    <h3>Assessment Results for {{ studentView.firstName }}</h3>
+                  <div *ngIf="showAssessmentResults && assessmentResults">
+                    <h3 *ngIf="editAssessment">Edit Assessment Results for {{ studentView.firstName }}</h3>
+                    <h3 *ngIf="!editAssessment">Enter Assessment Results for {{ studentView.firstName }}</h3>
                     <br />
                     <label class="control-label">Reading Comprehension Assessment #1: </label>
                     <input class="form-control" type="text" [(ngModel)]="assessmentResults.readingComp1" />
@@ -280,7 +281,8 @@
                     <label class="control-label">Digital Assessment: </label>
                     <input class="form-control" type="text" [(ngModel)]="assessmentResults.digital" />
                     <br />
-                    <button class="btn btn-success marginBottomButton" (click)="submitAssessmentResults(studentView.userID)" style="float:right" title="Submit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
+                    <button *ngIf="editAssessment" class="btn btn-success marginBottomButton" (click)="editAssessmentResults(studentView.userID)" style="float:right" title="Edit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
+                    <button *ngIf="!editAssessment" class="btn btn-success marginBottomButton" (click)="addAssessmentResults(studentView.userID)" style="float:right" title="Add Assessment Results"><i class="fa fa-upload"></i> Submit</button>
                     <div style="clear:both"></div>
                   </div>
                   <div *ngIf="showFiles">

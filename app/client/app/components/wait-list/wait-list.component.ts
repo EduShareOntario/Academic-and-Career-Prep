@@ -17,13 +17,13 @@ declare var moment;
 export class WaitListComponent implements OnInit {
   data: any;
   students: Student[];
-  courses: Course[];
+  courseTypes: any[];
   waitList: any[];
   timetables: any[];
   courseWaitList: any[];
   studentsWaiting:any = [];
   viewingCourse: Course[];
-  selectedCourse: Course[];
+  selectedCourseType: Course[];
   selectedStudent: Student[];
   showForm: boolean = false;
 
@@ -61,20 +61,13 @@ export class WaitListComponent implements OnInit {
 
   getCourses() {
     this.CourseService
-      .getCourses()
+      .getCourseTypes()
       .then(result => {
         if ((result as any).result === 'error') {
-          this.courses = null;
+          this.courseTypes = null;
           this.displayErrorAlert(result);
         } else {
-          //format datetime
-          result.forEach((item) => {
-            item.courseStart = moment(item.courseStart).format('YYYY-MM-DD');
-            item.courseEnd = moment(item.courseEnd).format('YYYY-MM-DD');
-            // item.classStartTime = moment(item.classStartTime).format('hh:mm A');
-            // item.classEndTime = moment(item.classEndTime).format('hh:mm A');
-          });
-          this.courses = result;
+          this.courseTypes = result;
           this.getWaitList();
         }
       })
@@ -93,14 +86,13 @@ export class WaitListComponent implements OnInit {
           this.waitList = result;
           for (let item of this.waitList) {
              var student = this.students.filter(x => x.userID === item.studentID);
-             var course = this.courses.filter(x => x.courseID === item.courseID);
              //student[0].fullName = student[0].firstName + " " + student[0].lastName;
              // student[0].courseID = course[0].courseID;
              // student[0].professorId = course[0].professorId;
-             student[0].courseName = course[0].courseName;
+             student[0].courseName = item.courseType;
              var studentRecord = {
                fullName: student[0].fullName,
-               courseName: student[0].courseName,
+               courseType: student[0].courseName,
                date: item.date
              };
              this.studentsWaiting.push(studentRecord);
@@ -132,14 +124,7 @@ export class WaitListComponent implements OnInit {
 
   addStudentToWaitList() {
     var CurrentDate = moment().format();
-    var timetable = this.timetables.filter(x => x.courseID === this.selectedCourse && x.userID === this.selectedStudent);
-    if (timetable[0] != null) {
-        swal(
-          'Whoops!',
-          'That student is already enrolled in the selected course.',
-          'warning'
-        );
-    } else if (this.selectedStudent == null || this.selectedCourse == null) {
+   if (this.selectedStudent == null || this.selectedCourseType == null) {
       swal(
         'Invalid Input',
         'Please select both a student and a course.',
@@ -154,7 +139,7 @@ export class WaitListComponent implements OnInit {
       this.courseWaitList = null;
       this.showForm = false;
       this.CourseService
-        .addToWaitList(this.selectedStudent, this.selectedCourse, CurrentDate)
+        .addToWaitList(this.selectedStudent, this.selectedCourseType, CurrentDate)
         .then(result => {
           if ((result as any).result === 'error') {
             this.displayErrorAlert(result);
@@ -188,7 +173,7 @@ export class WaitListComponent implements OnInit {
   viewCourseWaitList(data) {
     this.viewingCourse = data;
     this.studentsWaiting = [];
-    this.courseWaitList = this.waitList.filter(x => x.courseID === data.courseID);
+    this.courseWaitList = this.waitList.filter(x => x.courseType === data.courseType);
     for (let item of this.courseWaitList) {
        var student = this.students.filter(x => x.userID === item.studentID);
        student[0].fullName = student[0].firstName + " " + student[0].lastName;

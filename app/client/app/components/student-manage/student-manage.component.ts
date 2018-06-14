@@ -47,6 +47,7 @@ export class StudentManageComponent implements OnInit {
   showLearningStyle: boolean;
   showFiles: boolean;
   showAssessmentResults: boolean;
+  editAssessment: boolean;
 
   //bar chart (learning style)
   barChartOptions: any = {
@@ -103,20 +104,17 @@ export class StudentManageComponent implements OnInit {
           file.userID = +file.userID;
         }
         swal.close();
-        console.log(this.files);
       })
       .catch(error => error);
   }
 
   download(file) {
-    console.log(file);
     var filename = file.milliseconds + "_" + file.userID + "_" + file.filename;
     this.filesService
       .download(filename)
       .then(response => {
         var blob = new Blob([response], { type: "application/pdf" });
         //change download.pdf to the name of whatever you want your file to be
-        console.log(blob);
         saveAs(blob, file.filename);
       })
       .catch(error => error);
@@ -253,7 +251,12 @@ export class StudentManageComponent implements OnInit {
           this.consentForms = forms.consentForm;
           this.learningStyleView = forms.learningStyleForm[0];
           this.suitabilityView = forms.suitabilityForm[0];
-          if (forms.assessmentResults[0] != null) {
+          var isEmpty = (forms.assessmentResults || []).length === 0;
+          if (isEmpty) {
+            this.editAssessment = false;
+            this.assessmentResults = new AssessmentResults();
+          } else {
+            this.editAssessment = true;
             this.assessmentResults = forms.assessmentResults[0];
           }
           this.barChartData = [{ data: [this.learningStyleView.hearing, this.learningStyleView.seeing, this.learningStyleView.doing] }];
@@ -498,19 +501,42 @@ export class StudentManageComponent implements OnInit {
     this.showFiles = false;
   }
 
-  addAssessmentResults(student) {
+  viewAssessmentResults(student) {
     this.viewInfo(student);
-    this.assessmentResults = new AssessmentResults();
     this.resetView();
     this.studentInfoView = true;
     this.studentView = student;
     this.showAssessmentResults = true;
   }
 
-  submitAssessmentResults(userID) {
+  addAssessmentResults(userID) {
     this.assessmentResults.userID = userID;
     this.clientService
-      .submitAssessmentResults(this.assessmentResults)
+      .addAssessmentResults(this.assessmentResults)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.resetView();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
+  }
+
+  editAssessmentResults(userID) {
+    this.clientService
+      .editAssessmentResults(this.assessmentResults)
       .then(result => {
         if ((result as any).result === 'error') {
           this.displayErrorAlert(result);

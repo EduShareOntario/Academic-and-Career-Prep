@@ -1,5 +1,6 @@
 export class Course {
     courseID: string;
+    courseType: string;
     professorId: string;
     authLevel: string;
     courseName: string;

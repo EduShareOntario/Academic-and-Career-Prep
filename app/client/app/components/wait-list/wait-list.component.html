@@ -1,17 +1,3 @@
-<div *ngIf="!courses" class="cs-loader doNotPrint">
-  <div class="cs-loader-inner">
-    <label>	L</label>
-    <label>	O</label>
-    <label>	A</label>
-    <label>	D</label>
-    <label>	I</label>
-    <label>	N</label>
-    <label>	G</label>
-    <label>	.</label>
-    <label>	.</label>
-    <label>	.</label>
-  </div>
-</div>
 <div class="row">
   <div class="doNotPrint">
     <div class="col-md-10">
@@ -25,19 +11,18 @@
         <span title="Close" class="closeMenu" (click)="closeMenu()"><i class="fa fa-times"></i></span>
         <h4>Add Student to Wait List</h4>
         <p-dropdown [options]="students | studentToSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
-        <p-dropdown [options]="courses | courseToSelectItem" [(ngModel)]="selectedCourse" placeholder="Select a Course" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
+        <p-dropdown [options]="courseTypes | courseTypeToSelectItem" [(ngModel)]="selectedCourseType" placeholder="Select a Course Type" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
         <button class="btn btn-success" style="float:right" (click)="addStudentToWaitList()" title="Add to wait list"><i class="fa fa-plus"></i> Submit</button>
       </div>
     </div>
   </div>
 
   <div class="col-md-3 doNotPrint">
-    <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
-    <p-dataTable [value]="courses | courseFilter : filterQuery" [responsive]="true">
-      <p-column field="courseName" header="Name" [sortable]="true"></p-column>
+    <p-dataTable [value]="courseTypes" [responsive]="true">
+      <p-column field="courseType" header="Course Type" [sortable]="true"></p-column>
       <p-column header="Action" [style]="{'width': '58px'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-primary" style="background-color:#EBEDF0; border-color:e3e3e3; color:black;" title="View wait list for this course." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+          <button class="btn btn-primary" style="background-color:#EBEDF0; border-color:e3e3e3; color:black;" title="View wait list for this course type." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
         </template>
       </p-column>
     </p-dataTable>
@@ -49,7 +34,7 @@
     <h3 class="well" *ngIf="waitList">Total # of students waiting to be enrolled in a course: {{ waitList.length }}<strong> </strong></h3>
     <p-dataTable [value]="studentsWaiting" [responsive]="true">
       <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-      <p-column field="courseName" header="Course" [sortable]="true"></p-column>
+      <p-column field="courseType" header="Course Type" [sortable]="true"></p-column>
       <p-column field="date" header="Date Added" [sortable]="true"></p-column>
       <p-column header="Action" [style]="{'width': '125px'}">
         <template let-data="rowData" pTemplate="body">
@@ -59,7 +44,7 @@
     </p-dataTable>
   </div>
   <div *ngIf="courseWaitList" class="col-md-9">
-    <h2>{{ viewingCourse.courseName }} Wait List</h2>
+    <h2>{{ viewingCourse.courseType }} Wait List</h2>
     <div (click)="courseWaitList = null; getWaitList();" class="statusButton" title="View overall status"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
     <hr>
     <p-dataTable [value]="studentsWaiting" [responsive]="true">

@@ -11,6 +11,11 @@
     <button (click)="save()" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
   </div>
   <div class="col-md-4" *ngIf="course">
+    <!-- Instructor dropdown selection -->
+    <div class="form-group">
+      <label class="col-md-4 control-label"><span style="color:red">*</span> Course Type: </label>
+      <p-dropdown [style]="{'width':'200px'}" [options]="courseTypes" [(ngModel)]="course.courseType"></p-dropdown>
+    </div>
     <div class="form-group">
       <label class="col-md-4 control-label"><span style="color:red">*</span> Course Name: </label>
       <div style="max-width:200px; display: inline-block;">
@@ -32,12 +37,12 @@
     <!-- Instructor dropdown selection -->
     <div class="form-group">
       <label class="col-md-4 control-label"><span style="color:red">*</span> Instructor: </label>
-      <p-dropdown [style]="{'width':'175px'}" [options]="professors" [(ngModel)]="course.professorId"></p-dropdown>
+      <p-dropdown [style]="{'width':'200px'}" [options]="professors" [(ngModel)]="course.professorId"></p-dropdown>
     </div>
     <!-- Campus dropdown selection -->
     <div class="form-group">
       <label class="col-md-4 control-label"><span style="color:red">*</span> Campus: </label>
-      <p-dropdown [style]="{'width':'175px'}" [options]="campuses" [(ngModel)]="course.campusId"></p-dropdown>
+      <p-dropdown [style]="{'width':'200px'}" [options]="campuses" [(ngModel)]="course.campusId"></p-dropdown>
     </div>
     <!-- Classroom input -->
     <div class="form-group">

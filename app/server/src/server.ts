@@ -9,9 +9,7 @@ const ScheduleService = require("./services/ScheduleService");
 
 var port:number = process.env.PORT || 3000;
 var env:string = process.env.NODE_ENV || 'developement';
-
-var app = express();
-
+var app = express(); 
 
 app.set('port', port);
 

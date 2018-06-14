@@ -3,6 +3,14 @@ html, body {
   margin: 0;
 }
 
+.navbar-toggle {
+    border: none;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #FFFFFF;
+}
+
 .active>li>a {
   background-color: #F5F5F5;
 }

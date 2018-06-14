@@ -640,7 +640,7 @@ class ClientController {
     }
   }
 
-  submitAssessmentResults(req: express.Request, res: express.Response): void {
+  addAssessmentResults(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
         requiredAuth: ["Admin", "Staff"], done: function() {
@@ -656,11 +656,11 @@ class ClientController {
               new sql.Request(connection)
                 .query("INSERT INTO AssessmentResults VALUES (" + assessmentResultsQuery + ")")
                 .then(function() {
-                  new ActivityService().reportActivity('Form Submitted', 'success', assessmentResults.userID, 'Assessment results submitted.');
+                  new ActivityService().reportActivity('Form Submitted', 'success', assessmentResults.userID, 'Assessment results added.');
                     res.send({ result: "success", title: "Results Submitted", msg: "Assessment results have been successfully submitted.", serverMsg: "" });
                 }).catch(function(err) {
-                  console.log("Submit Assessment Results form : " + err);
-                  res.send({ result: "error", title: "Error", msg: "There was an error submitting assessment results.", serverMsg: err });
+                  console.log("Add Assessment Results form : " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error adding new assessment results.", serverMsg: err });
                 });
             }).catch(function(err) {
               console.log("DB Connection error - Submit Assessment Results: " + err);
@@ -669,8 +669,36 @@ class ClientController {
         }
       });
     } catch (err) {
-      console.log("Error - Submit Assessment Results: " + err);
-      res.send({ result: "error", title: "Error", msg: "There was an error submitting assessment results.", serverMsg: err });
+      console.log("Error - Add Assessment Results: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error adding new assessment results.", serverMsg: err });
+    }
+  }
+
+  editAssessmentResults(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: ["Admin", "Staff"], done: function() {
+          var assessmentResults = req.body;
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query("UPDATE AssessmentResults SET readingComp1='" + assessmentResults.readingComp1 + "', readingComp2='" + assessmentResults.readingComp2 + "', readingComp3 ='" + assessmentResults.readingComp3 + "', numeracy='" + assessmentResults.numeracy + "', digital='" + assessmentResults.digital + "' WHERE assessmentID='" + assessmentResults.assessmentID + "'")
+                .then(function() {
+                  new ActivityService().reportActivity('Form Submitted', 'success', assessmentResults.userID, 'Assessment results updated.');
+                    res.send({ result: "success", title: "Results Updated", msg: "Assessment results have been successfully updated.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Update Assessment Results form : " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error updating assessment results.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Submit Assessment Results: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+        }
+      });
+    } catch (err) {
+      console.log("Error - Update Assessment Results: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error updating assessment results.", serverMsg: err });
     }
   }
 

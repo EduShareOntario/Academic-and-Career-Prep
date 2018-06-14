@@ -22,6 +22,7 @@ class CourseRoutes {
         router.delete("/course/:_id", controller.delete);
         router.get("/getInstructors", controller.getInstructors);
         router.get("/getCampuses", controller.getCampuses);
+        router.get("/getCourseTypes", controller.getCourseTypes);
         return router;
     }
 }

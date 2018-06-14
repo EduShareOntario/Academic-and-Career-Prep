@@ -53,6 +53,7 @@ import { CampusFilterPipe } from "./pipes/campus-filter.pipe";
 import { StudentSelectItemPipe } from "./pipes/student-to-select-item.pipe";
 import { InstructorSelectItemPipe } from "./pipes/instructor-to-select-item.pipe";
 import { CourseSelectItemPipe } from "./pipes/course-to-select-item.pipe";
+import { CourseTypeSelectItemPipe } from "./pipes/course-type-to-select-item.pipe";
 
 //Import services
 import { AuthGuard } from './guards/auth.guard';
@@ -113,6 +114,7 @@ import { FilesService } from "./services/files.service";
     StudentSelectItemPipe,
     InstructorSelectItemPipe,
     CourseSelectItemPipe,
+    CourseTypeSelectItemPipe,
     AttendanceListComponent,
     AttendanceReportComponent,
     ResetPasswordComponent,
