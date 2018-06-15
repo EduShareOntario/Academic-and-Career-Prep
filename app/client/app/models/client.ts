@@ -4,6 +4,7 @@ export class Client {
     userID: string;
     authLevel: string;
     inquiryDate: string;
+    courseType: string;
     username: string;
     password: string;
     fullName: string;

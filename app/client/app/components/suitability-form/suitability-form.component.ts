@@ -4,6 +4,7 @@ import { Client } from "../../models/client";
 import { SuitabilityForm } from "../../models/suitabilityForm";
 import { ActivatedRoute, Params } from '@angular/router';
 import { ClientService } from "../../services/client.service";
+import { CourseService } from "../../services/course.service";
 import { AuthService } from '../../services/authentication.service';
 declare var swal: any;
 declare var moment: any;
@@ -46,8 +47,14 @@ export class SuitabilityFormComponent {
     studentNumberToggle: boolean = false;
 
     campusList: any;
+    courseTypes: any[] = [];
+    selectedCourseTypes: any[] = [];
 
-    constructor(private clientService: ClientService, private router: Router, private route: ActivatedRoute, private authService: AuthService) {
+    constructor(private courseService: CourseService,
+      private clientService: ClientService,
+      private router: Router,
+      private route: ActivatedRoute,
+      private authService: AuthService) {
         this.client = new Client();
         this.suitabilityForm = new SuitabilityForm();
         this.date = new Date();
@@ -64,7 +71,20 @@ export class SuitabilityFormComponent {
     }
 
     ngOnInit() {
-
+      // get course types
+      this.courseService.getCourseTypes()
+      .then((result) => {
+        if ((result as any).result === "error") {
+          this.displayErrorAlert(result);
+        } else {
+          result.forEach((i) => {
+            this.courseTypes.push({
+              label: i.courseType,
+              value: i.courseType
+            });
+          });
+        }
+      });
     }
 
     clicked(item) {
@@ -326,7 +346,10 @@ export class SuitabilityFormComponent {
     }
 
     saveClient() {
-      console.log(this.client);
+      if (this.selectedCourseTypes.toString() !== '') {
+        this.suitabilityForm.selectedCourseTypes = this.selectedCourseTypes.toString();
+      }
+
       swal({
         title: 'Saving...',
         allowOutsideClick: false
@@ -364,6 +387,28 @@ export class SuitabilityFormComponent {
                 this.clicked('section1');
               }
             }  else if (client.result === "success") {
+              console.log(client.userID);
+              var CurrentDate = moment().format();
+              if (this.selectedCourseTypes.toString() !== '') {
+              for (let courseType of this.selectedCourseTypes) {
+                this.courseService
+                    .addToWaitList(client.userID, courseType, CurrentDate)
+                    .then(result => {
+                      if ((result as any).result === 'error') {
+                        this.displayErrorAlert(result);
+                      } else if ((result as any).result === 'success')  {
+                        swal.close();
+                      } else {
+                        swal(
+                          'Error',
+                          'Something went wrong while adding student to wait list.',
+                          'error'
+                        );
+                      }
+                    })
+                    .catch(error => console.log("Error - Add student to wait list: " + error));
+                }
+              }
               swal.close();
               this.router.navigate(['/clients']);
             } else {

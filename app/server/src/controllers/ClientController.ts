@@ -121,7 +121,7 @@ class ClientController {
                               if (Object.keys(suitabilityForm).length != 0) {
                                 var suitabilityFormQuery = "'" + id[0].userID
                                   + "', '" + suitabilityForm.transcript
-                                  + "', '" + suitabilityForm.courses
+                                  + "', '" + suitabilityForm.selectedCourseTypes
                                   + "', '" + suitabilityForm.goal
                                   + "', '" + suitabilityForm.transitionDate
                                   + "', '" + suitabilityForm.governmentID
@@ -166,7 +166,7 @@ class ClientController {
                                       .query("UPDATE Clients SET suitability= 'false' WHERE userID = '" + id[0].userID + "'")
                                       .then(function() {
                                         new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
-                                        res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
+                                        res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "", userID: id[0].userID });
                                       }).catch(function(err) {
                                         console.log("Update client " + err);
                                         res.send({ result: "error", title: "Error", msg: "There was an error creating new client.", serverMsg: err });
@@ -230,7 +230,7 @@ class ClientController {
 
               var suitabilityFormQuery = "'" + _id
                 + "', '" + suitabilityForm.transcript
-                + "', '" + suitabilityForm.courses
+                + "', '" + suitabilityForm.selectedCourseTypes
                 + "', '" + suitabilityForm.goal
                 + "', '" + suitabilityForm.transitionDate
                 + "', '" + suitabilityForm.governmentID
@@ -424,7 +424,7 @@ class ClientController {
           sql.connect(db)
             .then(function(connection) {
               var query = "UPDATE SuitabilityForm SET transcript='" + suitability.transcript
-                + "', courses='" + suitability.courses
+                + "', selectedCourseTypes='" + suitability.selectedCourseTypes
                 + "', goal='" + suitability.goal
                 + "', transitionDate='" + suitability.transitionDate
                 + "', governmentID='" + suitability.governmentID

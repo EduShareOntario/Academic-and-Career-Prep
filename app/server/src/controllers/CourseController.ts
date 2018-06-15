@@ -334,15 +334,15 @@ class CourseController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query(`SELECT * FROM WaitList WHERE studentID = ${_id}`)
+                .query(`SELECT * FROM WaitList WHERE userID = ${_id}`)
                 .then(function(result) {
                   if (result.length > 0) {
-                    let query = 'select * from course where';
+                    let query = 'SELECT * FROM Course WHERE';
                     for (let i = 0; i < result.length; i++) {
                       if (i === 0) {
-                        query += ' courseId = ' + result[i].courseID;
+                        query += ' courseType = ' + result[i].courseType;
                       } else {
-                        query += " OR courseId = " + result[i].courseID;
+                        query += " OR courseType = " + result[i].courseType;
                       }
                     }
                     new sql.Request(connection)
@@ -354,7 +354,7 @@ class CourseController {
                         res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by user id.", serverMsg: err });
                       });
                   } else {
-                    res.send({ result: "success", title: "No Timetable Info", msg: "No wait lsit info for this student.", serverMsg: "" });
+                    res.send({ result: "success", title: "No Timetable Info", msg: "No wait list info for this student.", serverMsg: "" });
                   }
                 }).catch(function(err) {
                   console.log("Error - Get wait list: " + err);
@@ -384,13 +384,12 @@ class CourseController {
           var courseType = course.courseType;
           var date = course.date;
           sql.connect(db)
-            .then(function() {
-              sql.query
-                `INSERT INTO WaitList (courseType, studentID, date)
-        VALUES(${courseType}, ${userID}, ${date})`
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query("INSERT INTO WaitList (courseType, userID, date) VALUES ('" + courseType + "', '" + userID + "', '" + date + "')")
                 .then(function(result) {
-                  new ActivityService().reportActivity('Course Wait List', 'success', userID, 'Student has been added to the course wait list.');
-                  res.send({ result: "success", title: "Success!", msg: "Student has been added to the wait list.", serverMsg: "" });
+                  new ActivityService().reportActivity('Course Wait List', 'success', userID, 'User has been added to the course wait list.');
+                  res.send({ result: "success", title: "Success!", msg: "User has been added to the wait list.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Add to wait list: " + err);
                   res.send({ result: "error", title: "Error", msg: "There was an error while adding student to the wait list.", serverMsg: err });

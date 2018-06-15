@@ -204,7 +204,7 @@
               <button (click)="editSuitability(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
               <label class="control-label">Transcript: </label> {{suitabilityView.transcript}}
               <div class="info_seperate"></div>
-              <label class="control-label">Courses: </label> {{suitabilityView.courses}}
+              <label class="control-label">Course Interests: </label> {{suitabilityView.selectedCourseTypes}}
               <div class="info_seperate"></div>
               <label class="control-label">Goal: </label> {{suitabilityView.goal}}
               <div class="info_seperate"></div>
@@ -290,18 +290,18 @@
               <div (click)="showStatusReport()" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
               <hr>
             </div>
-            <label class="col-md-2 control-label">Courses: </label>
-            <div class="col-md-10">
-              <input class="form-control" type="text" [(ngModel)]="suitabilityForm.courses" />
+            <label class="col-md-3 control-label">Course Interests: </label>
+            <div class="col-md-9">
+              <p-multiSelect [options]="courseTypes" [(ngModel)]="selectedCourseTypes" optionLabel="name"></p-multiSelect>
             </div>
 
-            <label class="col-md-2 control-label">Goal: </label>
-            <div class="col-md-10">
+            <label class="col-md-3 control-label">Goal: </label>
+            <div class="col-md-9">
               <input class="form-control" type="text" [(ngModel)]="suitabilityForm.goal" />
             </div>
 
-            <label class="col-md-2 control-label">Transition Date: </label>
-            <div class="col-md-10">
+            <label class="col-md-3 control-label">Transition Date: </label>
+            <div class="col-md-9">
               <input class="form-control" type="date" [(ngModel)]="suitabilityForm.transitionDate" />
             </div>
             <div>

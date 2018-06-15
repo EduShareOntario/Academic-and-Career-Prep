@@ -199,7 +199,6 @@ export class ClientService {
     }
 
     delete(client) {
-      console.log(client.userID);
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });

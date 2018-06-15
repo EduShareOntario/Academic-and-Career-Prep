@@ -8,6 +8,7 @@ import { LearningStyleForm } from "../../models/learningStyleForm";
 import { AssessmentResults } from "../../models/assessmentResults";
 import { ClientService } from "../../services/client.service";
 import { StudentService } from "../../services/student.service";
+import { CourseService } from "../../services/course.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
 import { DOCUMENT } from '@angular/platform-browser';
@@ -90,9 +91,13 @@ export class ClientStatusComponent implements OnInit {
   barChartData: any;
   barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
 
+  courseTypes: any[] = [];
+  selectedCourseTypes: any[] = [];
+
   constructor(
   @Inject(DOCUMENT) private document: Document,
   private router: Router,
+  private courseService: CourseService,
   private clientService: ClientService,
   private studentService: StudentService,
   private authService: AuthService,
@@ -103,6 +108,20 @@ export class ClientStatusComponent implements OnInit {
   ngOnInit() {
     this.getClients();
     this.getFiles();
+    // get course types
+    this.courseService.getCourseTypes()
+    .then((result) => {
+      if ((result as any).result === "error") {
+        this.displayErrorAlert(result);
+      } else {
+        result.forEach((i) => {
+          this.courseTypes.push({
+            label: i.courseType,
+            value: i.courseType
+          });
+        });
+      }
+    });
   }
 
   getClients() {
@@ -503,6 +522,7 @@ export class ClientStatusComponent implements OnInit {
   }
 
   addSuitabilityInfo(client) {
+    this.selectedCourseTypes = [];
     this.clientView = client;
     this.addSuitability = true;
     this.showGeneral = false;
@@ -644,6 +664,10 @@ export class ClientStatusComponent implements OnInit {
     this.resetView();
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
+    this.selectedCourseTypes = [];
+    for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
+      this.selectedCourseTypes.push(item);
+    }
 
     var keys = Object.keys(this.suitabilityForm);
     for (var i = 0; i < keys.length; i++) {
@@ -666,6 +690,7 @@ export class ClientStatusComponent implements OnInit {
     });
     swal.showLoading();
     if (this.suitabilityForm.suitabilityID) {
+      this.suitabilityForm.selectedCourseTypes = this.selectedCourseTypes.toString();
       this.tallyPoints();
       this.suitabilityForm.dbTotalPoints = this.totalPoints;
       this.clientService

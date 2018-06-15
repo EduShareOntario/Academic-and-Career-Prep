@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CourseService } from "../../services/course.service";
 import { Course } from "../../models/course";
 import { Student } from "../../models/student";
+import { Client } from "../../models/client";
+import { CourseService } from "../../services/course.service";
 import { StudentService } from "../../services/student.service";
+import { ClientService } from "../../services/client.service";
 import { StaffService } from "../../services/staff.service";
 declare var swal: any;
 declare var moment;
@@ -17,17 +19,19 @@ declare var moment;
 export class WaitListComponent implements OnInit {
   data: any;
   students: Student[];
+  clients: Client[];
+  users: any = [];
   courseTypes: any[];
   waitList: any[];
   timetables: any[];
   courseWaitList: any[];
-  studentsWaiting:any = [];
+  usersWaiting:any = [];
   viewingCourse: Course[];
   selectedCourseType: Course[];
-  selectedStudent: Student[];
+  selectedUser: any[];
   showForm: boolean = false;
 
-  constructor(private router: Router, private CourseService: CourseService, private StudentService: StudentService, private StaffService: StaffService) {
+  constructor(private router: Router, private CourseService: CourseService, private StudentService: StudentService, private ClientService: ClientService, private StaffService: StaffService) {
 
   }
 
@@ -52,11 +56,31 @@ export class WaitListComponent implements OnInit {
           this.students = students;
           for (let student of this.students) {
             student.fullName = student.firstName + " " + student.lastName;
+            this.users.push(student);
+          }
+          this.getClients();
+        }
+      })
+      .catch(error => console.log("Error - Get students: " + error));
+  }
+
+  getClients() {
+    this.ClientService
+      .getClients()
+      .then(clients => {
+        if ((clients as any).result === 'error') {
+          this.clients = null;
+          this.displayErrorAlert(clients);
+        } else {
+          this.clients = (clients as any).clients;
+          for (let client of this.clients) {
+            client.fullName = client.firstName + " " + client.lastName;
+            this.users.push(client);
           }
           this.getCourses();
         }
       })
-      .catch(error => console.log("Error - Get students: " + error));
+      .catch(error => console.log("Error - Get clients: " + error));
   }
 
   getCourses() {
@@ -75,7 +99,7 @@ export class WaitListComponent implements OnInit {
   }
 
   getWaitList() {
-    this.studentsWaiting = [];
+    this.usersWaiting = [];
     this.CourseService
       .getWaitList()
       .then(result => {
@@ -85,17 +109,17 @@ export class WaitListComponent implements OnInit {
         } else {
           this.waitList = result;
           for (let item of this.waitList) {
-             var student = this.students.filter(x => x.userID === item.studentID);
+             var user = this.users.filter(x => x.userID === item.userID);
              //student[0].fullName = student[0].firstName + " " + student[0].lastName;
              // student[0].courseID = course[0].courseID;
              // student[0].professorId = course[0].professorId;
-             student[0].courseName = item.courseType;
-             var studentRecord = {
-               fullName: student[0].fullName,
-               courseType: student[0].courseName,
+             user[0].courseName = item.courseType;
+             var userRecord = {
+               fullName: user[0].fullName,
+               courseType: item.courseType,
                date: item.date
              };
-             this.studentsWaiting.push(studentRecord);
+             this.usersWaiting.push(userRecord);
           }
           this.getTimetables();
         }
@@ -124,7 +148,7 @@ export class WaitListComponent implements OnInit {
 
   addStudentToWaitList() {
     var CurrentDate = moment().format();
-   if (this.selectedStudent == null || this.selectedCourseType == null) {
+   if (this.selectedUser == null || this.selectedCourseType == null) {
       swal(
         'Invalid Input',
         'Please select both a student and a course.',
@@ -139,7 +163,7 @@ export class WaitListComponent implements OnInit {
       this.courseWaitList = null;
       this.showForm = false;
       this.CourseService
-        .addToWaitList(this.selectedStudent, this.selectedCourseType, CurrentDate)
+        .addToWaitList(this.selectedUser, this.selectedCourseType, CurrentDate)
         .then(result => {
           if ((result as any).result === 'error') {
             this.displayErrorAlert(result);
@@ -172,16 +196,17 @@ export class WaitListComponent implements OnInit {
 
   viewCourseWaitList(data) {
     this.viewingCourse = data;
-    this.studentsWaiting = [];
+    this.usersWaiting = [];
     this.courseWaitList = this.waitList.filter(x => x.courseType === data.courseType);
     for (let item of this.courseWaitList) {
-       var student = this.students.filter(x => x.userID === item.studentID);
-       student[0].fullName = student[0].firstName + " " + student[0].lastName;
-       var studentRecord = {
-         fullName: student[0].fullName,
+       var user = this.users.filter(x => x.userID === item.userID);
+       user[0].fullName = user[0].firstName + " " + user[0].lastName;
+       var userRecord = {
+         fullName: user[0].fullName,
          date: item.date
        };
-       this.studentsWaiting.push(studentRecord);
+
+       this.usersWaiting.push(userRecord);
     }
   }
 
