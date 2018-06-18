@@ -336,26 +336,7 @@ class CourseController {
               new sql.Request(connection)
                 .query(`SELECT * FROM WaitList WHERE userID = ${_id}`)
                 .then(function(result) {
-                  if (result.length > 0) {
-                    let query = 'SELECT * FROM Course WHERE';
-                    for (let i = 0; i < result.length; i++) {
-                      if (i === 0) {
-                        query += ' courseType = ' + result[i].courseType;
-                      } else {
-                        query += " OR courseType = " + result[i].courseType;
-                      }
-                    }
-                    new sql.Request(connection)
-                      .query(query)
-                      .then((result) => {
-                        res.send(result);
-                      }).catch(function(err) {
-                        console.log("Error - Select from courses: " + err);
-                        res.send({ result: "error", title: "Error", msg: "There was an error retrieving student timetables by user id.", serverMsg: err });
-                      });
-                  } else {
-                    res.send({ result: "success", title: "No Timetable Info", msg: "No wait list info for this student.", serverMsg: "" });
-                  }
+                  res.send(result);
                 }).catch(function(err) {
                   console.log("Error - Get wait list: " + err);
                   res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });

@@ -35,7 +35,11 @@
     <p-dataTable [value]="usersWaiting" [responsive]="true">
       <p-column field="fullName" header="Name" [sortable]="true"></p-column>
       <p-column field="courseType" header="Course Type" [sortable]="true"></p-column>
-      <p-column field="date" header="Date Added" [sortable]="true"></p-column>
+      <p-column header="Date Added" [sortable]="true">
+        <template let-data="rowData" pTemplate="body">
+          {{ data.date | date }}
+        </template>
+      </p-column>
       <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '125px'}">
         <template let-data="rowData" pTemplate="body">
           <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>

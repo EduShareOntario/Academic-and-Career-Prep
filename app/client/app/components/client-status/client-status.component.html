@@ -126,7 +126,7 @@
               <button (click)="editGeneralInfo(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
               <label class="control-label">id: </label> {{clientView.userID}}
               <div class="info_seperate"></div>
-              <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate}}
+              <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate | date}}
               <div class="info_seperate"></div>
               <label class="control-label">Student Number: </label> {{clientView.studentNumber}}
               <div class="info_seperate"></div>
@@ -134,7 +134,7 @@
               <div class="info_seperate"></div>
               <label class="control-label">Last Name: </label> {{clientView.lastName}}
               <div class="info_seperate"></div>
-              <label class="control-label">Birth Date: </label> {{clientView.birthdate}}
+              <label *ngIf="clientView.birthdate" class="control-label">Birth Date: </label> {{clientView.birthdate}}
               <div class="info_seperate"></div>
               <label class="control-label">Email: </label> {{clientView.email}}
               <div class="info_seperate"></div>
@@ -208,7 +208,7 @@
               <div class="info_seperate"></div>
               <label class="control-label">Goal: </label> {{suitabilityView.goal}}
               <div class="info_seperate"></div>
-              <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate}}
+              <label class="control-label">Transition Date: </label> {{suitabilityView.transitionDate }}
               <div class="info_seperate"></div>
               <label class="control-label">Governament ID: </label> {{suitabilityView.governmentID}}
               <div class="info_seperate"></div>

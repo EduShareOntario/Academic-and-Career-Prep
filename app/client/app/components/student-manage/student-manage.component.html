@@ -74,8 +74,12 @@
       <div>
         <h3>Waiting to be enrolled in: </h3>
         <p-dataTable [value]="waitList" [responsive]="true">
-          <p-column field="courseID" header="Course ID" [sortable]="true" [style]="{'width': '120px'}"></p-column>
-          <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
+          <p-column field="courseType" header="Course Type" [sortable]="true" [style]="{'width': '120px'}"></p-column>
+          <p-column header="Date Added" [sortable]="true">
+            <template let-data="rowData" pTemplate="body">
+              {{ data.date | date  }}
+            </template>
+          </p-column>
         </p-dataTable>
       </div>
     </div>
@@ -102,11 +106,11 @@
                       <h3>Viewing General Info for {{ studentView.firstName }}</h3>
                       <button (click)="editGeneralInfo(studentView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
                       <!-- <label class="control-label">id: </label> {{studentView.userID}} <hr/> -->
-                      <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate}} <div class="info_seperate"></div>
+                      <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate | date}} <div class="info_seperate"></div>
                       <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <div class="info_seperate"></div>
                       <label class="control-label">First Name: </label> {{studentView.firstName}} <div class="info_seperate"></div>
                       <label class="control-label">Last Name: </label> {{studentView.lastName}} <div class="info_seperate"></div>
-                      <label class="control-label">Birth Date: </label> {{studentView.birthdate}} <div class="info_seperate"></div>
+                      <label class="control-label">Birth Date: </label> {{studentView.birthdate }} <div class="info_seperate"></div>
                       <label class="control-label">Email: </label> {{studentView.email}} <div class="info_seperate"></div>
                       <label class="control-label">Phone: </label> {{studentView.phone}} <div class="info_seperate"></div>
                       <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessage}} <div class="info_seperate"></div>

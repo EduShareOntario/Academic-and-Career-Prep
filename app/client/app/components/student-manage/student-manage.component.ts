@@ -267,10 +267,11 @@ export class StudentManageComponent implements OnInit {
   }
 
   viewCourses(student: Student) {
+    var userID = student.userID;
     this.resetView();
     this.studentCoursesView = student;
-    this.getTimetableById(student.userID);
-    this.getWaitListById(student);
+    this.getTimetableById(userID);
+    this.getWaitListById(userID);
   }
 
   getTimetableById(userID) {
@@ -295,21 +296,15 @@ export class StudentManageComponent implements OnInit {
       });
   }
 
-  getWaitListById(student: Student) {
+  getWaitListById(userID) {
     this.waitList = null;
+    console.log(userID);
     this.courseService
-      .getWaitListById(student.userID)
+      .getWaitListById(userID)
       .then(result => {
         if ((result as any).result === 'error') {
           this.displayErrorAlert(result);
           this.waitList = null;
-        } else if ((result as any).result === 'success') {
-          this.waitList = null;
-          // swal(
-          //     result.title,
-          //     result.msg,
-          //     'info'
-          // );
         } else {
           this.waitList = result;
         }

@@ -2,6 +2,11 @@
   font-family: Avenir, Calibri, Minion;
 }
 
+.dropdown-menu {
+  top: -150%;
+  left: 115%;
+}
+
 .addClient {
   position: absolute;
   top: 25;
