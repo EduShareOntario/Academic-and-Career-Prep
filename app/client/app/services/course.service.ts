@@ -64,7 +64,7 @@ export class CourseService {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
-    console.log(userID);
+    
     let url = "api/wait-list-by-id/" + userID;
 
     return this.http.get(url, options)

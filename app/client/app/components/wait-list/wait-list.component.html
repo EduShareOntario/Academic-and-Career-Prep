@@ -20,9 +20,9 @@
   <div class="col-md-3 doNotPrint">
     <p-dataTable [value]="courseTypes" [responsive]="true">
       <p-column field="courseType" header="Course Type" [sortable]="true"></p-column>
-      <p-column header="Action" [style]="{'width': '58px'}">
+      <p-column header="Action" [style]="{'width': '58px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-primary" style="background-color:#EBEDF0; border-color:e3e3e3; color:black;" title="View wait list for this course type." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+          <button class="btn btn-danger" style="height:auto" title="View wait list for this course type." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
         </template>
       </p-column>
     </p-dataTable>
@@ -40,7 +40,7 @@
           {{ data.date | date }}
         </template>
       </p-column>
-      <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '125px'}">
+      <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '125px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
           <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
         </template>
@@ -54,7 +54,7 @@
     <p-dataTable [value]="usersWaiting" [responsive]="true">
       <p-column field="fullName" header="Name" [sortable]="true"></p-column>
       <p-column field="date" header="Date Added" [sortable]="true"></p-column>
-      <p-column header="Action" [style]="{'width': '125px'}">
+      <p-column header="Action" [style]="{'width': '125px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
           <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
         </template>

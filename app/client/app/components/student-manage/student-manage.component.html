@@ -38,7 +38,7 @@
           <template let-data="rowData" pTemplate="body">
             <div class="btn-group">
               <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
+                <i class="fa fa-caret-right" aria-hidden="true"></i>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
               <ul class="dropdown-menu" role="menu" style="position:absolute;">
@@ -74,8 +74,8 @@
       <div>
         <h3>Waiting to be enrolled in: </h3>
         <p-dataTable [value]="waitList" [responsive]="true">
-          <p-column field="courseType" header="Course Type" [sortable]="true" [style]="{'width': '120px'}"></p-column>
-          <p-column header="Date Added" [sortable]="true">
+          <p-column field="courseType" header="Course Type" [sortable]="true" [style]="{'width': '150px'}"></p-column>
+          <p-column header="Date Added"  [sortable]="true">
             <template let-data="rowData" pTemplate="body">
               {{ data.date | date  }}
             </template>

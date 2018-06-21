@@ -298,7 +298,7 @@ export class StudentManageComponent implements OnInit {
 
   getWaitListById(userID) {
     this.waitList = null;
-    console.log(userID);
+
     this.courseService
       .getWaitListById(userID)
       .then(result => {
