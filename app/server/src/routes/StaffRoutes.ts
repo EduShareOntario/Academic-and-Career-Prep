@@ -12,6 +12,7 @@ class StaffRoutes {
         var controller = this._staffController;
 
         router.get("/staff", controller.retrieve);
+        router.get("/site-activity", controller.getSiteActivity);
         router.post("/staff", controller.create);
         router.put("/staff/:_id", controller.update);
         router.get("/staff/:_id", controller.findById);

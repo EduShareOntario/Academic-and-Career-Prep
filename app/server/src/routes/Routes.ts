@@ -8,6 +8,7 @@ import ClientRoutes = require('../routes/ClientRoutes');
 import ClientFormsRoutes = require('../routes/ClientFormsRoutes');
 import CourseRoutes = require('../routes/CourseRoutes');
 import UploadRoutes = require('../routes/UploadRoutes');
+
 var app = express();
 
 class Routes {

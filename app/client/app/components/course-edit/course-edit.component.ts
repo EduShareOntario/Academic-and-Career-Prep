@@ -32,6 +32,7 @@ export class CourseEditComponent implements OnInit {
   // pop up
   dialogVisible: boolean = false;
   // drop down
+  courseTypes: SelectItem[] = [{ label: '-- select --', value: '' }];
   professors: SelectItem[] = [{ label: '-- select --', value: '' }];
   campuses: SelectItem[] = [{ label: '-- select --', value: '' }];
 
@@ -42,7 +43,8 @@ export class CourseEditComponent implements OnInit {
     this.subscribeCourse();
 
     // get instructors
-    this.courseService.getInstructors().then((result) => {
+    this.courseService.getInstructors()
+    .then((result) => {
       if ((result as any).result === "error") {
         this.displayErrorAlert(result);
       } else {
@@ -56,7 +58,8 @@ export class CourseEditComponent implements OnInit {
     });
 
     // get campuses
-    this.courseService.getCampuses().then((result) => {
+    this.courseService.getCampuses()
+    .then((result) => {
       if ((result as any).result === "error") {
         this.displayErrorAlert(result);
       } else {
@@ -64,6 +67,21 @@ export class CourseEditComponent implements OnInit {
           this.campuses.push({
             label: i.campusName,
             value: i.campusId
+          });
+        });
+      }
+    });
+
+    // get course types
+    this.courseService.getCourseTypes()
+    .then((result) => {
+      if ((result as any).result === "error") {
+        this.displayErrorAlert(result);
+      } else {
+        result.forEach((i) => {
+          this.courseTypes.push({
+            label: i.courseType,
+            value: i.courseType
           });
         });
       }
@@ -82,6 +100,7 @@ export class CourseEditComponent implements OnInit {
       selectable: true,
       displayEventEnd: true
     };
+
   } // end of init
 
   // check boxes onchange event
@@ -207,7 +226,6 @@ export class CourseEditComponent implements OnInit {
     return index;
   }
 
-
   // event handler for event click
   handleEventClick(e) {
     this.event = new MyEvent();
@@ -232,7 +250,6 @@ export class CourseEditComponent implements OnInit {
     this.dialogVisible = true;
   }
 
-
   checkExist(date) {
     let ndate = this.events.filter(result => result.start === date);
     if (ndate.length === 1) { // if found event exist then return false to prevent new arry.push
@@ -241,7 +258,6 @@ export class CourseEditComponent implements OnInit {
       return true;
     }
   }
-
 
   subscribeCourse() {
     this.sub = this.route.params.subscribe(params => {
@@ -306,7 +322,14 @@ export class CourseEditComponent implements OnInit {
 
   save() {
     this.course.classTimeStr = this.generateClassTimeStr();
-    if (!this.course.courseName || !this.course.courseStart || !this.course.courseEnd || !this.course.professorId || !this.course.campusId || !this.course.classroom || !this.course.classTimeStr) {
+    if (!this.course.courseName
+      || !this.course.courseStart
+      || !this.course.courseEnd
+      || !this.course.professorId
+      || !this.course.campusId
+      || !this.course.classroom
+      || !this.course.classTimeStr
+      || !this.course.courseType) {
       swal(
         'Form Incomplete',
         'Please fill out all fields in the form.',

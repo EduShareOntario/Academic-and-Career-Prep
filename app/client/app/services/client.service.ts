@@ -6,6 +6,7 @@ import { Client } from "../models/client";
 import { ConsentForm } from "../models/consentForm";
 import { LearningStyleForm } from "../models/learningStyleForm";
 import { SuitabilityForm } from "../models/suitabilityForm";
+import { AssessmentResults } from "../models/assessmentResults";
 
 @Injectable()
 export class ClientService {
@@ -19,7 +20,8 @@ export class ClientService {
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(this.clientUrl, options)
+        return this.http
+            .get(this.clientUrl, options)
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Get clients"));
@@ -29,7 +31,8 @@ export class ClientService {
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(this.clientUrl + '/' + id, options)
+        return this.http
+            .get(this.clientUrl + '/' + id, options)
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Get client"));
@@ -196,7 +199,6 @@ export class ClientService {
     }
 
     delete(client) {
-      console.log(client.userID);
         // add authorization header with jwt token
         let headers = new Headers({ authorization: this.authService.token });
         let options = new RequestOptions({ headers: headers });
@@ -222,6 +224,28 @@ export class ClientService {
             .toPromise()
             .then(response => response.json())
             .catch(err => this.handleError(err, "Remove client"));
+    }
+
+    addAssessmentResults(assessmentResults: AssessmentResults): Promise<AssessmentResults> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+        return this.http
+            .post('api/add-assessment-results', assessmentResults, options)
+            .toPromise()
+            .then(response => response.json())
+            .catch(err => this.handleError(err, "Submit Assessment Results"));
+    }
+
+    editAssessmentResults(assessmentResults: AssessmentResults): Promise<AssessmentResults> {
+        // add authorization header with jwt token
+        let headers = new Headers({ authorization: this.authService.token });
+        let options = new RequestOptions({ headers: headers });
+        return this.http
+            .put('api/edit-assessment-results', assessmentResults, options)
+            .toPromise()
+            .then(response => response.json())
+            .catch(err => this.handleError(err, "Submit Assessment Results"));
     }
 
     private handleError(error: any, name: any) {

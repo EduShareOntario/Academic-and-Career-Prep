@@ -2,6 +2,7 @@ import express = require("express");
 import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
+const ActivityService = require("../services/ActivityService");
 const sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
 const config = require('../config');
@@ -86,6 +87,7 @@ class CourseController {
               sql.query
                 `DELETE FROM Course WHERE courseID = ${_id}`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Deleted', 'success', _id, 'Course has been deleted.');
                   res.send({ result: "success", title: "Course Deleted", msg: "Course has been deleted successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update course " + err);
@@ -115,10 +117,11 @@ class CourseController {
           sql.connect(db)
             .then(function(connection) {
               sql.query
-                `UPDATE Course SET courseName = ${course.courseName},professorId = ${course.professorId},
+                `UPDATE Course SET courseName = ${course.courseName},courseType = ${course.courseType},professorId = ${course.professorId},
           campusId = ${course.campusId},classroom = ${course.classroom},courseStart = ${course.courseStart},
           courseEnd = ${course.courseEnd},classTimeStr = ${course.classTimeStr} WHERE courseID = ${_id}`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Updated', 'success', _id, 'Course has been updated.');
                   res.send({ result: "success", title: "Course Updated!", msg: "Course has been updated successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update course " + err);
@@ -183,9 +186,10 @@ class CourseController {
             .then(function() {
               sql.query
                 `INSERT INTO Course (courseName, professorId, campusId, classroom, classTimeStr,courseStart,courseEnd)
-        VALUES(${course.courseName}, ${course.professorId}, ${course.campusId}, ${course.classroom}, ${course.classTimeStr},
+        VALUES(${course.courseName}, ${course.courseType}, ${course.professorId}, ${course.campusId}, ${course.classroom}, ${course.classTimeStr},
           ${course.courseStart},${course.courseEnd})`
                 .then(function(result) {
+                  new ActivityService().reportActivity('Course Created', 'success', '', "Course name '" + course.courseName + "' has been successfully created." );
                   res.send({ result: "success", title: "Course Created!", msg: "Course has been created successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Create course: " + err);
@@ -201,6 +205,35 @@ class CourseController {
     } catch (err) {
       console.log("Error - Create course: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error creating course.", serverMsg: err });
+    }
+  }
+
+  getCourseTypes(req: express.Request, res: express.Response): void {
+    try {
+
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query(`SELECT * FROM CourseTypes`)
+                .then(function(recordset) {
+                  res.send(recordset);
+                }).catch(function(err) {
+                  console.log("Error - Get course types: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving course types.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Get campuses: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get Course Types: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving course types.", serverMsg: err });
     }
   }
 
@@ -260,6 +293,98 @@ class CourseController {
     } catch (err) {
       console.log("Error - Get Instructors: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving all instructors.", serverMsg: err });
+    }
+  }
+
+  getWaitList(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query(`SELECT * FROM WaitList`)
+                .then(function(recordset) {
+                  res.send(recordset);
+                }).catch(function(err) {
+                  console.log("Error - Get wait list: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Get instructors: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+    }
+  }
+
+  getWaitListById(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          var _id: string = req.params._id;
+
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query(`SELECT * FROM WaitList WHERE userID = ${_id}`)
+                .then(function(result) {
+                  res.send(result);
+                }).catch(function(err) {
+                  console.log("Error - Get wait list: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Get instructors: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving wait list information.", serverMsg: err });
+    }
+  }
+
+  addToWaitList(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          // get course from req url
+          var course = req.body;
+          var userID = course.userID;
+          var courseType = course.courseType;
+          var date = course.date;
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query("INSERT INTO WaitList (courseType, userID, date) VALUES ('" + courseType + "', '" + userID + "', '" + date + "')")
+                .then(function(result) {
+                  new ActivityService().reportActivity('Course Wait List', 'success', userID, 'User has been added to the course wait list.');
+                  res.send({ result: "success", title: "Success!", msg: "User has been added to the wait list.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Error - Add to wait list: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error while adding student to the wait list.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Create course: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Add to wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error while adding student to the wait list.", serverMsg: err });
     }
   }
 

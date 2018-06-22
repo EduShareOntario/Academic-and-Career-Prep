@@ -30,6 +30,9 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
 import { FilesComponent } from './components/files/files.component';
 import { HelpComponent } from './components/help/help.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { WaitListComponent } from './components/wait-list/wait-list.component';
+import { SiteActivityComponent } from './components/site-activity/site-activity.component';
+import { StudentArchiveComponent } from './components/student-archive/student-archive.component';
 
 const appRoutes: Routes = [
     {
@@ -99,7 +102,7 @@ const appRoutes: Routes = [
     {
         path: 'learning-style',
         component: LearningStyleComponent,
-        canActivate: [AuthGuard, ClientGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'timetable',
@@ -140,6 +143,21 @@ const appRoutes: Routes = [
         path: 'help',
         component: HelpComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'wait-list',
+        component: WaitListComponent,
+        canActivate: [AuthGuard, StaffGuard]
+    },
+    {
+        path: 'student-archive',
+        component: StudentArchiveComponent,
+        canActivate: [AuthGuard, StaffGuard]
+    },
+    {
+        path: 'site-activity',
+        component: SiteActivityComponent,
+        canActivate: [AuthGuard, StaffGuard]
     }
 ];
 

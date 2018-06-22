@@ -2,6 +2,9 @@
     <div *ngIf="userType === 'Client'">
       <h1>Welcome, {{client}}</h1>
     </div>
+    <div *ngIf="userType === 'Student'">
+      <h1>Welcome, {{student}}</h1>
+    </div>
     <div *ngIf="userType === 'Admin' || userType === 'Staff'">
       <h1><strong>Dashboard</strong></h1>
     </div>
@@ -52,6 +55,30 @@
                     </div>
                     <div>
                         <h1 class="dashboardItemText">Manage Courses</h1>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 dashboardItem" *ngIf="waitList">
+            <div class="itemBorder">
+                <a routerLink="/wait-list" routerLinkActive="active">
+                    <div>
+                        <i class="fa fa-clock-o fa-lg-icon" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h1 class="dashboardItemText">Wait List</h1>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 dashboardItem" *ngIf="siteActivity">
+            <div class="itemBorder">
+                <a routerLink="/site-activity" routerLinkActive="active">
+                    <div>
+                        <i class="fa fa-bar-chart fa-lg-icon" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h1 class="dashboardItemText">Site Activity</h1>
                     </div>
                 </a>
             </div>

@@ -3,6 +3,7 @@ import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
 import AuthController = require("../controllers/AuthController");
 const MailService = require("../services/MailService");
+const ActivityService = require("../services/ActivityService");
 var sql = require('mssql');
 var auth = ["Admin"];
 const config = require('../config');
@@ -76,6 +77,7 @@ class StaffController {
                                   };
                                   new MailService().sendMessage("Welcome Staff", mailOptions);
                                 }
+                                new ActivityService().reportActivity(staff.userType + ' User Created', 'success', id[0].userID, req.body.firstName + ' ' + req.body.lastName + ' has been created as a new' + staff.userType + ' user. (Notify: ' + staff.notify + ')');
                                 res.send({ result: "success", title: "New User Created!", msg: "Staff user has been successfully created!", serverMsg: "" });
                               }).catch(function(err) {
                                 console.log("insert staff " + err);
@@ -146,7 +148,7 @@ class StaffController {
                       res.send({ result: "invalid", title: "Invalid Input", msg: error, serverMsg: "" });
                     } else {
                       new sql.Request(connection)
-                        .query("SELECT username, email, active, notify FROM Users WHERE userID = '" + _id + "'")
+                        .query("SELECT userID, username, email, active, notify FROM Users WHERE userID = '" + _id + "'")
                         .then(function(userInfo) {
                           if (!userInfo[0].notify && !userInfo[0].active && user.notify) {
                             var randomstring = Math.random().toString(36).slice(-8);
@@ -165,6 +167,7 @@ class StaffController {
                                   text: '', // plain text body
                                   html: 'Your username is <b>' + userInfo[0].username + '</b> and here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + '  <br /><br /> Thankyou'// html body
                                 };
+
                                 new MailService().sendMessage("Welcome Staff", mailOptions);
                               }).catch(function(err) {
                                 console.log("Update user password " + err);
@@ -187,6 +190,7 @@ class StaffController {
                                     };
                                     new MailService().sendMessage("Staff Username Update", mailOptions);
                                   }
+                                  new ActivityService().reportActivity(user.userType + 'User Updated', 'success', userInfo.userID, user.userType + ' user has been updated. (Notify: ' + user.notify + ')');
                                   res.send({ result: "success", title: "Update Success!", msg: "Staff user updated!", serverMsg: "" });
                                 }).catch(function(err) {
                                   console.log("Update user " + err);
@@ -232,6 +236,7 @@ class StaffController {
                   new sql.Request(connection)
                     .query("DELETE FROM Users WHERE userID = '" + _id + "'")
                     .then(function() {
+                      new ActivityService().reportActivity('Faculty User deleted', 'success', _id, 'Faculty user has been deleted.');
                       res.send({ result: "success", title: "User Deleted", msg: "Staff user deleted successfully.", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Delete user with id " + _id + ". " + err);
@@ -261,7 +266,7 @@ class StaffController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query('SELECT Staff.firstName, Staff.lastName, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID')
+                .query("SELECT Staff.firstName, Staff.lastName, Users.userID, Users.userType, Users.email, Users.active, Users.username, Users.notify FROM Staff LEFT JOIN Users ON Users.userID = Staff.userID WHERE username != 'adminuser'")
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
@@ -277,6 +282,32 @@ class StaffController {
     } catch (err) {
       console.log("Get all staff records from Staff table: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving all staff information.", serverMsg: err });
+    }
+  }
+
+  getSiteActivity(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query('SELECT * FROM SiteActivity ORDER BY id DESC')
+                .then(function(recordset) {
+                  res.send(recordset);
+                }).catch(function(err) {
+                  console.log("Error - Select all site activity: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error retrieving all site activity.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+        }
+      });
+    } catch (err) {
+      console.log("Error - Get site activity: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error retrieving all site activity.", serverMsg: err });
     }
   }
 

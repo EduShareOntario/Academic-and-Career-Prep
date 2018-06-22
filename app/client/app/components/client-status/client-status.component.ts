@@ -1,14 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Client } from "../../models/client";
 import { Student } from "../../models/student";
 import { SuitabilityForm } from "../../models/suitabilityForm";
 import { ConsentForm } from "../../models/consentForm";
 import { LearningStyleForm } from "../../models/learningStyleForm";
+import { AssessmentResults } from "../../models/assessmentResults";
 import { ClientService } from "../../services/client.service";
 import { StudentService } from "../../services/student.service";
+import { CourseService } from "../../services/course.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
+import { DOCUMENT } from '@angular/platform-browser';
 declare var swal: any;
 declare var FileSaver: any;
 
@@ -19,17 +22,25 @@ declare var FileSaver: any;
 })
 
 export class ClientStatusComponent implements OnInit {
+  @Input() assessmentResults: AssessmentResults;
   data: any[];
   allClients: Client[];
   suitabilityForms: SuitabilityForm[];
   consentForms: ConsentForm[];
   learningStyleForms: LearningStyleForm[];
+  allAssessmentResults: AssessmentResults[];
+  editAssessment: boolean;
   clientTotal: any;
   actionItems: any[];
   error: any;
 
   clientView: Client;
+  currentClientEmail: string;
   clientEdit: Client;
+  phone1: boolean = false;
+  phone2: boolean = false;
+  long1: boolean = false;
+  long2: boolean = false;
   consentView: ConsentForm;
   selectedConsentForm: string;
   clientConsentForms: ConsentForm[];
@@ -38,6 +49,7 @@ export class ClientStatusComponent implements OnInit {
 
   showSuitabilityEdit: boolean;
   showGeneralInfoEdit: boolean;
+  showAssessmentResults: boolean;
 
   addSuitability: boolean = false;
   @Input() suitabilityForm: SuitabilityForm;
@@ -79,20 +91,46 @@ export class ClientStatusComponent implements OnInit {
   barChartData: any;
   barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
 
-  constructor(private router: Router, private clientService: ClientService, private studentService: StudentService, private authService: AuthService, private filesService: FilesService) {
+  courseTypes: any[] = [];
+  selectedCourseTypes: any[] = [];
+
+  constructor(
+  @Inject(DOCUMENT) private document: Document,
+  private router: Router,
+  private courseService: CourseService,
+  private clientService: ClientService,
+  private studentService: StudentService,
+  private authService: AuthService,
+  private filesService: FilesService) {
+
   }
 
   ngOnInit() {
     this.getClients();
     this.getFiles();
+    // get course types
+    this.courseService.getCourseTypes()
+    .then((result) => {
+      if ((result as any).result === "error") {
+        this.displayErrorAlert(result);
+      } else {
+        result.forEach((i) => {
+          this.courseTypes.push({
+            label: i.courseType,
+            value: i.courseType
+          });
+        });
+      }
+    });
   }
 
   getClients() {
     this.clientService
       .getClients()
       .then(objects => {
-        if ((objects as any).status === "403") {
+        if ((objects as any).result === 'error') {
           this.data = null;
+          this.displayErrorAlert(objects);
         } else {
           this.setData(objects);
         }
@@ -116,11 +154,12 @@ export class ClientStatusComponent implements OnInit {
     this.suitabilityForms = objects.suitabilityForms;
     this.consentForms = objects.consentForms;
     this.learningStyleForms = objects.learningStyleForms;
+    this.allAssessmentResults = objects.assessmentResults;
     this.stage1 = this.data.filter(x => x.suitability);
-    this.stage2 = this.data.filter(x => !x.suitability && x.consent && x.learningStyle);
-    this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
-    this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-    this.doughnutChartLabels = ['Suitability', 'Consent/Learning Style', 'Banner/CAM', 'Transfer Ready'];
+    this.stage2 = this.data.filter(x => !x.suitability && x.consent);
+    this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
+    this.stage4 = this.data.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
+    this.doughnutChartLabels = ['Suitability', 'Consent', 'Banner/CAM', 'Transfer Ready'];
     this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
     this.doughnutChartType = 'doughnut';
     this.addSuitability = false;
@@ -130,12 +169,16 @@ export class ClientStatusComponent implements OnInit {
     this.filesService
       .getFiles()
       .then(files => {
-        this.files = files;
-        for (let file of this.files) {
-          file.userID = +file.userID;
+        if ((files as any).result === 'error') {
+          this.files = null;
+          this.displayErrorAlert(files);
+        } else {
+          this.files = files;
+          for (let file of this.files) {
+            file.userID = +file.userID;
+          }
+          swal.close();
         }
-        swal.close();
-        console.log(this.files);
       })
       .catch(error => error);
   }
@@ -177,13 +220,23 @@ export class ClientStatusComponent implements OnInit {
     event.stopPropagation();
     this.filesService
       .delete(filename)
-      .then(res => {
-        this.getFiles();
-        swal(
-          'Deleted!',
-          'File has been deleted.',
-          'success'
-        );
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          this.getFiles();
+          swal(
+            'Deleted!',
+            'File has been deleted.',
+            'success'
+          );
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
       })
       .catch(error => error);
   }
@@ -220,26 +273,37 @@ export class ClientStatusComponent implements OnInit {
     event.stopPropagation();
     this.clientService
       .delete(client)
-      .then(res => {
-        this.showStatusReport();
-        this.data = this.data.filter(h => h !== client);
-        this.allClients = this.allClients.filter(h => h !== client);
-        this.stage1 = this.data.filter(x => x.suitability);
-        this.stage2 = this.data.filter(x => !x.suitability && x.consent && x.learningStyle);
-        this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
-        this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-        this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
-        swal(
-          'Deleted!',
-          'Client record has been deleted.',
-          'success'
-        );
-        this.clientTotal = this.data.length;
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          this.showStatusReport();
+          this.data = this.data.filter(h => h !== client);
+          this.allClients = this.allClients.filter(h => h !== client);
+          this.stage1 = this.data.filter(x => x.suitability);
+          this.stage2 = this.data.filter(x => !x.suitability && x.consent);
+          this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
+          this.stage4 = this.data.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
+          this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
+          swal(
+            'Deleted!',
+            'Client record has been deleted.',
+            'success'
+          );
+          this.clientTotal = this.data.length;
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
       })
       .catch(error => this.error = error);
   }
 
   showClientView(client: Client) {
+    this.currentClientEmail = client.email;
     this.clientView = client;
     this.resetView();
     this.showGeneral = true;
@@ -316,11 +380,11 @@ export class ClientStatusComponent implements OnInit {
       if (index === 0) {
         this.data = this.allClients.filter(x => x.suitability);
       } else if (index === 1) {
-        this.data = this.allClients.filter(x => !x.suitability && x.consent && x.learningStyle);
+        this.data = this.allClients.filter(x => !x.suitability && x.consent);
       } else if (index === 2) {
-        this.data = this.allClients.filter(x => !x.suitability && !x.consent && !x.learningStyle);
+        this.data = this.allClients.filter(x => !x.suitability && !x.consent);
       } else if (index === 3) {
-        this.data = this.allClients.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+        this.data = this.allClients.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
       }
     } catch (err) {
       this.data = this.allClients;
@@ -436,8 +500,8 @@ export class ClientStatusComponent implements OnInit {
           this.displayErrorAlert((result as any));
         } else if ((result as any).result === 'success') {
           this.data = this.data.filter(h => h.userID !== userID);
-          this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle);
-          this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
+          this.stage3 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent);
+          this.stage4 = this.data.filter(x => x.userID !== userID && !x.suitability && !x.consent && x.banner && x.cam);
           this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
           swal(
             'Transfered',
@@ -458,6 +522,7 @@ export class ClientStatusComponent implements OnInit {
   }
 
   addSuitabilityInfo(client) {
+    this.selectedCourseTypes = [];
     this.clientView = client;
     this.addSuitability = true;
     this.showGeneral = false;
@@ -488,6 +553,42 @@ export class ClientStatusComponent implements OnInit {
   editGeneralInfo(client) {
     this.statusReport = false;
     this.clientEdit = client;
+    var splitPhone = this.clientEdit.phone.split(' ');
+    if (this.clientEdit.phone.indexOf('+1') !== -1) {
+      this.long1 = true;
+      this.clientEdit.phone = splitPhone[1] + " " + splitPhone[2];
+      if (splitPhone[3] === 'Home') {
+        this.phone1 = false;
+      } else {
+        this.phone1 = true;
+      }
+    } else {
+      this.long1 = false;
+      this.clientEdit.phone = splitPhone[0] + " " + splitPhone[1];
+      if (splitPhone[2] === 'Home') {
+        this.phone1 = false;
+      } else {
+        this.phone1 = true;
+      }
+    }
+    var splitAlternate = this.clientEdit.alternateNumber.split(' ');
+    if (this.clientEdit.alternateNumber.indexOf('+1') !== -1) {
+      this.long2 = true;
+      this.clientEdit.alternateNumber = splitAlternate[1] + " " + splitAlternate[2];
+      if (splitAlternate[3] === 'Home') {
+        this.phone2 = false;
+      } else {
+        this.phone2 = true;
+      }
+    } else {
+      this.long2 = false;
+      this.clientEdit.alternateNumber = splitAlternate[0] + " " + splitAlternate[1];
+      if (splitAlternate[2] === 'Home') {
+        this.phone2 = false;
+      } else {
+        this.phone2 = true;
+      }
+    }
     this.showGeneral = false;
     this.showGeneralInfoEdit = true;
   }
@@ -497,21 +598,76 @@ export class ClientStatusComponent implements OnInit {
       title: 'Updating...'
     });
     swal.showLoading();
+    var phoneSplit = this.clientEdit.phone.split(' ');
+    this.clientEdit.phone = phoneSplit[0] + " " + phoneSplit[1];
+    if (this.phone1 === true) {
+      this.clientEdit.phone = this.clientEdit.phone + " Cell";
+    } else if (this.phone1 === false) {
+      this.clientEdit.phone = this.clientEdit.phone + " Home";
+    }
+    if (this.long1 === true) {
+      this.clientEdit.phone = "+1 " + this.clientEdit.phone;
+    }
+    var alternateSplit = this.clientEdit.alternateNumber.split(' ');
+    this.clientEdit.alternateNumber = alternateSplit[0] + " " + alternateSplit[1];
+    if (this.phone2 === true) {
+      this.clientEdit.alternateNumber = this.clientEdit.alternateNumber + " Cell";
+    } else if (this.phone2 === false) {
+      this.clientEdit.alternateNumber = this.clientEdit.alternateNumber + " Home";
+    }
+    if (this.long2 === true) {
+      this.clientEdit.alternateNumber = "+1 " + this.clientEdit.alternateNumber;
+    }
     this.clientService
       .updateGeneralInfo(this.clientEdit)
-      .then(res => {
-        this.getClients();
-        this.showGeneralInfoEdit = false;
-        this.showGeneral = true;
-        swal.close();
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert((result as any));
+        } else if ((result as any).msg === "Username is already in use.") {
+          swal(
+            'Username taken',
+            'Please enter a different username.',
+            'warning'
+          );
+        } else if ((result as any).msg === "Email is already in use.") {
+          swal(
+            'Email in use',
+            'Please enter a different email.',
+            'warning'
+          );
+        } else if ((result as any).msg === "Incorrect email format.") {
+          swal(
+            'Incorrect email format',
+            'Please enter a proper email.',
+            'warning'
+          );
+          this.clientView.email = this.currentClientEmail;
+        } else if ((result as any).result === 'success') {
+          this.showStatusReport();
+          swal(
+            'Success!',
+            'Client information has been updated!',
+            'success'
+          );
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
       })
-      .catch();
+      .catch(error => this.error = error);
   }
 
   editSuitability(client) {
     this.resetView();
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
+    this.selectedCourseTypes = [];
+    for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
+      this.selectedCourseTypes.push(item);
+    }
 
     var keys = Object.keys(this.suitabilityForm);
     for (var i = 0; i < keys.length; i++) {
@@ -534,15 +690,30 @@ export class ClientStatusComponent implements OnInit {
     });
     swal.showLoading();
     if (this.suitabilityForm.suitabilityID) {
+      this.suitabilityForm.selectedCourseTypes = this.selectedCourseTypes.toString();
       this.tallyPoints();
       this.suitabilityForm.dbTotalPoints = this.totalPoints;
       this.clientService
         .updateSuitability(this.suitabilityForm)
-        .then(res => {
-          this.showSuitabilityEdit = false;
-          this.clientView = null;
-          this.ngOnInit();
-          swal.close();
+        .then(result => {
+          if ((result as any).result === 'error') {
+            this.displayErrorAlert((result as any));
+          } else if ((result as any).result === 'success') {
+            this.getClients();
+            this.showStatusReport();
+            this.document.body.scrollTop = 0;
+            swal(
+              'Success!',
+              'Suitability form updated!',
+              'success'
+            );
+          } else {
+            swal(
+              'Error',
+              'Something went wrong, please try again.',
+              'error'
+            );
+          }
         })
         .catch();
     } else {
@@ -550,13 +721,29 @@ export class ClientStatusComponent implements OnInit {
       this.suitabilityForm.dbTotalPoints = this.totalPoints;
       this.clientService
         .addSuitability(this.clientSuitability, this.suitabilityForm)
-        .then(res => {
-          this.showSuitabilityEdit = false;
-          this.clientView = null;
-          this.ngOnInit();
-          swal.close();
+        .then(result => {
+          if ((result as any).result === 'error') {
+            this.displayErrorAlert((result as any));
+          } else if ((result as any).result === 'success') {
+            this.getClients();
+            this.showStatusReport();
+            // var updatedClient = this.allClients.filter(x => x.userID === this.clientView.userID);
+            // this.showClientView(updatedClient[0]);
+            this.document.body.scrollTop = 0;
+            swal(
+              'Success!',
+              'Suitability form initialized!',
+              'success'
+            );
+          } else {
+            swal(
+              'Error',
+              'Something went wrong, please try again.',
+              'error'
+            );
+          }
         })
-        .catch();
+        .catch(error => this.error = error);
     }
 
   }
@@ -643,15 +830,17 @@ export class ClientStatusComponent implements OnInit {
   allowClientToEdit(client, permission) {
     this.clientService
       .grantConsentEditPermission(client, permission)
-      .then(res => {
-        if ((res as any).status === 'granted') {
+      .then(result => {
+      if ((result as any).result === 'error') {
+        this.displayErrorAlert(result);
+      } else if ((result as any).result === 'granted') {
           this.clientView.editConsentRequest = false;
           swal(
             'Client Access Granted',
             'Client will be sent an email informing that they can now edit conesnt.',
             'success'
           );
-        } else if ((res as any).status === 'denied') {
+        } else if ((result as any).result === 'denied') {
           this.clientView.editConsentRequest = false;
           swal(
             'Client Access Denied',
@@ -659,26 +848,28 @@ export class ClientStatusComponent implements OnInit {
             'danger'
           );
         }
-      }).catch();
+      }).catch(error => this.error = error);
   }
 
   checkboxChange(client) {
     this.clientService
       .updateBannerCamBool(client)
-      .then(res => {
-        this.ngOnInit();
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          this.stage3 = this.data.filter(x => !x.suitability && !x.consent && (!x.banner || !x.cam));
+          this.stage4 = this.data.filter(x => !x.suitability && !x.consent && x.banner && x.cam);
+          this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
       })
-      .catch();
-
-    if (client.banner && client.cam) {
-      this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && !x.banner && !x.cam);
-      this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-    } else {
-      this.stage3 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle);
-      this.stage4 = this.data.filter(x => !x.suitability && !x.consent && !x.learningStyle && x.banner && x.cam);
-    }
-
-    this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
+      .catch(error => this.error = error);
   }
 
   onSelectChange(event) {
@@ -686,8 +877,24 @@ export class ClientStatusComponent implements OnInit {
     this.consentView = consentForm[0];
   }
 
+  viewAssessmentResults(client) {
+    var assessmentResults = this.allAssessmentResults.filter(x => x.userID === client.userID);
+    var isEmpty = (assessmentResults || []).length === 0;
+    if (isEmpty) {
+      this.editAssessment = false;
+      this.assessmentResults = new AssessmentResults;
+    } else {
+      this.editAssessment = true;
+      this.assessmentResults = assessmentResults[0];
+    }
+    this.showClientView(client);
+    this.resetView();
+    this.showAssessmentResults = true;
+  }
+
   resetView() {
     this.consentView = null;
+    this.showAssessmentResults = false;
     this.showFiles = false;
     this.statusReport = false;
     this.showGeneral = false;
@@ -697,6 +904,57 @@ export class ClientStatusComponent implements OnInit {
     this.showSuitability = false;
     this.showSuitabilityEdit = false;
     this.addSuitability = false;
+  }
+
+  addAssessmentResults(userID) {
+
+    this.assessmentResults.userID = userID;
+    this.clientService
+      .addAssessmentResults(this.assessmentResults)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.getClients();
+          this.showStatusReport();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
+  }
+
+  editAssessmentResults(userID) {
+    this.clientService
+      .editAssessmentResults(this.assessmentResults)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else if ((result as any).result === 'success') {
+          swal(
+            (result as any).title,
+            (result as any).msg,
+            (result as any).result
+          );
+          this.resetView();
+        } else {
+          swal(
+            'Error',
+            'Something went wrong, please try again.',
+            'error'
+          );
+        }
+      })
+      .catch(error => this.error = error);
   }
 
   displayErrorAlert(error) {

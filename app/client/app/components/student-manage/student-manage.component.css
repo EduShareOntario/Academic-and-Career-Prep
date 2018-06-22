@@ -3,6 +3,11 @@
   color: #333f48;
 }
 
+.dropdown-menu {
+  top: -220%;
+  left: 115%;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: Avenir, Calibri, Minion;
   color: #333f48;

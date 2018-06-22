@@ -2,7 +2,7 @@ export class SuitabilityForm {
   suitabilityID: number;
   userID: any;
   transcript: boolean;
-  courses: string;
+  selectedCourseTypes: string;
   goal: string;
   transitionDate: string;
   governmentID: boolean;

@@ -31,8 +31,9 @@ export class CaseNotesComponent implements OnInit {
     this.studentService
       .getStudents()
       .then(students => {
-        if ((students as any).status === "403") {
+        if ((students as any).result === 'error') {
           this.data = null;
+          this.displayErrorAlert(students);
         } else {
           this.data = students;
           for (let student of this.data) {
@@ -44,16 +45,35 @@ export class CaseNotesComponent implements OnInit {
   }
 
   saveNote(studentID) {
-    console.log(this.note);
-    this.studentService
-        .saveNewNote(this.note, studentID)
-        .then(note => {
-            this.note = '';
-            this.showNotes(studentID);
-        })
-        .catch(error => this.error = error); // TODO: Display error message
+    if (this.note == null) {
+      swal(
+        'Empty Input',
+        'Type something in the text area to save new note.',
+        'warning'
+      );
+    } else {
+      this.studentService
+          .saveNewNote(this.note, studentID)
+          .then(note => {
+            console.log(note);
+            if ((note as any).result === 'error') {
+              this.displayErrorAlert(note);
+            } else if ((note as any).result === 'success') {
+              console.log("is work");
+              this.note = '';
+              this.showNotes(studentID);
+            } else {
+              swal(
+                'Error',
+                'Something went wrong, please try again.',
+                'error'
+              );
+            }
+          })
+          .catch(error => this.error = error); // TODO: Display error message
 
-    this.newNote = false;
+      this.newNote = false;
+    }
   }
 
   showCaseNotes(student: Student) {
@@ -65,7 +85,11 @@ export class CaseNotesComponent implements OnInit {
     this.studentService
         .getNotes(studentID)
         .then(notes => {
-          this.notes = notes;
+          if ((notes as any).result === 'error') {
+            this.displayErrorAlert(notes);
+          } else {
+            this.notes = notes;
+          }
         })
         .catch(error => console.log(error));
   }
@@ -74,13 +98,18 @@ export class CaseNotesComponent implements OnInit {
       event.stopPropagation();
       this.studentService
           .deleteNote(noteID)
-          .then(res => {
+          .then(result => {
+            if ((result as any).result === 'error') {
+              this.displayErrorAlert(result);
+            } else if ((result as any).result === 'success') {
               this.notes = this.notes.filter(h => h.caseNoteID !== noteID);
+            } else {
               swal(
-                  'Deleted!',
-                  'Case note has been successfully removed.',
-                  'success'
+                'Error',
+                'Something went wrong, please try again.',
+                'error'
               );
+            }
           })
           .catch(error => this.error = error);
   }
@@ -103,6 +132,14 @@ export class CaseNotesComponent implements OnInit {
       }).catch(error => {
         console.log(error);
       });
+  }
+
+  displayErrorAlert(error) {
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
   }
 
   goBack() {

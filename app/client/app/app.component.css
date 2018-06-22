@@ -11,6 +11,7 @@
   color:white !important;
   font-family: Avenir, Calibri, Minion;
   font-size: 16pt;
+  cursor: pointer;
 }
 
 .nav>li>a:focus, .nav>li>a:hover {

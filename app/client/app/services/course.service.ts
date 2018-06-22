@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import { Course } from "../models/course";
+import { Student } from "../models/student";
 import { AuthService } from './authentication.service';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/toPromise';
@@ -48,6 +49,45 @@ export class CourseService {
       .catch(err => this.handleError(err, "Get Course"));
   }
 
+  getWaitList() {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.get('api/wait-list', options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get waitlist"));
+  }
+
+  getWaitListById(userID) {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+    
+    let url = "api/wait-list-by-id/" + userID;
+
+    return this.http.get(url, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get course wait list by id"));
+  }
+
+  addToWaitList(userID, courseType, date) {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+    var info = {
+      userID: userID,
+      courseType: courseType,
+      date: date
+    };
+    return this.http
+      .post('/api/addToWaitList', info, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "addToWaitList"));
+  }
 
   delete(course: Course) {
     // add authorization header with jwt token
@@ -88,6 +128,17 @@ export class CourseService {
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Update Course"));
+  }
+
+  getCourseTypes() {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.get('api/getCourseTypes', options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get Course Types"));
   }
 
   getCampuses() {

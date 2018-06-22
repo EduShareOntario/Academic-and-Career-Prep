@@ -2,25 +2,51 @@
   font-family: Avenir, Calibri, Minion;
 }
 
+.dropdown-menu {
+  top: -150%;
+  left: 115%;
+}
+
 .addClient {
-  position:absolute;
+  position: absolute;
   top: 25;
   right: 15;
   float: right;
   min-width: 0px
 }
 
+.sticky {
+  top: 260px;
+  bottom:0;
+  position:fixed;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  right:30px;
+}
+
+::-webkit-scrollbar {
+display: none;
+}
+
+.element {
+  -ms-overflow-style: none;
+}
+
 .deleteClient>a {
   color: red;
 }
 
+.element {
+  overflow: -moz-scrollbars-none;
+}
+
 .booleanBtn {
-    min-width:45px;
-    margin-right:10px;
+  min-width: 45px;
+  margin-right: 10px;
 }
 
 #actionMenu {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .actionMenu {
@@ -33,61 +59,63 @@ th:first-of-type, th:last-of-type {
 }
 
 h2 {
-    margin-bottom: 25;
+  margin-bottom: 25;
 }
 
 .inline {
-    display: inline;
+  display: inline;
 }
 
 .btn-group {
-    white-space: nowrap;
+  white-space: nowrap;
 }
+
 .btn-group .btn {
-    float: none;
-    display: inline-block;
+  float: none;
+  display: inline-block;
 }
- .btn + .dropdown-toggle {
-    margin-left: -4px;
+
+.btn+.dropdown-toggle {
+  margin-left: -4px;
 }
 
 .actionColumn {
-    width: 24%;
+  width: 24%;
 }
 
 .middle {
-    text-align: center;
+  text-align: center;
 }
 
 .statusStage1 {
   vertical-align: middle;
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   background-color: #EB3700;
   margin: 0 auto;
 }
 
 .statusStage2 {
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   background-color: #F8E903;
   margin: 0 auto;
 }
 
 .statusStage3 {
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   background-color: #309EFF;
   margin: 0 auto;
 }
 
 .statusStage4 {
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   background-color: #21C700;
   margin: 0 auto;
 }
@@ -101,5 +129,5 @@ h2 {
 }
 
 .marginBottomButton {
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }

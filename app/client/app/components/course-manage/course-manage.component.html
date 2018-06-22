@@ -36,7 +36,12 @@
       <div class="col-md-12">
         <p-dataTable [value]="courses | courseFilter : filterQuery | campusFilter : selectedCampusId" [responsive]="true">
             <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
-            <p-column field="professorName" header="Instructor" [sortable]="true"></p-column>
+            <p-column header="Instructor" [sortable]="true"  [style]="{'text-align': 'center'}" >
+              <template let-data="rowData" pTemplate="body">
+                <p >{{ data.professorName }}</p>
+                <i  *ngIf="data.professorName == ' '" class="fa fa-exclamation-triangle fa-2x" title="This course does not have an instructor!" style="color:red;" aria-hidden="true"></i>
+              </template>
+            </p-column>
             <p-column field="classroom" header="Classroom" [sortable]="true"></p-column>
             <p-column field="campusName" header="Campus" [sortable]="true"></p-column>
             <p-column field="courseStart" header="Start Date" [sortable]="true"></p-column>

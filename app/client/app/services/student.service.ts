@@ -18,7 +18,8 @@ export class StudentService {
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.get(this.studentsUrl, options)
+    return this.http
+      .get(this.studentsUrl, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get all students"));
@@ -29,7 +30,8 @@ export class StudentService {
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.get(this.studentsUrl + '/' + id, options)
+    return this.http
+      .get(this.studentsUrl + '/' + id, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "get student by id"));
@@ -47,6 +49,31 @@ export class StudentService {
       .catch(err => this.handleError(err, "postNew"));
   }
 
+  archiveStudent(student: Student): Promise<Student> {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http
+      .post('api/archive-student', student, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "archiveStudent"));
+  }
+
+  getStudentArchive() {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+
+    let url = `api/get-student-archive`;
+
+    return this.http.get(url, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "Get all student archive"));
+  }
+
   updateGeneralInfo(student: Student): Promise<Student> {
       // add authorization header with jwt token
       let headers = new Headers({ authorization: this.authService.token });
@@ -57,9 +84,7 @@ export class StudentService {
       return this.http
           .put(url, student, options)
           .toPromise()
-          .then(response => {
-            return response.json();
-          })
+          .then(response => response.json())
           .catch(err => this.handleError(err, "Update General Info"));
   }
 
@@ -93,19 +118,6 @@ export class StudentService {
         .catch(err => this.handleError(err, "Grant permission to edit consent"));
   }
 
-  delete(student: Student) {
-    // add authorization header with jwt token
-    let headers = new Headers({ authorization: this.authService.token });
-    let options = new RequestOptions({ headers: headers });
-
-    let url = `${this.studentsUrl}/${student.userID}`;
-
-    return this.http
-      .delete(url, options)
-      .toPromise()
-      .catch(err => this.handleError(err, "Delete"));
-  }
-
   courseEnroll(userID, startDate, endDate, courseID, instructorID) {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
@@ -137,6 +149,7 @@ export class StudentService {
     return this.http
       .delete(url, options)
       .toPromise()
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Course drop"));
   }
 
@@ -192,7 +205,7 @@ export class StudentService {
 
   saveNewNote(caseNote, studentID) {
     var caseNoteObject = { caseNote: caseNote, dateTime: moment().format('YYYY-MM-DD HH:mm:ss a') };
-    console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
@@ -201,7 +214,7 @@ export class StudentService {
     return this.http
       .post(url, caseNoteObject, options)
       .toPromise()
-      .then(response => response.json().data)
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Save new note"));
   }
 
@@ -228,6 +241,7 @@ export class StudentService {
     return this.http
       .delete(url, options)
       .toPromise()
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Delete notes"));
   }
 
