@@ -2,7 +2,7 @@
   background-color: #004B87;
   color: white;
   position: relative;
-  min-height: 150px;
+  height: 150px;
   margin-bottom: 10px;
   border: 1px solid transparent;
 }
@@ -14,12 +14,15 @@
   cursor: pointer;
 }
 
+.nav>li>a{
+  /* Firefox /
+  -moz-transition: all 1s ease-in;
+  / Standard */
+  transition: all 0.2s ease-in;
+}
+
 .nav>li>a:focus, .nav>li>a:hover {
     background-color: #0072ce;
-    /* Firefox /
-    -moz-transition: all 1s ease-in;
-    / Standard */
-    transition: all 0.4s ease-in;
 }
 
 .active_nav_item {

@@ -24,6 +24,11 @@ export class CaseNotesComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getStudents();
   }
 
@@ -39,6 +44,7 @@ export class CaseNotesComponent implements OnInit {
           for (let student of this.data) {
             student.fullName = student.firstName + " " + student.lastName;
           }
+          swal.close();
         }
       })
       .catch(error => this.error = error);

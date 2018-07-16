@@ -1,19 +1,17 @@
 <div class="row">
   <div class="doNotPrint">
-    <div class="col-md-10">
+    <div class="spacer"></div>
+    <div class="col-md-10 inner_header">
       <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Course Wait List</strong></h1>
-      <hr>
+      <button class="orangeButton" (click)="showWaitListForm()" title="Add new client"><i class="fa fa-plus"></i> Add</button>
+      <button class="lightBlueButton" (click)="onPrint()" title="Print timetable"><i class="fa fa-print"></i> Print</button>
     </div>
-    <div class="col-md-2" style="margin-top:20px">
-      <button (click)="onPrint()" class="btn btn-primary printButton" title="Print timetable"><i class="fa fa-print"></i> Print</button>
-      <button class="addClient btn btn-info" (click)="showWaitListForm()" title="Add new client"><i class="fa fa-plus"></i> Add</button>
-      <div *ngIf="showForm" class="addMenu well">
-        <span title="Close" class="closeMenu" (click)="closeMenu()"><i class="fa fa-times"></i></span>
-        <h4>Add User to Wait List</h4>
-        <p-dropdown [options]="users | studentToSelectItem" [(ngModel)]="selectedUser" placeholder="Select a User" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
-        <p-dropdown [options]="courseTypes | courseTypeToSelectItem" [(ngModel)]="selectedCourseType" placeholder="Select a Course Type" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
-        <button class="btn btn-success" style="float:right" (click)="addStudentToWaitList()" title="Add to wait list"><i class="fa fa-plus"></i> Submit</button>
-      </div>
+    <div *ngIf="showForm" class="addMenu well">
+      <span title="Close" class="closeMenu" (click)="closeMenu()"><i class="fa fa-times"></i></span>
+      <h4>Add User to Wait List</h4>
+      <p-dropdown [options]="users | studentToSelectItem" [(ngModel)]="selectedUser" placeholder="Select a User" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
+      <p-dropdown [options]="courseTypes | courseTypeToSelectItem" [(ngModel)]="selectedCourseType" placeholder="Select a Course Type" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
+      <button class="greenButton" style="float:right" (click)="addStudentToWaitList()" title="Add to wait list"><i class="fa fa-plus"></i> Submit</button>
     </div>
   </div>
 
@@ -22,7 +20,7 @@
       <p-column field="courseType" header="Course Type" [sortable]="true"></p-column>
       <p-column header="Action" [style]="{'width': '58px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-danger" style="height:auto" title="View wait list for this course type." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+          <button class="dropToggleButton" title="View wait list for this course type." (click)="viewCourseWaitList(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
         </template>
       </p-column>
     </p-dataTable>

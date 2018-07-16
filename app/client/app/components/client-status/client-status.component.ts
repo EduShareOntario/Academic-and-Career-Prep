@@ -71,7 +71,7 @@ export class ClientStatusComponent implements OnInit {
   doughnutChartLabels: string[];
   doughnutChartData: number[];
   doughnutChartType: string;
-  doughnutChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#309EFF", "#2AD308"] }];
+  doughnutChartColors: any[] = [{ backgroundColor: ["#EA7200", "#F7CE3C", "#76C4D5", "#62A744"] }];
   stage1: any;
   stage2: any;
   stage3: any;
@@ -89,7 +89,7 @@ export class ClientStatusComponent implements OnInit {
   barChartType: string = 'bar';
   barChartLegend: boolean = false;
   barChartData: any;
-  barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
+  barChartColors: any[] = [{ backgroundColor: ["#EA7200", "#F7CE3C", "#62A744"] }];
 
   courseTypes: any[] = [];
   selectedCourseTypes: any[] = [];
@@ -106,8 +106,12 @@ export class ClientStatusComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getClients();
-    this.getFiles();
     // get course types
     this.courseService.getCourseTypes()
     .then((result) => {
@@ -163,6 +167,7 @@ export class ClientStatusComponent implements OnInit {
     this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
     this.doughnutChartType = 'doughnut';
     this.addSuitability = false;
+    this.getFiles();
   }
 
   getFiles() {

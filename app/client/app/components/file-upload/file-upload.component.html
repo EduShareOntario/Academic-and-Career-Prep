@@ -1,5 +1,6 @@
 <div class="row">
-  <div class="col-md-11">
+  <div class="spacer"></div>
+  <div class="inner_header">
     <h2>
       <span style="cursor:pointer" (click)="goBack()">
         <i class="fa fa-arrow-circle-o-left"></i>
@@ -7,7 +8,6 @@
       <strong> File Upload for: </strong>
       <p-dropdown [options]="users" [(ngModel)]="selectedStudent" placeholder="Select a User" [filter]="true" [style]="{'width':'350px'}" (onChange)="userSelect()"></p-dropdown>
     </h2>
-    <hr>
   </div>
   <div *ngIf="selectedStudent">
     <div class="col-md-3">

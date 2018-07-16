@@ -1,17 +1,19 @@
 .addMenu {
-  margin-top: 5px;
+  width:372px;
   padding:10px;
   position: absolute;
+  top: 226px;
   box-shadow: 5px 5px 5px #eee;
   z-index: 1;
-  right:0;
+  right:50px;
+  transition: all 0.2s ease-in;
 }
 
 .closeMenu {
   float:right;
+  transition: 0.2s ease-in;
 }
 
 .closeMenu:hover {
   transform: scale(2);
-  transition: 0.2s;
 }

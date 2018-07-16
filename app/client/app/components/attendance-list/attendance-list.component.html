@@ -1,5 +1,7 @@
 <div class="attendanceList">
-  <h2>
+  <div class="spacer"></div>
+  <div class="inner_header">
+    <h2>
     <span style="cursor:pointer" (click)="goBack()">
       <i class="fa fa-arrow-circle-o-left"></i>
     </span>
@@ -8,73 +10,56 @@
     <strong *ngIf="selectedInstructor"> Taking Attendance for: </strong>
     <p-dropdown *ngIf="instructors" [options]="instructors | instructorToSelectItem" [(ngModel)]="selectedInstructor" placeholder="Select a Instructor" [filter]="true" [style]="{'width':'350px'}" (onChange)="instructorSelect()"></p-dropdown>
   </h2>
-  <hr>
-    <!-- <div *ngIf="!instructors">
-        <div class="cs-loader">
-            <div class="cs-loader-inner">
-                <label>	L</label>
-                <label>	O</label>
-                <label>	A</label>
-                <label>	D</label>
-                <label>	I</label>
-                <label>	N</label>
-                <label>	G</label>
-                <label>	.</label>
-                <label>	.</label>
-                <label>	.</label>
-            </div>
-        </div>
-    </div> -->
-    <div class="row" *ngIf="data">
-        <div class="col-md-3">
-          <h2>My Courses</h2>
-          <hr>
-          <input placeholder="Filter by course name" class="form-control" [(ngModel)]="courseQuery" />
-          <p-dataTable [value]="data | courseFilter : courseQuery" [responsive]="true">
-              <p-column field="courseName" header="Name" [sortable]="true"></p-column>
-              <p-column header="Action" [style]="{'width': '140px'}">
-                <template let-data="rowData" pTemplate="body">
+  </div>
+  <div class="row" *ngIf="data">
+    <div class="col-md-3">
+      <h2>My Courses</h2>
+      <hr>
+      <input placeholder="Filter by course name" class="form-control" [(ngModel)]="courseQuery" />
+      <p-dataTable [value]="data | courseFilter : courseQuery" [responsive]="true">
+        <p-column field="courseName" header="Name" [sortable]="true"></p-column>
+        <p-column header="Action" [style]="{'width': '140px'}">
+          <template let-data="rowData" pTemplate="body">
                   <button type="button" (click)="doAttendance(data)" class="btn btn-info">Attendance</button>
                 </template>
-              </p-column>
-          </p-dataTable>
-        </div>
-        <div *ngIf="!attendanceView" class="col-md-9">
-            <h2>Status Report</h2>
-            <hr>
-            <h3 class="well">Total courses: {{ data.length }}</h3>
-        </div>
-        <div *ngIf="attendanceView" class="col-md-9">
-          <div class="wrapper4">
-            <h2>Attendance for {{ attendanceCourse.courseName }}</h2>
-            <hr>
-            Date:
-            <!-- <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Select attendance date">
+        </p-column>
+      </p-dataTable>
+    </div>
+    <div *ngIf="!attendanceView" class="col-md-9">
+      <h2>Status Report</h2>
+      <hr>
+      <h3 class="well">Total courses: {{ data.length }}</h3>
+    </div>
+    <div *ngIf="attendanceView" class="col-md-9">
+      <div class="wrapper4">
+        <h2>Attendance for {{ attendanceCourse.courseName }}</h2>
+        <hr> Date:
+        <!-- <select class="form-control" style="display: inline-block;max-width: 200px;" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Select attendance date">
               <option [ngValue]="null" selected>Choose </option>
               <option *ngFor="let date of attendanceDates" value="{{ date[0] }} {{ date[1] }}">{{ date[0] | date }} from {{ date[1] }}</option>
             </select> -->
-            <p-dropdown [options]="attendanceDates" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Choose a date" [filter]="true"></p-dropdown>
-            <p-dataTable [value]="attendanceStudents | userFilter : studentQuery" [responsive]="true">
-                <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-                <p-column header="Action" [style]="{'width': '330px'}">
-                  <template let-data="rowData" pTemplate="body">
+        <p-dropdown [options]="attendanceDates" [(ngModel)]="attendanceCourse.attendanceDate" placeholder="Choose a date" [filter]="true"></p-dropdown>
+        <p-dataTable [value]="attendanceStudents | userFilter : studentQuery" [responsive]="true">
+          <p-column field="fullName" header="Name" [sortable]="true"></p-column>
+          <p-column header="Action" [style]="{'width': '330px'}">
+            <template let-data="rowData" pTemplate="body">
                     <p-radioButton class="attendanceRadioButtons" name="{{data.usedID}}" value="P" label="Present" [(ngModel)]="data.attendanceValue"></p-radioButton>
                     <p-radioButton class="attendanceRadioButtons" name="{{data.usedID}}" value="A" label="Absent" [(ngModel)]="data.attendanceValue"></p-radioButton>
                     <p-radioButton class="attendanceRadioButtons" name="{{data.usedID}}" value="MC" label="Made Contact" [(ngModel)]="data.attendanceValue"></p-radioButton>
                   </template>
-                </p-column>
-                <p-column header="Value" [style]="{'width': '60px'}">
-                  <template let-data="rowData" pTemplate="body">
+          </p-column>
+          <p-column header="Value" [style]="{'width': '60px'}">
+            <template let-data="rowData" pTemplate="body">
                   <div *ngIf="data.attendanceValue === 'A'" style="color: red; display: inline-block"><strong>{{data.attendanceValue}}</strong></div>
                   <div *ngIf="data.attendanceValue === 'P'" style="color: green; display: inline-block"><strong>{{data.attendanceValue}}</strong></div>
                   <div *ngIf="data.attendanceValue === 'MC'" style="color: #FFA500; display: inline-block"><strong>{{data.attendanceValue}}</strong></div>
                 </template>
-                </p-column>
-            </p-dataTable>
-        </div>
-        <div class="push"></div>
+          </p-column>
+        </p-dataTable>
       </div>
-        <div *ngIf="!loading && attendanceView" class="footer">
-            <button type="button" (click)="submitAttendance()" style="float:right;" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</button>
-        </div>
+      <div class="push"></div>
     </div>
+    <div *ngIf="!loading && attendanceView" class="footer">
+      <button type="button" (click)="submitAttendance()" style="float:right;" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</button>
+    </div>
+  </div>

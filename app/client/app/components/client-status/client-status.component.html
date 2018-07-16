@@ -1,29 +1,9 @@
 <div class="clients">
-  <div *ngIf="!data">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Clients</strong></h1>
-    <hr>
-    <div class="cs-loader">
-      <div class="cs-loader-inner">
-        <label>	L</label>
-        <label>	O</label>
-        <label>	A</label>
-        <label>	D</label>
-        <label>	I</label>
-        <label>	N</label>
-        <label>	G</label>
-        <label>	.</label>
-        <label>	.</label>
-        <label>	.</label>
-      </div>
-    </div>
-  </div>
   <div class="row" *ngIf="data">
-    <div class="col-md-11">
+    <div class="spacer"></div>
+    <div class="col-md-11 inner_header">
       <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Clients</strong></h1>
-      <hr>
-    </div>
-    <div class="col-md-1">
-      <button class="addClient btn btn-success" (click)="addClient()" title="Add new client"><i class="fa fa-plus"></i> New Client</button>
+      <button class="orangeButton" (click)="addClient()" title="Add new client"><i class="fa fa-plus"></i> New Client</button>
     </div>
     <div class="col-md-7">
       <h2>Clients</h2>
@@ -62,7 +42,7 @@
           <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
             <template let-data="rowData" pTemplate="body">
               <div class="btn-group">
-                <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="dropToggleButton" data-toggle="dropdown">
                   <i class="fa fa-caret-right" aria-hidden="true"></i>
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
@@ -86,12 +66,12 @@
         <div class="well">
           <div style="margin-bottom:100px;">
             <div style="font-size:1.5em;text-align:center;width:30%;float:left">Total clients<br />
-              <span style="font-size:1.3em;color:#555555">{{ clientTotal }}</span>
+              <span style="font-size:1.3em;color:#333F48">{{ clientTotal }}</span>
             </div>
             <div style="font-size:1.5em;text-align:center;width:70%;float:left">Current Default Password <br />
-              <span style="font-size:1.3em;color:#555555">Georgian2018
-              <button class="btn btn-warning btn-xs" style="height:auto;padding:5px 5px;margin-bottom:6px;" (click)="editDefaultPass()" title="Edit Default Pass">
-                <i class="fa fa-pencil fa-lg"></i></button>
+              <span style="font-size:1.3em;color:#333F48">Georgian2018
+              <!-- <button class="btn btn-warning btn-xs" style="height:auto;padding:5px 5px;margin-bottom:6px;" (click)="editDefaultPass()" title="Edit Default Pass">
+                <i class="fa fa-pencil fa-lg"></i></button> -->
             </span>
             </div>
           </div>

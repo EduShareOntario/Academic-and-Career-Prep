@@ -1,20 +1,6 @@
 <div class="row">
     <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span> {{courseName}} Enrollment</h2>
     <hr>
-    <div *ngIf="!students" class="cs-loader">
-        <div class="cs-loader-inner">
-            <label>	L</label>
-            <label>	O</label>
-            <label>	A</label>
-            <label>	D</label>
-            <label>	I</label>
-            <label>	N</label>
-            <label>	G</label>
-            <label>	.</label>
-            <label>	.</label>
-            <label>	.</label>
-        </div>
-    </div>
     <div class="col-lg-8">
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">

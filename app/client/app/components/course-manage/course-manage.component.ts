@@ -27,6 +27,11 @@ export class CourseManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getInstructors();
     this.getCampuses();
     this.getCourses();
@@ -72,6 +77,7 @@ export class CourseManageComponent implements OnInit {
             item.courseEnd = moment(item.courseEnd).utcOffset(60).format('YYYY-MM-DD');
           });
           this.courses = res;
+          swal.close();
         }
       })
       .catch(error => this.error = error);

@@ -26,7 +26,12 @@ export class StaffManageComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getUsers();
+      swal({
+        title: 'Loading...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
+      this.getUsers();
     }
 
     getUsers() {
@@ -113,6 +118,7 @@ export class StaffManageComponent implements OnInit {
       this.staffNumber = this.staffNumber.length;
       this.instructorNumber = this.users.filter(x => x.userType.indexOf("Instructor") !== -1);
       this.instructorNumber = this.instructorNumber.length;
+      swal.close();
     }
 
     filterStaff(userType) {

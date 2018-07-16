@@ -28,6 +28,11 @@ export class StudentEnrollmentComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.route.params.forEach((params: Params) => {
       this.courseID = params['courseID'];
       this.instructorID = params['instructorID'];
@@ -78,6 +83,7 @@ export class StudentEnrollmentComponent implements OnInit {
       }
     }
     this.loading = false;
+    swal.close();
   }
 
   checkEnrolled(student: Student) {

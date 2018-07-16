@@ -1,22 +1,8 @@
 <div class="consentForm">
-  <hr class="col-md-4">
-  <div class="col-md-4" style="text-align:center">
-    <h1 style="position: relative;top: 50%;transform: translateY(-50%);"><strong>Consent Form</strong></h1>
-  </div>
-  <hr style="col-md-4">
-  <div *ngIf="loading" class="cs-loader">
-    <div class="cs-loader-inner">
-      <label>	L</label>
-      <label>	O</label>
-      <label>	A</label>
-      <label>	D</label>
-      <label>	I</label>
-      <label>	N</label>
-      <label>	G</label>
-      <label>	.</label>
-      <label>	.</label>
-      <label>	.</label>
-    </div>
+  <div class="spacer"></div>
+  <div class="inner_header_form">
+    <span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left fa-3x"></i></span>
+    <h1><strong> Consent Form</strong></h1>
   </div>
   <div *ngIf="!loading">
     <div class="jumbotron col-md-8 col-md-offset-2">
@@ -141,14 +127,11 @@
           </div>
         </div>
         <div class="col-md-12" style="margin-top:50px;margin-left:-15px;">
-          <div style="float:left">
-            <button (click)="goBack()" class="btn btn-default">Back</button>
-          </div>
           <div style="float:right" *ngIf="currentUser.userType === 'Client' && (completeConsentForm || editConsentPermission)">
-            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
+            <button (click)="saveConsent()" class="greenButton" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
           <div style="float:right" *ngIf="currentUser.userType === 'Student' && editConsentPermission">
-            <button (click)="saveConsent()" class="submitForm" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
+            <button (click)="saveConsent()" class="greenButton" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
           </div>
         </div>
       </div>

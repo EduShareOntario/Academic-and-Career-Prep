@@ -9,8 +9,10 @@ a {
 }
 
 a:active, .selectedLink {
-  background-color: #eee;
-  font-weight: bold;
+  background-color: #004B87;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .help_topic {
