@@ -18,9 +18,9 @@
       <input placeholder="Filter by course name" class="form-control" [(ngModel)]="courseQuery" />
       <p-dataTable [value]="data | courseFilter : courseQuery" [responsive]="true">
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '140px'}">
+        <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button type="button" (click)="doAttendance(data)" class="btn btn-info">Attendance</button>
+                  <button type="button" (click)="doAttendance(data)" class="dropToggleButton"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>
@@ -60,6 +60,6 @@
       <div class="push"></div>
     </div>
     <div *ngIf="!loading && attendanceView" class="footer">
-      <button type="button" (click)="submitAttendance()" style="float:right;" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</button>
+      <button type="button" (click)="submitAttendance()" style="float:right;" class="greenButton"><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</button>
     </div>
   </div>

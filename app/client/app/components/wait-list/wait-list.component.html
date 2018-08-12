@@ -40,7 +40,7 @@
       </p-column>
       <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '125px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
+          <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
         </template>
       </p-column>
     </p-dataTable>
@@ -54,7 +54,7 @@
       <p-column field="date" header="Date Added" [sortable]="true"></p-column>
       <p-column header="Action" [style]="{'width': '125px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="btn btn-warning doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
+          <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
         </template>
       </p-column>
     </p-dataTable>

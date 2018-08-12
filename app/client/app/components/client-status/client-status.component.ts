@@ -71,7 +71,7 @@ export class ClientStatusComponent implements OnInit {
   doughnutChartLabels: string[];
   doughnutChartData: number[];
   doughnutChartType: string;
-  doughnutChartColors: any[] = [{ backgroundColor: ["#EA7200", "#F7CE3C", "#76C4D5", "#62A744"] }];
+  doughnutChartColors: any[] = [{ backgroundColor: ["#E32F26", "#F7CE3C", "#76C4D5", "#62A744"] }];
   stage1: any;
   stage2: any;
   stage3: any;
@@ -89,7 +89,7 @@ export class ClientStatusComponent implements OnInit {
   barChartType: string = 'bar';
   barChartLegend: boolean = false;
   barChartData: any;
-  barChartColors: any[] = [{ backgroundColor: ["#EA7200", "#F7CE3C", "#62A744"] }];
+  barChartColors: any[] = [{ backgroundColor: ["#E32F26", "#F7CE3C", "#62A744"] }];
 
   courseTypes: any[] = [];
   selectedCourseTypes: any[] = [];
@@ -261,7 +261,7 @@ export class ClientStatusComponent implements OnInit {
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      cancelButtonColor: '#E32F26',
       confirmButtonText: 'Yes, delete it!'
     }).then(isConfirm => {
       if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -413,7 +413,7 @@ export class ClientStatusComponent implements OnInit {
         showCancelButton: true,
         animation: "slide-from-top",
         confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        cancelButtonColor: '#E32F26',
         confirmButtonText: 'Save'
       }).then(isConfirm => {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -439,7 +439,7 @@ export class ClientStatusComponent implements OnInit {
       showCancelButton: true,
       animation: "slide-from-top",
       confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      cancelButtonColor: '#E32F26',
       confirmButtonText: 'Save'
     }).then(isConfirm => {
       if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -463,7 +463,7 @@ export class ClientStatusComponent implements OnInit {
         type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        cancelButtonColor: '#E32F26',
         confirmButtonText: 'Yes, transfer!'
       }).then(isConfirm => {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {

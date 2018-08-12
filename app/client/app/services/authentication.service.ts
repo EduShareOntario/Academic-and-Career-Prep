@@ -63,13 +63,8 @@ export class AuthService {
       var credentials = JSON.stringify({ userID: userID, password: password });
       return this.http.put('/api/resetPassword', credentials, {headers:headers})
       .toPromise()
-      .then((response: Response) => {
-        if (response.status === 200) {
-          return true;
-        } else {
-          return false;
-        }
-      }).catch((err) => {
+      .then(response => response.json())
+      .catch((err) => {
         console.log("Reset password " + err);
       });
     }

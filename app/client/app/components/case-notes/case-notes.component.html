@@ -11,9 +11,9 @@
       <p-dataTable [value]="data | userFilter : filterQuery" [responsive]="true">
           <p-column field="studentNumber" header="Number" [sortable]="true" [style]="{'width': '120px'}"></p-column>
           <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-          <p-column header="Action" [style]="{'width': '150px'}">
+          <p-column header="Action" [style]="{'width': '60px'}">
             <template let-data="rowData" pTemplate="body">
-              <button class="btn btn-primary" (click)="showCaseNotes(data)"><i class="fa fa-eye" aria-hidden="true"></i> View Notes</button>
+              <button class="dropToggleButton" (click)="showCaseNotes(data)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
             </template>
           </p-column>
       </p-dataTable>
@@ -25,12 +25,12 @@
       <div>
         <label for="caseNote">New Case Note:</label>
         <textarea class="form-control" rows="3" name="caseNote" [(ngModel)]="note"></textarea>
-        <button class="btn btn-success" style="float: right; margin: 5px" (click)="saveNote(notesView.studentID)" title="Save note"><i class="fa fa-floppy-o " aria-hidden="true"></i> Save Note</button>
+        <button class="greenButton" style="float: right; margin: 5px" (click)="saveNote(notesView.studentID)" title="Save note"><i class="fa fa-floppy-o " aria-hidden="true"></i> Save</button>
       </div>
       <hr style="clear:both">
       <div>
           <ul class="notesList">
-            <li *ngFor="let noteItem of notes"><b>{{noteItem.dateTime | date}}:</b> {{noteItem.caseNote}} <button class="btn-danger deleteNote" (click)="deleteAlert(noteItem.caseNoteID)" title="Delete note"><i class="fa fa-trash-o"></i></button></li>
+            <li *ngFor="let noteItem of notes"><b>{{noteItem.dateTime | date}}:</b> {{noteItem.caseNote}} <button class="deleteButton deleteNote" (click)="deleteAlert(noteItem.caseNoteID)" title="Delete note"><i class="fa fa-trash-o"></i></button></li>
           </ul>
       </div>
     </div>

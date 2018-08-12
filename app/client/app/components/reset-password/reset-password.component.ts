@@ -25,11 +25,6 @@ export class ResetPasswordComponent {
 
   constructor( private router: Router, private authService: AuthService) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      if (this.currentUser) {
-
-      } else {
-
-      }
   }
 
   inputChange() {
@@ -90,7 +85,8 @@ export class ResetPasswordComponent {
             (result as any).msg,
             'success'
         );
-        window.history.back();
+        this.router.navigate(['/login']);
+        //window.history.back();
       } else {
         console.log("There was an error with your request...");
       }

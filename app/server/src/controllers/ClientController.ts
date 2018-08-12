@@ -560,7 +560,7 @@ class ClientController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query('SELECT Clients.*, Users.email, Users.active from Clients Left JOIN Users ON Clients.userID = Users.userID')
+                .query('SELECT Clients.*, Users.email, Users.active from Clients Left JOIN Users ON Clients.userID = Users.userID ORDER BY firstName ASC')
                 .then(function(clients) {
                   new sql.Request(connection)
                     .query('SELECT * FROM SuitabilityForm')

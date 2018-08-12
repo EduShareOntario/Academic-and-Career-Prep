@@ -11,9 +11,9 @@
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '130px'}">
+        <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button class="btn btn-success" (click)="viewStudentReport(data, $event)">View Report</button>
+                  <button class="dropToggleButton" (click)="viewStudentReport(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>
@@ -80,9 +80,9 @@
       <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="courses | courseFilter : filterQuery" [responsive]="true">
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '130px'}">
+        <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button class="btn btn-primary" (click)="viewCourseReport(data, $event)">View Report</button>
+                  <button class="dropToggleButton" (click)="viewCourseReport(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>

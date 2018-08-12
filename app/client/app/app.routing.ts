@@ -115,6 +115,11 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard, StaffGuard]
     },
     {
+        path: 'student-enrollment/:courseType/:studentID',
+        component: StudentEnrollmentComponent,
+        canActivate: [AuthGuard, StaffGuard]
+    },
+    {
         path: 'attendance-list',
         component: AttendanceListComponent,
         canActivate: [AuthGuard, InstructorGuard]

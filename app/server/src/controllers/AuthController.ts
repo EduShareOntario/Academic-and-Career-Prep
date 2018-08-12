@@ -146,38 +146,33 @@ class AuthController {
       if (!emailValidation) {
         res.send({ result: "invalid", title: "Invalid", msg: "Please enter a proper email address. (example@email.com)", serverMsg: "" })
       } else {
-        sql.connect(db)
-          .then(function(connection) {
-            new sql.Request(connection)
-              .query(`UPDATE Users SET password = '${_password}', active = 'false' WHERE email = '${_email}'`)
-              .then(function(result) {
-                console.log(result);
-                if (result != null) {
-                  // setup email data with unicode symbols
-                  let mailOptions = {
-                    from: mail.user, // sender address
-                    to: _email, // list of receivers
-                    subject: 'Password Reset', // Subject line
-                    text: '', // plain text body
-                    html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + ' <br /><br /> Thankyou'// html body
-                  };
-                  new ActivityService().reportActivity('Request Password Reset', 'success', '', 'Password reset accepted. Instructions for login sent to ' + _email + '.');
-                  new MailService().sendMessage(" Reset Password", mailOptions);
-                } else {
-                  new ActivityService().reportActivity('Request Password Reset', 'fail', '', 'Could not find user with email ' + _email + '.');
-                }
-                res.send({ result: "success", title: "Success!", msg: "Check your email for reset instructions.", serverMsg: "" });
-              }).catch(function(err) {
-                console.log("Update user password " + err);
-                res.send({ result: "error", title: "Error", msg: "There was an error requesting password reset.", serverMsg: "" });
-              });
+          sql.connect(db).then(pool => {
+            return pool.request()
+            .input('password', sql.VarChar(250), _password)
+            .input('email', sql.VarChar(100), _email)
+            .query("UPDATE Users SET password = @password, active = 'false' WHERE email = @email; SELECT @@rowcount as 'RowsAffected'")
+          }).then(result => {
+            console.dir(result);
+            if (result != null) {
+              // setup email data with unicode symbols
+              let mailOptions = {
+                from: mail.user, // sender address
+                to: _email, // list of receivers
+                subject: 'Password Reset', // Subject line
+                text: '', // plain text body
+                html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + ' <br /><br /> Thankyou'// html body
+              };
+              new ActivityService().reportActivity('Request Password Reset', 'success', '', 'Password reset accepted. Instructions for login sent to ' + _email + '.');
+              new MailService().sendMessage(" Reset Password", mailOptions);
+            } else {
+              new ActivityService().reportActivity('Request Password Reset', 'fail', '', 'Could not find user with email ' + _email + '.');
+            }
+            res.send({ result: "success", title: "Success!", msg: "Check your email for reset instructions.", serverMsg: "" });
           }).catch(function(err) {
             console.log(err);
-            res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: "" });
+            res.send({ result: "error", title: "Error", msg: "There was an error with your request.", serverMsg: err.message });
           });
       }
-
-
     } catch (err) {
       console.log("Error - Request password reset: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error requesting password reset.", serverMsg: "" });

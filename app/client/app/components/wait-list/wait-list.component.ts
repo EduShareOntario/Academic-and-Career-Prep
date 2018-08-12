@@ -115,6 +115,7 @@ export class WaitListComponent implements OnInit {
              // student[0].professorId = course[0].professorId;
              user[0].courseName = item.courseType;
              var userRecord = {
+               id: user[0].userID,
                fullName: user[0].fullName,
                courseType: item.courseType,
                date: item.date
@@ -186,12 +187,9 @@ export class WaitListComponent implements OnInit {
     this.showForm = false;
   }
 
-  gotoStudentEnrollment(course, data, event: any) {
-    if (course == null) {
-      course = this.courses.filter(x => x.courseName === data.courseName);
-      course = course[0];
-    }
-    this.router.navigate(['/student-enrollment', course.courseID, course.professorId, course.courseName]);
+  gotoStudentEnrollment(data, event: any) {
+    console.log(data.id);
+    this.router.navigate(['/student-enrollment', data.courseType, data.id ]);
   }
 
   viewCourseWaitList(data) {

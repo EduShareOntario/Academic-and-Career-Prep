@@ -54,8 +54,7 @@ class CourseController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-              sql.query
-                `SELECT * FROM Course WHERE professorId = ${_id}`
+                .query(`SELECT * FROM Course WHERE professorId = ${_id}`)
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
@@ -385,6 +384,38 @@ class CourseController {
     } catch (err) {
       console.log("Error - Add to wait list: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error while adding student to the wait list.", serverMsg: err });
+    }
+  }
+
+  addToCourseTypes(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function() {
+
+          // get course from req url
+          console.log(req.body);
+          var courseType = req.body.courseType;
+          sql.connect(db)
+            .then(function(connection) {
+              new sql.Request(connection)
+                .query("INSERT INTO CourseTypes (courseType) VALUES ('" + courseType + "')")
+                .then(function(result) {
+                  new ActivityService().reportActivity('Manage Courses', 'success', '', "New course type named: " + courseType + " has been added. ");
+                  res.send({ result: "success", title: "Success!", msg: "New course type has been added.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Error - Add new course type: " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error while adding the new course type.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Add new course type: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Add new course type: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error while adding the new course type.", serverMsg: err });
     }
   }
 

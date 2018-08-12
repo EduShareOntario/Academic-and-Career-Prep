@@ -25,7 +25,7 @@ display: none;
 }
 
 .deleteClient>a {
-  color: #EA7200;
+  color: #E32F26;
 }
 
 .element {
@@ -84,7 +84,7 @@ h2 {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  background-color: #EA7200;
+  background-color: #E32F26;
   margin: 0 auto;
 }
 

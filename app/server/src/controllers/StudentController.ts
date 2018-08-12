@@ -278,7 +278,7 @@ class StudentController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query('SELECT Students.*, Users.email, Users.active FROM Students LEFT JOIN Users ON Students.userID = Users.UserID')
+                .query('SELECT Students.*, Users.email, Users.active FROM Students LEFT JOIN Users ON Students.userID = Users.UserID ORDER BY firstName ASC')
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {

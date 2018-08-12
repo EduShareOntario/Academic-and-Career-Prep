@@ -19,6 +19,7 @@ class CourseRoutes {
         router.get("/wait-list", controller.getWaitList);
         router.get("/wait-list-by-id/:_id", controller.getWaitListById);
         router.post("/addToWaitList", controller.addToWaitList);
+        router.post("/addToCourseTypes", controller.addToCourseTypes);
         router.delete("/course/:_id", controller.delete);
         router.get("/getInstructors", controller.getInstructors);
         router.get("/getCampuses", controller.getCampuses);

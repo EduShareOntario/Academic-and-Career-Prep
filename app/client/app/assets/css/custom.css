@@ -21,6 +21,11 @@ html, body {
 
 .well {
   background-color: #FFF;
+  border-radius: 0px;
+}
+
+.form-control {
+  border-radius: 0px;
 }
 
 li>a>i {
@@ -197,7 +202,7 @@ li>a>i {
 }
 
 .editButton:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .deleteButton {
@@ -213,12 +218,28 @@ li>a>i {
 }
 
 .deleteButton:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+}
+
+.enrollButton {
+  text-align: center;
+  background-color: #333f48;
+  padding:10px;
+  min-width:0px !important;
+  cursor: pointer;
+  color: #fff;
+  display: inline;
+  border: 0px solid;
+  transition: 0.2s ease;
+}
+
+.enrollButton:hover {
+  transform: scale(1.05);
 }
 
 .dropToggleButton {
   text-align: center;
-  background-color: #333f48;
+  background-color: #004B87;
   padding:10px 19px;
   min-width:0px !important;
   cursor: pointer;
@@ -317,13 +338,13 @@ li>a>i {
   padding: 5px 15px;
   margin: 0 2 0 2;
   float: left;
+  transition: 0.2s ease;
 }
 
 .statusButton:hover {
   transform: scale(1.2);
   /* background-color: #004B87;
   color: #fff;*/
-  transition: .4s;
 }
 
 .statBox {
@@ -372,6 +393,27 @@ li>a>i {
 
 .active_tab>h4 {
   color: #fff !important;
+}
+
+.addMenu {
+  width:372px;
+  padding:10px;
+  position: absolute;
+  top: 226px;
+  box-shadow: 5px 5px 20px #3333;
+  z-index: 1;
+  right:50px;
+  transition: all 0.2s ease-in;
+}
+
+.closeMenu {
+  cursor: pointer;
+  float:right;
+  transition: 0.2s ease-in;
+}
+
+.closeMenu:hover {
+  transform: scale(2);
 }
 
 @media (max-width: 768px){

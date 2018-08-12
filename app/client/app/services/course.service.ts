@@ -89,6 +89,20 @@ export class CourseService {
       .catch(err => this.handleError(err, "addToWaitList"));
   }
 
+  addToCourseTypes(courseType) {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+    var info = {
+      courseType: courseType
+    };
+    return this.http
+      .post('/api/addToCourseTypes', info, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "addToCourseTypes"));
+  }
+
   delete(course: Course) {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });

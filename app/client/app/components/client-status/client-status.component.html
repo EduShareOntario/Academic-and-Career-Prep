@@ -180,7 +180,7 @@
           <div *ngIf="showSuitability" class="">
             <br />
             <div class="form-group">
-              <h3>Viewing Suitability Info for {{ suitabilityView.firstName }}</h3>
+              <h3>Viewing Suitability Info for {{ clientView.firstName }}</h3>
               <button (click)="editSuitability(clientView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
               <label class="control-label">Transcript: </label> {{suitabilityView.transcript}}
               <div class="info_seperate"></div>
@@ -393,17 +393,17 @@
               <label class="text-nowrap control-label">Income Source: </label>
               <div class="col-md-12">
                 <select class="form-control" [(ngModel)]="suitabilityForm.incomeSource" required #income="ngModel">
-                          <option value="EI">EI</option>
+                          <option value="No income">No income</option>
+                          <option value="Employed">Employed</option>
                           <option value="OW">OW</option>
                           <option value="ODSP">ODSP</option>
-                          <option value="Crown Ward">Crown Ward</option>
-                          <option value="Self-employed">Self-employed</option>
-                          <option value="Second Career">Second Career</option>
-                          <option value="No income">No income</option>
-                          <option value="Dependent of OW/ODSP">Dependent of OW/ODSP</option>
-                          <option value="Employed">Employed</option>
+                          <option value="EI">EI</option>
                           <option value="WSIB">WSIB</option>
+                          <option value="Self-employed">Self-employed</option>
+                          <option value="Dependent of OW/ODSP">Dependent of OW/ODSP</option>
                           <option value="International Student">International Student</option>
+                          <option value="Crown Ward">Crown Ward</option>
+                          <option value="Second Career">Second Career</option>
                         </select>
               </div>
             </div>
@@ -603,11 +603,11 @@
             </div>
           </div>
           <div *ngIf="showConsent" class="">
-            <h3>Viewing Consent Info for {{ studentView.firstName }}</h3>
+            <h3>Viewing Consent Info for {{ clientView.firstName }}</h3>
             <br />
             <div class="form-group">
               <div *ngIf="clientView.editConsentRequest">
-                <strong><h3>{{studentView.firstName}} is requesting to edit: </h3></strong>
+                <strong><h3>{{clientView.firstName}} is requesting to edit: </h3></strong>
                 <button (click)="allowClientToEdit(clientView, true)" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Grant</button>
                 <button (click)="allowClientToEdit(clientView, false)" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Deny</button>
                 <hr>
@@ -659,9 +659,9 @@
                 <div class="info_seperate"></div>
                 <label class="control-label">Contact Number: </label> {{consentView.contactNum}}
                 <div class="info_seperate"></div>
-                <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}}
+                <label class="control-label">Signature: </label> {{consentView.literacyAgencies}}
                 <div class="info_seperate"></div>
-                <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}}
+                <label class="control-label">Witness: </label> {{consentView.literacyWitness}}
                 <div class="info_seperate"></div>
               </div>
             </div>

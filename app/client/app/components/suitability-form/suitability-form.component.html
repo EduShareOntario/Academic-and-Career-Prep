@@ -264,17 +264,17 @@
           <label class="col-md-2 text-nowrap control-label">Income Source: </label>
           <div class="col-md-4">
             <select class="form-control" [(ngModel)]="suitabilityForm.incomeSource" required #income="ngModel">
-                        <option value="EI">EI</option>
+                        <option value="No income">No income</option>
+                        <option value="Employed">Employed</option>
                         <option value="OW">OW</option>
                         <option value="ODSP">ODSP</option>
-                        <option value="Crown Ward">Crown Ward</option>
-                        <option value="Self-employed">Self-employed</option>
-                        <option value="Second Career">Second Career</option>
-                        <option value="No income">No income</option>
-                        <option value="Dependent of OW/ODSP">Dependent of OW/ODSP</option>
-                        <option value="Employed">Employed</option>
+                        <option value="EI">EI</option>
                         <option value="WSIB">WSIB</option>
+                        <option value="Self-employed">Self-employed</option>
+                        <option value="Dependent of OW/ODSP">Dependent of OW/ODSP</option>
                         <option value="International Student">International Student</option>
+                        <option value="Crown Ward">Crown Ward</option>
+                        <option value="Second Career">Second Career</option>
                       </select>
             <!-- <div *ngIf="income.errors && income.touched" class="alert alert-danger">
                             <div [hidden]="!income.errors.required">Please Select Income Option</div>

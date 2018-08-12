@@ -15,13 +15,20 @@ declare var moment: any;
 })
 
 export class StudentEnrollmentComponent implements OnInit {
+  studentTimetables: any[];
+  loading: boolean = true;
+  tempTimetableArry: any[] = [];
+  enrollMultiple: boolean;
+  // if enrolling multiple students
   students: Student[];
   courseID: any;
   instructorID: any;
   courseName: any;
-  studentTimetables: any[];
-  loading: boolean = true;
-  tempTimetableArry: any[] = [];
+  // if enrolling specific student
+  student: Student[];
+  courseType: any;
+  studentID: any;
+  courses: any[];
 
   constructor(private studentService: StudentService, private courseService: CourseService, private route: ActivatedRoute) {
 
@@ -34,11 +41,19 @@ export class StudentEnrollmentComponent implements OnInit {
     });
     swal.showLoading();
     this.route.params.forEach((params: Params) => {
-      this.courseID = params['courseID'];
-      this.instructorID = params['instructorID'];
-      this.courseName = params['courseName'];
+      if (params['courseID'] && params['instructorID'] && params['courseName']) {
+        this.enrollMultiple = true;
+        this.courseID = params['courseID'];
+        this.instructorID = params['instructorID'];
+        this.courseName = params['courseName'];
+        this.getStudents();
+      } else if (params['courseType'] && params['studentID']) {
+        this.enrollMultiple = false;
+        this.courseType = params['courseType'];
+        this.studentID = params['studentID'];
+        this.getStudentById(this.studentID);
+      }
     });
-    this.getStudents();
   }
 
   getStudents() {
@@ -58,6 +73,36 @@ export class StudentEnrollmentComponent implements OnInit {
       }).catch(error => error);
   }
 
+  getStudentById(id) {
+    this.studentService
+      .getStudent(id)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.student = null;
+          this.displayErrorAlert(result);
+        } else {
+          this.student = result;
+          console.log(this.student);
+          this.getCourses();
+        }
+      }).catch(error => error);
+  }
+
+  getCourses() {
+    this.courseService
+      .getCourses()
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else {
+          this.courses = result;
+          this.courses = this.courses.filter(x => x.courseType === this.courseType);
+          this.getTimetables();
+        }
+      })
+      .catch(error => error);
+  }
+
   getTimetables() {
     this.studentService
       .getTimetables()
@@ -73,12 +118,25 @@ export class StudentEnrollmentComponent implements OnInit {
   }
 
   compareTimetables() {
-    for (let student of this.students) {
-      var timetable = this.studentTimetables.filter(x => x.userID === student.userID);
+    console.log("comparing timetables");
+    if (this.student !== null) {
+      console.log("student compare: " + this.student[0].userID);
+      var timetable = this.studentTimetables.filter(x => x.userID === this.student[0].userID);
+      console.log(timetable);
       for (let item of timetable) {
         var itemCourseID = item.courseID.toString();
         if (itemCourseID === this.courseID) {
-          student.enrolled = true;
+          this.student[0].enrolled = true;
+        }
+      }
+    } else {
+      for (let student of this.students) {
+        var timetable = this.studentTimetables.filter(x => x.userID === student.userID);
+        for (let item of timetable) {
+          var itemCourseID = item.courseID.toString();
+          if (itemCourseID === this.courseID) {
+            student.enrolled = true;
+          }
         }
       }
     }
