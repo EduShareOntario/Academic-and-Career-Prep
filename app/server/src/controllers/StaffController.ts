@@ -21,7 +21,7 @@ class StaffController {
   create(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var randomstring = Math.random().toString(36).slice(-8);
           randomstring = randomstring.charAt(0).toUpperCase() + randomstring.slice(1);
           var salt = bcrypt.genSaltSync(10);
@@ -77,7 +77,7 @@ class StaffController {
                                   };
                                   new MailService().sendMessage("Welcome Staff", mailOptions);
                                 }
-                                new ActivityService().reportActivity(staff.userType + ' User Created', 'success', id[0].userID, req.body.firstName + ' ' + req.body.lastName + ' has been created as a new' + staff.userType + ' user. (Notify: ' + staff.notify + ')');
+                                new ActivityService().reportActivity('staff', staff.userType + ' User Created', 'success', id[0].userID, currentUserID, req.body.firstName + ' ' + req.body.lastName + ' has been created as a new' + staff.userType + ' user. (Notify: ' + staff.notify + ')');
                                 res.send({ result: "success", title: "New User Created!", msg: "Staff user has been successfully created!", serverMsg: "" });
                               }).catch(function(err) {
                                 console.log("insert staff " + err);
@@ -112,7 +112,7 @@ class StaffController {
   update(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var user = req.body;
           var _id: string = req.params._id;
           var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -190,7 +190,7 @@ class StaffController {
                                     };
                                     new MailService().sendMessage("Staff Username Update", mailOptions);
                                   }
-                                  new ActivityService().reportActivity(user.userType + 'User Updated', 'success', userInfo.userID, user.userType + ' user has been updated. (Notify: ' + user.notify + ')');
+                                  new ActivityService().reportActivity('staff', user.userType + 'User Updated', 'success', userInfo.userID, currentUserID, user.userType + ' user has been updated. (Notify: ' + user.notify + ')');
                                   res.send({ result: "success", title: "Update Success!", msg: "Staff user updated!", serverMsg: "" });
                                 }).catch(function(err) {
                                   console.log("Update user " + err);
@@ -226,7 +226,7 @@ class StaffController {
   delete(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -236,7 +236,7 @@ class StaffController {
                   new sql.Request(connection)
                     .query("DELETE FROM Users WHERE userID = '" + _id + "'")
                     .then(function() {
-                      new ActivityService().reportActivity('Faculty User deleted', 'success', _id, 'Faculty user has been deleted.');
+                      new ActivityService().reportActivity('staff', 'Faculty User deleted', 'success', _id, currentUserID, 'Faculty user has been deleted.');
                       res.send({ result: "success", title: "User Deleted", msg: "Staff user deleted successfully.", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Delete user with id " + _id + ". " + err);
@@ -262,7 +262,7 @@ class StaffController {
   retrieve(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
@@ -288,7 +288,7 @@ class StaffController {
   getSiteActivity(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
@@ -315,7 +315,7 @@ class StaffController {
   findById(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {

@@ -82,7 +82,6 @@ export class StudentEnrollmentComponent implements OnInit {
           this.displayErrorAlert(result);
         } else {
           this.student = result;
-          console.log(this.student);
           this.getCourses();
         }
       }).catch(error => error);
@@ -119,7 +118,8 @@ export class StudentEnrollmentComponent implements OnInit {
 
   compareTimetables() {
     console.log("comparing timetables");
-    if (this.student !== null) {
+    console.log(this.student);
+    if (Object.keys(this.student).length !== 0 && this.student.constructor === Object) {
       console.log("student compare: " + this.student[0].userID);
       var timetable = this.studentTimetables.filter(x => x.userID === this.student[0].userID);
       console.log(timetable);

@@ -2,16 +2,49 @@
   font-family: Avenir, Calibri, Minion;
 }
 
-.notesList li{
+.notesList {
+  position: relative;
   padding: 10px;
-  margin: 8px;
+  margin-top: 8px;
   list-style: none;
-  background: #efefef;
   font-size: 18px;
 }
 
-.deleteNote{
-  float: right;
+.notesList #noteDate {
+  width:50%;
+  float:right;
+  text-align: right;
+}
+
+.notesList #postedBy {
+  width:50%;
+  float:left;
+}
+
+.notesList #noteContent {
+  width:100%;
+  padding:10px;
+}
+
+.notesList #noteDelete {
+  position:absolute;
+  right:0;
+  bottom:0;
+  margin:8px;
+}
+
+.createNote {
+  position:relative;
+}
+
+.createNote textarea {
+  float:left;
+  width: calc(100% - 110px);
+}
+
+.createNote button {
+  position:absolute;
+  right: 0;
 }
 
 .actionColumn {

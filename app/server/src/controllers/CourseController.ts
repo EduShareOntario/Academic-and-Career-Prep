@@ -16,7 +16,7 @@ class CourseController {
   retrieve(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           sql.connect(db)
             .then(function(connection) {
@@ -47,7 +47,7 @@ class CourseController {
   getInstructorCourses(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           var _id: string = req.params._id;
 
@@ -77,7 +77,7 @@ class CourseController {
   delete(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           var _id: string = req.params._id;
 
@@ -86,7 +86,7 @@ class CourseController {
               sql.query
                 `DELETE FROM Course WHERE courseID = ${_id}`
                 .then(function(result) {
-                  new ActivityService().reportActivity('Course Deleted', 'success', _id, 'Course has been deleted.');
+                  new ActivityService().reportActivity('course', 'Course Deleted', 'success', _id, currentUserID, 'Course has been deleted.');
                   res.send({ result: "success", title: "Course Deleted", msg: "Course has been deleted successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update course " + err);
@@ -108,7 +108,7 @@ class CourseController {
   update(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           var course = req.body;
           var _id: string = req.params._id;
@@ -120,7 +120,7 @@ class CourseController {
           campusId = ${course.campusId},classroom = ${course.classroom},courseStart = ${course.courseStart},
           courseEnd = ${course.courseEnd},classTimeStr = ${course.classTimeStr} WHERE courseID = ${_id}`
                 .then(function(result) {
-                  new ActivityService().reportActivity('Course Updated', 'success', _id, 'Course has been updated.');
+                  new ActivityService().reportActivity('course', 'Course Updated', 'success', _id, currentUserID, 'Course has been updated.');
                   res.send({ result: "success", title: "Course Updated!", msg: "Course has been updated successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update course " + err);
@@ -142,7 +142,7 @@ class CourseController {
   findById(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           var _id: string = req.params._id;
 
@@ -176,7 +176,7 @@ class CourseController {
   create(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           // get course from req url
           var course = req.body;
@@ -188,7 +188,7 @@ class CourseController {
         VALUES(${course.courseName}, ${course.courseType}, ${course.professorId}, ${course.campusId}, ${course.classroom}, ${course.classTimeStr},
           ${course.courseStart},${course.courseEnd})`
                 .then(function(result) {
-                  new ActivityService().reportActivity('Course Created', 'success', '', "Course name '" + course.courseName + "' has been successfully created." );
+                  new ActivityService().reportActivity('course', 'Course Created', 'success', '', currentUserID, "Course name '" + course.courseName + "' has been successfully created." );
                   res.send({ result: "success", title: "Course Created!", msg: "Course has been created successfully.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Create course: " + err);
@@ -211,7 +211,7 @@ class CourseController {
     try {
 
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           sql.connect(db)
             .then(function(connection) {
@@ -240,7 +240,7 @@ class CourseController {
     try {
 
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           sql.connect(db)
             .then(function(connection) {
@@ -268,7 +268,7 @@ class CourseController {
   getInstructors(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           sql.connect(db)
             .then(function(connection) {
@@ -298,7 +298,7 @@ class CourseController {
   getWaitList(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           sql.connect(db)
             .then(function(connection) {
@@ -326,7 +326,7 @@ class CourseController {
   getWaitListById(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           var _id: string = req.params._id;
 
@@ -356,7 +356,7 @@ class CourseController {
   addToWaitList(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           // get course from req url
           var course = req.body;
@@ -368,7 +368,7 @@ class CourseController {
               new sql.Request(connection)
                 .query("INSERT INTO WaitList (courseType, userID, date) VALUES ('" + courseType + "', '" + userID + "', '" + date + "')")
                 .then(function(result) {
-                  new ActivityService().reportActivity('Course Wait List', 'success', userID, 'User has been added to the course wait list.');
+                  new ActivityService().reportActivity('client', 'Course Wait List', 'success', userID, currentUserID, 'User has been added to the course wait list.');
                   res.send({ result: "success", title: "Success!", msg: "User has been added to the wait list.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Add to wait list: " + err);
@@ -390,7 +390,7 @@ class CourseController {
   addToCourseTypes(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
 
           // get course from req url
           console.log(req.body);
@@ -400,7 +400,7 @@ class CourseController {
               new sql.Request(connection)
                 .query("INSERT INTO CourseTypes (courseType) VALUES ('" + courseType + "')")
                 .then(function(result) {
-                  new ActivityService().reportActivity('Manage Courses', 'success', '', "New course type named: " + courseType + " has been added. ");
+                  new ActivityService().reportActivity('course', 'Manage Courses', 'success', '', currentUserID, "New course type named: " + courseType + " has been added. ");
                   res.send({ result: "success", title: "Success!", msg: "New course type has been added.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Add new course type: " + err);

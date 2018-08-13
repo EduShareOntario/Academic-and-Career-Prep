@@ -21,10 +21,16 @@
       </p-column>
       <p-column field="action" header="Action" [sortable]="true" [style]="{'width': '200px'}"></p-column>
       <p-column field="info" header="Info" [sortable]="true" [style]="{'width': '500px'}"></p-column>
-      <p-column field="userID" header="User Info" [sortable]="true" [style]="{'width': '100px', 'text-align': 'center'}">
+      <p-column field="affectedID" header="Affects" [sortable]="true" [style]="{'width': '100px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <i *ngIf="data.userID != 0" (click)="viewUserInfo()" class="fa fa-info-circle fa-2x user-info" title="View User Info" aria-hidden="true"></i>
-          <i *ngIf="data.userID === 0" class="fa fa-times-circle fa-2x" style="color:orange" title="No User Info" aria-hidden="true"></i>
+          <i *ngIf="data.affectedID != 0" (click)="viewUserInfo()" class="fa fa-info-circle fa-2x user-info" title="View User Info" aria-hidden="true"></i>
+          <i *ngIf="data.affectedID === 0" class="fa fa-times-circle fa-2x" style="color:orange" title="No User Info" aria-hidden="true"></i>
+        </template>
+      </p-column>
+      <p-column field="facultyID" header="Made By" [sortable]="true" [style]="{'width': '100px', 'text-align': 'center'}">
+        <template let-data="rowData" pTemplate="body">
+          <i *ngIf="data.facultyID != 0" (click)="viewUserInfo()" class="fa fa-info-circle fa-2x user-info" title="View User Info" aria-hidden="true"></i>
+          <i *ngIf="data.facultyID === 0" class="fa fa-times-circle fa-2x" style="color:orange" title="No User Info" aria-hidden="true"></i>
         </template>
       </p-column>
     </p-dataTable>
