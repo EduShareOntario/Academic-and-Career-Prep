@@ -89,6 +89,18 @@ export class CourseService {
       .catch(err => this.handleError(err, "addToWaitList"));
   }
 
+  removeFromWaitList(userID, courseType) {
+    // add authorization header with jwt token
+    let headers = new Headers({ authorization: this.authService.token });
+    let options = new RequestOptions({ headers: headers });
+    let url = `${this.courseUrl}/${userID}/${courseType}`;
+    return this.http
+      .delete(url, options)
+      .toPromise()
+      .then(response => response.json())
+      .catch(err => this.handleError(err, "removeFromWaitList"));
+  }
+
   addToCourseTypes(courseType) {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });

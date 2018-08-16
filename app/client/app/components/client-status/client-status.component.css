@@ -2,6 +2,10 @@
   font-family: Avenir, Calibri, Minion;
 }
 
+.well {
+  position: relative;
+}
+
 .dropdown-menu {
   top: -150%;
   left: 115%;
@@ -17,19 +21,17 @@
 }
 
 ::-webkit-scrollbar {
-display: none;
+  display: none;
 }
 
 .element {
+  overflow-y: scroll;
   -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
 }
 
 .deleteClient>a {
   color: #E32F26;
-}
-
-.element {
-  overflow: -moz-scrollbars-none;
 }
 
 .booleanBtn {

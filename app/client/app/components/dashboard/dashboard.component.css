@@ -13,6 +13,10 @@ h1, h2, h3, h4, h5, h6 {
     white-space: nowrap;
 }
 
+.dashboardItem a {
+    text-decoration: none;
+}
+
 .dashboardItemText {
     color: #333f48;
 }
@@ -29,10 +33,6 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #dddd;
     box-shadow: 0px 5px 10px #888888;
     transition: 0.1s;
-}
-
-.itemBorder a {
-    text-decoration: none;
 }
 
 .itemBorder:hover {

@@ -22,7 +22,7 @@ reportActivity(type, action, result, affectedID, facultyID, info) {
       sql.connect(db)
         .then(function(connection) {
           new sql.Request(connection)
-            .query("INSERT INTO CaseNotes VALUES ('" + affectedID + "', '" + info + "', '" + moment().format('YYYY-MM-DD HH:mm:ss a') + "')")
+            .query("INSERT INTO CaseNotes VALUES ('" + affectedID + "', '" + facultyID + "', '" + info + "', '" + moment().format('YYYY-MM-DD HH:mm:ss a') + "')")
             .then(function() {
             }).catch(function(err) {
               console.log("Error - Insert new note " + err);

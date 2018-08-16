@@ -13,6 +13,7 @@ import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
 import { DOCUMENT } from '@angular/platform-browser';
 declare var swal: any;
+declare var saveAs: any;
 declare var FileSaver: any;
 
 @Component({
@@ -670,10 +671,11 @@ export class ClientStatusComponent implements OnInit {
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
     this.selectedCourseTypes = [];
-    for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
-      this.selectedCourseTypes.push(item);
+    if (this.suitabilityForm.selectedCourseTypes != null) {
+      for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
+        this.selectedCourseTypes.push(item);
+      }
     }
-
     var keys = Object.keys(this.suitabilityForm);
     for (var i = 0; i < keys.length; i++) {
       if (typeof this.suitabilityForm[keys[i]] === "string") {

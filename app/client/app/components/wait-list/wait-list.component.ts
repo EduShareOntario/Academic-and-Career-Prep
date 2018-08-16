@@ -183,6 +183,19 @@ export class WaitListComponent implements OnInit {
     }
   }
 
+  removeFromWaitList(data) {
+    this.CourseService
+      .removeFromWaitList(data.id, data.courseType)
+      .then(result => {
+        this.getWaitList();
+        swal(
+          'Removed from ' + data.courseType,
+          '' + data.fullName + ' has been succesfully removed from the ' + data.courseType + ' wait list.',
+          'success'
+        );
+      }).catch(error => error);
+  }
+
   closeMenu() {
     this.showForm = false;
   }

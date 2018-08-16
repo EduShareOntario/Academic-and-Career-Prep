@@ -1,202 +1,202 @@
 <div class="dashboard">
   <div class="spacer"></div>
-    <div *ngIf="userType === 'Client'" class="inner_header">
-      <h1>Welcome, {{client}}</h1>
-    </div>
-    <div *ngIf="userType === 'Student'" class="inner_header">
-      <h1>Welcome, {{student}}</h1>
-    </div>
-    <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="inner_header">
-      <h1><strong>Dashboard</strong></h1>
-    </div>
-    <div class="container">
+  <div *ngIf="userType === 'Client'" class="inner_header">
+    <h1>Welcome, {{client}}</h1>
+  </div>
+  <div *ngIf="userType === 'Student'" class="inner_header">
+    <h1>Welcome, {{student}}</h1>
+  </div>
+  <div *ngIf="userType === 'Admin' || userType === 'Staff'" class="inner_header">
+    <h1><strong>Dashboard</strong></h1>
+  </div>
+  <div class="container">
     <div class=" row">
-        <div class="col-md-4 dashboardItem" *ngIf="clientStatus">
-            <div class="itemBorder">
-                <a routerLink="/clients" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-book fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Manage Clients</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="manageStudents">
-            <div class="itemBorder">
-                <a routerLink="/students" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-graduation-cap fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Manage Students</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="manageStaff">
-            <div class="itemBorder">
-                <a routerLink="/staff" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-users fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Manage Staff</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="manageCourses">
-            <div class="itemBorder">
-                <a routerLink="/courses" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-calendar-check-o fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Manage Courses</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="waitList">
-            <div class="itemBorder">
-                <a routerLink="/wait-list" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-clock-o fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Wait List</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="siteActivity">
-            <div class="itemBorder">
-                <a routerLink="/site-activity" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-bar-chart fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Site Activity</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="suitability">
-            <div class="itemBorder">
-                <a routerLink="/suitability" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-question fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Suitability</h1>
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="attendanceList">
-           <div class="itemBorder">
-               <a routerLink="/attendance-list" routerLinkActive="active">
-                   <div>
-                       <i class="fa fa-check-square-o fa-lg-icon" aria-hidden="true"></i>
-                   </div>
-                   <div>
-                       <h1 class="dashboardItemText">Take Attendance</h1>
-                   </div>
-               </a>
-           </div>
-       </div>
-       <div class="col-md-4 dashboardItem" *ngIf="attendanceReport">
+      <div class="col-md-4 dashboardItem" *ngIf="clientStatus">
+        <a routerLink="/clients" routerLinkActive="active">
           <div class="itemBorder">
-              <a routerLink="/attendance-report" routerLinkActive="active">
-                  <div>
-                      <i class="fa fa-list fa-lg-icon" aria-hidden="true"></i>
-                  </div>
-                  <div>
-                      <h1 class="dashboardItemText">Attendance Report</h1>
-                  </div>
-              </a>
+            <div>
+              <i class="fa fa-book fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Manage Clients</h1>
+            </div>
           </div>
+        </a>
       </div>
-        <div class="col-md-4 dashboardItem" *ngIf="caseNotes">
-            <div class="itemBorder">
-                <a routerLink="/case-notes" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-commenting fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Case Notes</h1>
-                    </div>
-                </a>
+      <div class="col-md-4 dashboardItem" *ngIf="manageStudents">
+        <a routerLink="/students" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-graduation-cap fa-lg-icon" aria-hidden="true"></i>
             </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="maesdprf">
-            <div class="itemBorder">
-                <a routerLink="/prf" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-ban fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">PRF</h1>
-                    </div>
-                </a>
+            <div>
+              <h1 class="dashboardItemText">Manage Students</h1>
             </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="timetable">
-            <div class="itemBorder">
-                <a routerLink="/timetable" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-calendar fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Timetable</h1>
-                    </div>
-                </a>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="manageStaff">
+        <a routerLink="/staff" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-users fa-lg-icon" aria-hidden="true"></i>
             </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="files">
-            <div class="itemBorder">
-                <a routerLink="/files" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-file-text fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Files</h1>
-                    </div>
-                </a>
+            <div>
+              <h1 class="dashboardItemText">Manage Staff</h1>
             </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="consent">
-            <div class="itemBorder">
-                <a routerLink="/consent" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-check-circle-o fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Consent
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="manageCourses">
+        <a routerLink="/courses" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-calendar-check-o fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Manage Courses</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="waitList">
+        <a routerLink="/wait-list" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-clock-o fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Wait List</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="siteActivity">
+        <a routerLink="/site-activity" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-bar-chart fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Site Activity</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="suitability">
+        <a routerLink="/suitability" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-question fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Suitability</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="attendanceList">
+        <a routerLink="/attendance-list" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-check-square-o fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Take Attendance</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="attendanceReport">
+        <a routerLink="/attendance-report" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-list fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Attendance Report</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="caseNotes">
+        <a routerLink="/case-notes" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-commenting fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Case Notes</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="maesdprf">
+        <a routerLink="/prf" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-ban fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">PRF</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="timetable">
+        <a routerLink="/timetable" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-calendar fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Timetable</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="files">
+        <a routerLink="/files" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-file-text fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Files</h1>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="consent">
+        <a routerLink="/consent" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-check-circle-o fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Consent
                           <i *ngIf="!consentForm" class="fa fa-check" style="color:green" title="Form completed." aria-hidden="true"></i>
                           <i *ngIf="consentForm" class="fa fa-exclamation" style="color:#FFA500" title="Please complete form." aria-hidden="true"></i>
                         </h1>
-                    </div>
-                </a>
             </div>
-        </div>
-        <div class="col-md-4 dashboardItem" *ngIf="learningStyle">
-            <div class="itemBorder">
-                <a routerLink="/learning-style" routerLinkActive="active">
-                    <div>
-                        <i class="fa fa-cubes fa-lg-icon" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h1 class="dashboardItemText">Learning Style
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 dashboardItem" *ngIf="learningStyle">
+        <a routerLink="/learning-style" routerLinkActive="active">
+          <div class="itemBorder">
+            <div>
+              <i class="fa fa-cubes fa-lg-icon" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h1 class="dashboardItemText">Learning Style
                           <i *ngIf="!learningStyleForm" class="fa fa-check" style="color:green" title="Form completed." aria-hidden="true"></i>
                           <i *ngIf="learningStyleForm" class="fa fa-exclamation" style="color:#FFA500" title="Please complete form." aria-hidden="true"></i>
                         </h1>
-                    </div>
-                </a>
             </div>
-        </div>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </div>

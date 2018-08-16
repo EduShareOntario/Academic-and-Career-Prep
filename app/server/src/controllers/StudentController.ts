@@ -35,7 +35,7 @@ class StudentController {
                 + student.okayToTextAlternate + "','"
                 + student.editConsentRequest + "','"
                 + student.editConsentPermission + "','"
-                + student.comments + "')")
+                + student.comments + "','0')")
                 .then(function() {
                   res.send({ result: "success", title: "New User Created!", msg: "Student user has been successfully created!", serverMsg: "" });
                 }).catch(function(err) {
@@ -591,7 +591,7 @@ class StudentController {
               new sql.Request(connection)
                 .query("INSERT INTO CaseNotes VALUES ('" + _id + "', '" + currentUserID + "', '" + caseNote + "', '" + dateTime + "')")
                 .then(function() {
-                  //new ActivityService().reportActivity('student', 'New Student Note', 'success', _id, '', 'New student note submitted.');
+                  new ActivityService().reportActivity('note', 'New Student Note', 'success', _id, currentUserID, 'New student note submitted.');
                   res.send({ result: "success", title: "Note Created!", msg: "Note has been created for this student.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Insert new note " + err);
@@ -646,7 +646,7 @@ class StudentController {
               new sql.Request(connection)
                 .query("DELETE FROM caseNotes WHERE caseNoteID = '" + _id + "'")
                 .then(function() {
-                  new ActivityService().reportActivity('student', 'Student Note Deleted', 'success', '', currentUserID, 'A student note has been deleted.');
+                  new ActivityService().reportActivity('note', 'Student Note Deleted', 'success', '', currentUserID, 'A student note has been deleted.');
                   res.send({ result: "success", title: "Note Deleted", msg: "Note has been deleted for this student.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Delete student note: " + err);

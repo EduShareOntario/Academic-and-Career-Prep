@@ -36,3 +36,28 @@ h1, h2, h3, h4, h5, h6 {
 .marginBottom {
   margin-bottom:10px;
 }
+
+.redStatus {
+  vertical-align: middle;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #E32F26;
+  margin: 0 auto;
+}
+
+.yellowStatus {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #F7CE3C;
+  margin: 0 auto;
+}
+
+.greenStatus {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #64A70B;
+  margin: 0 auto;
+}

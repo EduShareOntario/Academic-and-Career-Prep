@@ -253,6 +253,23 @@ li>a>i {
   transform: scale(1.1);
 }
 
+
+.editIcon {
+  color:#EA7200;
+  cursor:pointer;
+  transition: 0.1s;
+}
+
+.addIcon {
+  color:#64A70B;
+  cursor:pointer;
+  transition: 0.1s;
+}
+
+.editIcon:hover, .addIcon:hover {
+  transform: scale(1.2);
+}
+
 /* Sticky Footer */
 
 .wrapper {
@@ -414,6 +431,10 @@ li>a>i {
 
 .closeMenu:hover {
   transform: scale(2);
+}
+
+.swal2-popup {
+  border-radius: 0px !important;
 }
 
 @media (max-width: 768px){

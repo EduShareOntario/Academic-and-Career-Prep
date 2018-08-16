@@ -11,6 +11,7 @@ import { ClientService } from "../../services/client.service";
 import { CourseService } from "../../services/course.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
+declare var saveAs: any;
 declare var swal: any;
 declare var FileSaver: any;
 

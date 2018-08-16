@@ -13,6 +13,13 @@
       <hr>
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
+        <p-column field="status" header="Status" [sortable]="true" [style]="{'width': '60px'}">
+          <template let-data="rowData" pTemplate="body">
+            <div *ngIf="data.status === 0"><a routerLink="/attendance-report" routerLinkActive="active" title=""><div class="greenStatus"></div></a></div>
+            <div *ngIf="data.status === 2"><a routerLink="/attendance-report" routerLinkActive="active" title="Two missed classes. Click to view student attendance."><div class="yellowStatus"></div></a></div>
+            <div *ngIf="data.status === 4"><a routerLink="/attendance-report" routerLinkActive="active" title="Four missed classes. Click to view student attendance."><div class="redStatus"></div></a></div>
+          </template>
+        </p-column>
         <p-column field="studentNumber" header="Student #" [sortable]="true" [style]="{'width': '115px'}"></p-column>
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
         <p-column field="email" header="Email" [sortable]="true"></p-column>
@@ -71,7 +78,7 @@
       <hr>
       <div class="well">
         <ul class="sectionBtnGroup col-sm-12">
-          <li class="sectionButtons" [ngClass]="{active_tab: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
+          <li class="sectionButtons" [ngClass]="{active_tab: showGeneral || showGeneralInfoEdit}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
             <h4>General Info</h4></li>
             <li class="sectionButtons" *ngIf="!studentView.suitability" [ngClass]="{active_tab: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
               <h4>Suitability</h4></li>
@@ -85,8 +92,7 @@
                   <div *ngIf="showGeneral" class="infoPanel">
                     <br />
                     <div class="form-group">
-                      <h3>Viewing General Info for {{ studentView.firstName }}</h3>
-                      <button (click)="editGeneralInfo(studentView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
+                      <h3>Viewing General Info for {{ studentView.firstName }} <i class="fa fa-pencil editIcon" (click)="editGeneralInfo(studentView)" aria-hidden="true" title="Edit general info for {{ studentView.firstName }}"></i></h3>
                       <!-- <label class="control-label">id: </label> {{studentView.userID}} <hr/> -->
                       <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate | date}} <div class="info_seperate"></div>
                       <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <div class="info_seperate"></div>
@@ -106,7 +112,7 @@
                   <div *ngIf="showGeneralInfoEdit">
                     <h3>Editing General Info for {{ studentEdit.firstName }}</h3>
                     <hr>
-                    <div class="form-group">
+                    <div>
                       <p><span style="color:red">* </span>Updating first or last name will automatically update this students username and notify them about the change.</p>
                       <label class="control-label">First Name: </label>
                       <input class="form-control" type="text" [(ngModel)]="studentEdit.firstName" />
@@ -139,11 +145,8 @@
                       </div>
                       <label class="control-label">Comments: </label>
                       <input class="form-control" type="text" [(ngModel)]="studentEdit.comments"/>
-                      <div class="form-group">
-                        <div class="col-sm-offset-10 col-sm-1">
-                          <button (click)="updateGeneralInfo()" class="btn btn-success" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>
-                        </div>
-                      </div>
+                      <button (click)="updateGeneralInfo()" class="greenButton" style="margin-top:20px; float:right;" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>
+                      <div style="clear:both"></div>
                     </div>
                   </div>
                   <div *ngIf="showSuitability" class="infoPanel">
@@ -267,13 +270,12 @@
                     <label class="control-label">Digital Assessment: </label>
                     <input class="form-control" type="text" [(ngModel)]="assessmentResults.digital" />
                     <br />
-                    <button *ngIf="editAssessment" class="btn btn-success marginBottomButton" (click)="editAssessmentResults(studentView.userID)" style="float:right" title="Edit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
-                    <button *ngIf="!editAssessment" class="btn btn-success marginBottomButton" (click)="addAssessmentResults(studentView.userID)" style="float:right" title="Add Assessment Results"><i class="fa fa-upload"></i> Submit</button>
+                    <button *ngIf="editAssessment" class="greenButton" (click)="editAssessmentResults(studentView.userID)" style="float:right" title="Edit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
+                    <button *ngIf="!editAssessment" class="greenButton" (click)="addAssessmentResults(studentView.userID)" style="float:right" title="Add Assessment Results"><i class="fa fa-upload"></i> Submit</button>
                     <div style="clear:both"></div>
                   </div>
                   <div *ngIf="showFiles">
-                    <h3>Viewing Files for {{ studentView.firstName }}</h3>
-                    <button class="btn btn-success marginBottom" (click)="addFile()" title="Add new file"><i class="fa fa-upload"></i> Upload File</button>
+                    <h3>Viewing Files for {{ studentView.firstName }} <i class="fa fa-plus addIcon" (click)="addFile()" aria-hidden="true" title="Upload new file for {{ studentView.firstName }}"></i></h3>
                     <div style="overflow:visible; position:relative;">
                       <p-dataTable [value]="studentsFiles | userFilter : filterQuery" [responsive]="true">
                         <p-column field="userID" header="UserID" [sortable]="true"></p-column>

@@ -23,29 +23,29 @@
     </div>
     <div class="col-md-12">
       <p-dataTable [value]="courses | courseFilter : filterQuery | campusFilter : selectedCampusId" [responsive]="true">
-        <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
+        <p-column field="courseName" header="Course Name" [sortable]="true" [style]="{'width':'190px'}"></p-column>
         <p-column header="Instructor" [sortable]="true" [style]="{'text-align': 'center'}">
           <template let-data="rowData" pTemplate="body">
-                <p>{{ data.professorName }}</p>
-                <span *ngIf="data.professorName == ' '"><i class="fa fa-exclamation-triangle fa-2x" title="This course does not have an instructor!" style="color:#E32F26;" aria-hidden="true"></i> This course needs an instructor!</span>
-              </template>
+            <p>{{ data.professorName }}</p>
+            <span *ngIf="data.professorName == ' '"><i class="fa fa-exclamation-triangle fa-2x" title="This course does not have an instructor!" style="color:#E32F26;" aria-hidden="true"></i></span>
+          </template>
         </p-column>
         <p-column field="classroom" header="Classroom" [sortable]="true"></p-column>
         <p-column field="campusName" header="Campus" [sortable]="true"></p-column>
         <p-column field="courseStart" header="Start Date" [sortable]="true"></p-column>
         <p-column field="courseEnd" header="End Date" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '256px'}">
+        <p-column header="Action" [style]="{'width': '132px'}">
           <template let-data="rowData" pTemplate="body">
-                <div class="inline">
-                    <button class="enrollButton" (click)="gotoStudentEnrollment(data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
-                </div>
-                <div class="inline">
-                    <button class="editButton" (click)="gotoEdit(data, $event)"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
-                </div>
-                <div class="inline">
-                    <button class="deleteButton" (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                </div>
-              </template>
+            <div class="inline">
+                <button class="enrollButton" (click)="gotoStudentEnrollment(data, $event)" title="Enroll Students"><i class="fa fa-institution" aria-hidden="true"></i></button>
+            </div>
+            <div class="inline">
+                <button class="editButton" (click)="gotoEdit(data, $event)" title="Edit Course"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            </div>
+            <div class="inline">
+                <button class="deleteButton" (click)="deleteAlert(data, $event)" title="Delete Course"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </div>
+          </template>
         </p-column>
       </p-dataTable>
     </div>

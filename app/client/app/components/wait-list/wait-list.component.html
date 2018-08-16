@@ -38,9 +38,10 @@
           {{ data.date | date }}
         </template>
       </p-column>
-      <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '125px', 'text-align': 'center'}">
+      <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '140px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
+          <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(data, $event)" title="Enroll {{ data.fullName }} in course type: {{ data.courseType }}"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
+          <button class="deleteButton doNotPrint" (click)="removeFromWaitList(data, $event)" title="Remove {{ data.fullName }} from wait list for course type: {{ data.courseType }}"><i class="fa fa-trash" aria-hidden="true"></i></button>
         </template>
       </p-column>
     </p-dataTable>

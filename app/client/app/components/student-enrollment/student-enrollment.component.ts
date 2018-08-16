@@ -117,16 +117,16 @@ export class StudentEnrollmentComponent implements OnInit {
   }
 
   compareTimetables() {
-    console.log("comparing timetables");
-    console.log(this.student);
-    if (Object.keys(this.student).length !== 0 && this.student.constructor === Object) {
-      console.log("student compare: " + this.student[0].userID);
-      var timetable = this.studentTimetables.filter(x => x.userID === this.student[0].userID);
-      console.log(timetable);
-      for (let item of timetable) {
-        var itemCourseID = item.courseID.toString();
-        if (itemCourseID === this.courseID) {
-          this.student[0].enrolled = true;
+    if (this.students == null) {
+      for (let course of this.courses) {
+        var timetable = this.studentTimetables.filter(x => x.userID === (this.student as any).userID);
+        for (let item of timetable) {
+          var itemCourseID = item.courseID;
+          if (itemCourseID === course.courseID) {
+            course.enrolled = true;
+          } else {
+            course.enrolled = false;
+          }
         }
       }
     } else {
@@ -144,10 +144,10 @@ export class StudentEnrollmentComponent implements OnInit {
     swal.close();
   }
 
-  checkEnrolled(student: Student) {
-    if (student.enrolled) {
+  checkEnrolled(data) {
+    if (this.students == null && data.enrolled) {
       swal({
-        title: 'Remove ' + student.firstName + ' ' + student.lastName + ' from ' + this.courseName + '?',
+        title: 'Remove ' + data.firstName + ' ' + data.lastName + ' from ' + this.courseName + '?',
         text: "",
         type: 'warning',
         showCancelButton: true,
@@ -158,41 +158,69 @@ export class StudentEnrollmentComponent implements OnInit {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
           console.log(isConfirm.dismiss);
         } else if (isConfirm) {
-          this.drop(student);
+          this.drop(data);
         }
       }).catch(error => {
         console.log(error);
       });
     } else {
-      this.enroll(student);
+      this.enroll(data);
     }
   }
 
-  enroll(student: Student) {
-    var startDate = moment(student.studentStartDate, "DDD MMM YYYY h:mm:ss LT").isValid();
-    var endDate = moment(student.studentEndDate, "DDD MMM YYYY h:mm:ss LT").isValid();
+  enroll(data) {
+    var startDate = moment(data.studentStartDate, "DDD MMM YYYY h:mm:ss LT").isValid();
+    var endDate = moment(data.studentEndDate, "DDD MMM YYYY h:mm:ss LT").isValid();
     if (startDate && endDate) {
-      this.studentService
-        .courseEnroll(student.userID, student.studentStartDate, student.studentEndDate, this.courseID, this.instructorID)
-        .then(result => {
-          if ((result as any).result === 'error') {
-            this.displayErrorAlert(result);
-          } else if ((result as any).result === 'success') {
-            student.enrolled = true;
-            swal(
-              this.courseName,
-              '' + student.firstName + ' ' + student.lastName + ' has been succesfully enrolled.',
-              'success'
-            );
-          } else {
-            swal(
-              'Error',
-              'Something went wrong while enrolling student.',
-              'error'
-            );
-          }
-        })
-        .catch(error => error);
+      if (this.students != null) {
+        this.studentService
+          .courseEnroll(data.userID, data.studentStartDate, data.studentEndDate, this.courseID, this.instructorID)
+          .then(result => {
+            if ((result as any).result === 'error') {
+              this.displayErrorAlert(result);
+            } else if ((result as any).result === 'success') {
+              data.enrolled = true;
+              swal(
+                this.courseName,
+                '' + data.firstName + ' ' + data.lastName + ' has been succesfully enrolled.',
+                'success'
+              );
+            } else {
+              swal(
+                'Error',
+                'Something went wrong while enrolling student.',
+                'error'
+              );
+            }
+          })
+          .catch(error => error);
+      } else {
+        this.studentService
+          .courseEnroll((this.student as any).userID, data.studentStartDate, data.studentEndDate, data.courseID, data.professorId)
+          .then(result => {
+            if ((result as any).result === 'error') {
+              this.displayErrorAlert(result);
+            } else if ((result as any).result === 'success') {
+              this.courseService
+                .removeFromWaitList((this.student as any).userID, data.courseType)
+                .then(result => {
+                  data.enrolled = true;
+                  swal(
+                    data.courseName,
+                    '' + (this.student as any).firstName + ' ' + (this.student as any).lastName + ' has been succesfully enrolled.',
+                    'success'
+                  );
+                }).catch(error => error);
+            } else {
+              swal(
+                'Error',
+                'Something went wrong while enrolling student.',
+                'error'
+              );
+            }
+          })
+          .catch(error => error);
+      }
     } else {
       swal(
         'Whoops',

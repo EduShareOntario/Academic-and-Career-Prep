@@ -387,6 +387,38 @@ class CourseController {
     }
   }
 
+  removeFromWaitList(req: express.Request, res: express.Response): void {
+    try {
+      new AuthController().authUser(req, res, {
+        requiredAuth: auth, done: function(currentUserID) {
+
+          var _studentId: string = req.params._studentId;
+          var _courseType: string = req.params._courseType;
+
+          sql.connect(db)
+            .then(function(connection) {
+              sql.query
+                `DELETE FROM WaitList WHERE userID = ${_studentId} AND courseType = ${_courseType}`
+                .then(function(result) {
+                  new ActivityService().reportActivity('wait list', 'Course Wait List', 'success', _studentId, currentUserID, 'Student has been removed from the ' + _courseType + ' wait list.');
+                  res.send({ result: "success", title: "Student Removed", msg: "Student successfully removed from wait list.", serverMsg: "" });
+                }).catch(function(err) {
+                  console.log("Remove from wait list " + err);
+                  res.send({ result: "error", title: "Error", msg: "There was an error removing student from wait list.", serverMsg: err });
+                });
+            }).catch(function(err) {
+              console.log("DB Connection error - Delete course: " + err);
+              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+            });
+
+        }
+      });
+    } catch (err) {
+      console.log("Error - Remove from wait list: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error removing student from wait list.", serverMsg: err });
+    }
+  }
+
   addToCourseTypes(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
