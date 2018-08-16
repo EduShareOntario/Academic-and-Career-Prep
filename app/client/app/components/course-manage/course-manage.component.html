@@ -1,7 +1,7 @@
 <div class="courseManage">
   <div class="spacer"></div>
   <div class="inner_header">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Courses</strong></h1>
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Manage Courses</strong></h1>
     <button class="orangeButton" (click)="addCourse()"><i class="fa fa-plus"></i> Add Course</button>
     <button class="lightBlueButton" (click)="showCourseTypeForm()" title="Add new course type."><i class="fa fa-plus"></i> Add Type</button>
   </div>
@@ -34,16 +34,16 @@
         <p-column field="campusName" header="Campus" [sortable]="true"></p-column>
         <p-column field="courseStart" header="Start Date" [sortable]="true"></p-column>
         <p-column field="courseEnd" header="End Date" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '132px'}">
+        <p-column header="Action" [style]="{'width': '149px'}">
           <template let-data="rowData" pTemplate="body">
             <div class="inline">
-                <button class="enrollButton" (click)="gotoStudentEnrollment(data, $event)" title="Enroll Students"><i class="fa fa-institution" aria-hidden="true"></i></button>
+                <i class="fa fa-university fa-2x enrollIcon" aria-hidden="true " (click)="gotoStudentEnrollment(data, $event)" title="Enroll Students"></i>
             </div>
             <div class="inline">
-                <button class="editButton" (click)="gotoEdit(data, $event)" title="Edit Course"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                <i class="fas fa-pencil-alt fa-2x editIcon" aria-hidden="true" (click)="gotoEdit(data, $event)" title="Edit Course"></i>
             </div>
             <div class="inline">
-                <button class="deleteButton" (click)="deleteAlert(data, $event)" title="Delete Course"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                <i class="fas fa-trash-alt fa-2x deleteIcon" aria-hidden="true" (click)="deleteAlert(data, $event)" title="Delete Course"></i>
             </div>
           </template>
         </p-column>

@@ -1,7 +1,7 @@
 <div class="caseNotes">
   <div class="spacer"></div>
   <div class="inner_header">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Case Notes</strong></h1>
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Case Notes</strong></h1>
   </div>
   <div class="row" *ngIf="data">
     <div class="col-md-4">
@@ -28,11 +28,12 @@
       </div>
       <div style="clear:both"></div>
       <div class="notesList well" *ngFor="let noteItem of notes">
-        <b id="noteDate">{{noteItem.dateTime | date}}</b>
-        <div id="postedBy"><span style="color:#004B87">{{ noteItem.facultyUser }}</span> wrote: </div>
+        <em id="noteDate">{{noteItem.dateTime | date}}</em>
+        <div *ngIf="noteItem.facultyUser !== 'Automated Message'" id="postedBy"><span style="color:#004B87">{{ noteItem.facultyUser }}</span> wrote: </div>
+        <div *ngIf="noteItem.facultyUser === 'Automated Message'" id="postedBy"><span style="color:#FFCC14">{{ noteItem.facultyUser }}</span> states: </div>
         <div style="clear:both"></div>
         <div id="noteContent"><p>"{{noteItem.caseNote}}"</p></div>
-        <button id="noteDelete" class="deleteButton" (click)="deleteAlert(noteItem.caseNoteID)" title="Delete note"><i class="fa fa-trash-o"></i></button>
+        <i class="fas fa-trash-alt" id="noteDelete" (click)="deleteAlert(noteItem.caseNoteID)" title="Delete note"></i>
       </div>
     </div>
   </div>

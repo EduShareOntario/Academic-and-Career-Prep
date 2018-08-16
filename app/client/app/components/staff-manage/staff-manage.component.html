@@ -2,7 +2,7 @@
   <div class="row" *ngIf="users">
     <div class="spacer"></div>
     <div class="col-md-11 col-sm-11 col-xs-11 inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Staff</strong></h1>
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Manage Staff</strong></h1>
       <button class="orangeButton" (click)="addUser()" title="Add new client"><i class="fa fa-plus"></i> Add Staff</button>
     </div>
     <div class="col-md-10">
@@ -17,13 +17,13 @@
         <p-column field="username" header="Username" [sortable]="true"></p-column>
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
         <p-column field="email" header="Email" [sortable]="true" [style]="{'width': '300px'}"></p-column>
-        <p-column header="Action" [style]="{'width': '88px'}">
+        <p-column header="Action" [style]="{'width': '105px'}">
           <template let-data="rowData" pTemplate="body">
                 <div class="inline">
-                    <button class="editButton" (click)="gotoEdit(data, $event)" title="Edit User"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    <i class="fas fa-pencil-alt fa-2x editIcon" aria-hidden="true" (click)="gotoEdit(data, $event)" title="Edit User"></i>
                 </div>
                 <div class="inline">
-                    <button class="deleteButton" (click)="deleteAlert(data, $event)" title="Delete User"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                    <i class="fas fa-trash-alt fa-2x deleteIcon" aria-hidden="true" (click)="deleteAlert(data, $event)" title="Delete User"></i>
                 </div>
               </template>
         </p-column>

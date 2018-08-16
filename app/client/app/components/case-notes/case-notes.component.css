@@ -11,13 +11,13 @@
 }
 
 .notesList #noteDate {
-  width:50%;
-  float:right;
-  text-align: right;
+  width:1000%;
+  float:left;
+  text-align: left;
 }
 
 .notesList #postedBy {
-  width:50%;
+  width:1000%;
   float:left;
 }
 
@@ -28,9 +28,16 @@
 
 .notesList #noteDelete {
   position:absolute;
+  top:0;
   right:0;
-  bottom:0;
   margin:8px;
+  color: #E32F26;
+  transition: 0.2s;
+}
+
+.notesList #noteDelete:hover {
+  transform: scale(1.1);
+  cursor:pointer;
 }
 
 .createNote {

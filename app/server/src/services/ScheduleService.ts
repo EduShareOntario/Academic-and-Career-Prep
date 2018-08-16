@@ -3,7 +3,7 @@ const MailService = require("./MailService");
 var sql = require('mssql');
 var config = require('../config');
 
-//runs every night at 10pm
+//runs every night at 7:30pm
 var attendanceCheck = schedule.scheduleJob('0 30 19 * * *', function() {
 var date = new Date();
 var twoMissedClasses = 0, fourMissedClasses = 0;

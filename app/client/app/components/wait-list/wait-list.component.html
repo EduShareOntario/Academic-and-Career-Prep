@@ -2,7 +2,7 @@
   <div class="doNotPrint">
     <div class="spacer"></div>
     <div class="col-md-10 inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Course Wait List</strong></h1>
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Course Wait List</strong></h1>
       <button class="orangeButton" (click)="showWaitListForm()" title="Add new client"><i class="fa fa-plus"></i> Add</button>
       <button class="lightBlueButton" (click)="onPrint()" title="Print timetable"><i class="fa fa-print"></i> Print</button>
     </div>
@@ -38,10 +38,10 @@
           {{ data.date | date }}
         </template>
       </p-column>
-      <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '140px', 'text-align': 'center'}">
+      <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '103px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-          <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(data, $event)" title="Enroll {{ data.fullName }} in course type: {{ data.courseType }}"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
-          <button class="deleteButton doNotPrint" (click)="removeFromWaitList(data, $event)" title="Remove {{ data.fullName }} from wait list for course type: {{ data.courseType }}"><i class="fa fa-trash" aria-hidden="true"></i></button>
+          <i class="fa fa-university fa-2x enrollIcon" aria-hidden="true" (click)="gotoStudentEnrollment(data, $event)" title="Enroll {{ data.fullName }} in course type: {{ data.courseType }}"></i>
+          <i class="fas fa-trash-alt fa-2x deleteIcon" aria-hidden="true" (click)="removeFromWaitList(data, $event)" title="Remove {{ data.fullName }} from wait list for course type: {{ data.courseType }}"></i>
         </template>
       </p-column>
     </p-dataTable>

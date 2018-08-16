@@ -3,7 +3,7 @@
   <div *ngIf="!faculty" class="inner_header">
     <h2>
       <span style="cursor:pointer" (click)="goBack()">
-        <i class="fa fa-arrow-circle-o-left"></i>
+        <i class="far fa-arrow-alt-circle-left"></i>
       </span>
       <strong> My Timetable</strong>
     </h2>
@@ -12,7 +12,7 @@
   <div *ngIf="faculty" class="inner_header">
     <h2 style="display:inline-block;">
       <span style="cursor:pointer" (click)="goBack()">
-        <i class="fa fa-arrow-circle-o-left"></i>
+        <i class="far fa-arrow-alt-circle-left"></i>
       </span>
       <strong *ngIf="selectedStudent"> Viewing Timetable for </strong>
       <strong *ngIf="!selectedStudent"> View Timetable for: </strong>

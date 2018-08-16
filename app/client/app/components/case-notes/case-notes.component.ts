@@ -113,8 +113,11 @@ export class CaseNotesComponent implements OnInit {
             this.notes = notes;
             for (let notes of this.notes) {
               var facultyUser = this.users.filter(x => x.userID === notes.facultyID);
-              notes.facultyUser = facultyUser[0].firstName + " " + facultyUser[0].lastName;
-              console.log(notes.facultyUser);
+              if (facultyUser[0] != null) {
+                notes.facultyUser = facultyUser[0].firstName + " " + facultyUser[0].lastName;
+              } else {
+                notes.facultyUser = 'Automated Message';
+              }
             }
           }
         })

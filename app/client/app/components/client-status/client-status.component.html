@@ -2,7 +2,7 @@
   <div class="row" *ngIf="data">
     <div class="spacer"></div>
     <div class="col-md-11 inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Clients</strong></h1>
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Manage Clients</strong></h1>
       <button class="orangeButton" (click)="addClient()" title="Add new client"><i class="fa fa-plus"></i> New Client</button>
     </div>
     <div class="col-md-7">
@@ -51,7 +51,7 @@
                   <li *ngIf="!data.suitability && !data.consent && data.banner && data.cam"><a (click)="createAsStudent(data)"><i class="fa fa-check" aria-hidden="true"></i> Create as Student</a></li>
                   <li *ngIf="data.suitability"><a (click)="addSuitabilityInfo(data)"><i class="fa fa-check" aria-hidden="true"></i> Add Suitability Info</a></li>
                   <li><a (click)="viewAssessmentResults(data)"><i class="fa fa-list-ol" aria-hidden="true"></i> Assessment Results</a></li>
-                  <li class="deleteClient"><a (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                  <li class="deleteClient"><a (click)="deleteAlert(data, $event)"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</a></li>
                 </ul>
               </div>
             </template>
@@ -71,7 +71,7 @@
             <div style="font-size:1.5em;text-align:center;width:70%;float:left">Current Default Password <br />
               <span style="font-size:1.3em;color:#333F48">Georgian2018
                 <!-- <button class="btn btn-warning btn-xs" style="height:auto;padding:5px 5px;margin-bottom:6px;" (click)="editDefaultPass()" title="Edit Default Pass">
-                <i class="fa fa-pencil fa-lg"></i></button> -->
+                <i class="fas fa-pencil-alt fa-lg"></i></button> -->
               </span>
             </div>
           </div>
@@ -102,7 +102,7 @@
                     <div *ngIf="showGeneral">
                       <br />
                       <div class="form-group">
-                        <h3>Viewing General Info for {{ clientView.firstName }} <i class="fa fa-pencil editIcon" (click)="editGeneralInfo(clientView)" aria-hidden="true" title="Edit general info for {{ clientView.firstName }}"></i></h3>
+                        <h3>Viewing General Info for {{ clientView.firstName }} <i class="fas fa-pencil-alt editIcon" (click)="editGeneralInfo(clientView)" aria-hidden="true" title="Edit general info for {{ clientView.firstName }}"></i></h3>
                         <label class="control-label">id: </label> {{clientView.userID}}
                         <div class="info_seperate"></div>
                         <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate | date}}
@@ -176,7 +176,7 @@
                     <div *ngIf="showSuitability" class="">
                       <br />
                       <div class="form-group">
-                        <h3>Viewing Suitability Info for {{ clientView.firstName }}  <i class="fa fa-pencil editIcon" (click)="editSuitability(clientView)" aria-hidden="true" title="Edit suitability info for {{ clientView.firstName }}"></i></h3>
+                        <h3>Viewing Suitability Info for {{ clientView.firstName }}  <i class="fas fa-pencil-alt editIcon" (click)="editSuitability(clientView)" aria-hidden="true" title="Edit suitability info for {{ clientView.firstName }}"></i></h3>
                         <label class="control-label">Transcript: </label> {{suitabilityView.transcript}}
                         <div class="info_seperate"></div>
                         <label class="control-label">Course Interests: </label> {{suitabilityView.selectedCourseTypes}}
@@ -701,7 +701,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                   <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
-                                  <li><a (click)="deleteFileAlert(data)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                                  <li><a (click)="deleteFileAlert(data)"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</a></li>
                                 </ul>
                               </div>
                             </template>

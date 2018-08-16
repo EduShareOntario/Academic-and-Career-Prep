@@ -258,15 +258,31 @@ li>a>i {
   color:#EA7200;
   cursor:pointer;
   transition: 0.1s;
+  margin:0px 5px;
+}
+
+.deleteIcon {
+  color:#E32F26;
+  cursor:pointer;
+  transition: 0.1s;
+  margin:0px 5px;
+}
+
+.enrollIcon {
+  color:#333f48;
+  cursor:pointer;
+  transition: 0.1s;
+  margin:0px 5px;
 }
 
 .addIcon {
   color:#64A70B;
   cursor:pointer;
   transition: 0.1s;
+  margin:0px 5px;
 }
 
-.editIcon:hover, .addIcon:hover {
+.editIcon:hover, .addIcon:hover, .deleteIcon:hover, .enrollIcon:hover {
   transform: scale(1.2);
 }
 
