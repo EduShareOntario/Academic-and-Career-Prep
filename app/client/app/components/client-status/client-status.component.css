@@ -30,8 +30,29 @@
   overflow: -moz-scrollbars-none;
 }
 
+.sticky {
+  top: 260px;
+  bottom:0;
+  position:fixed;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  right:30px;
+}
+
+::-webkit-scrollbar {
+display: none;
+}
+
+.element {
+  -ms-overflow-style: none;
+}
+
 .deleteClient>a {
   color: #E32F26;
+}
+
+.element {
+  overflow: -moz-scrollbars-none;
 }
 
 .booleanBtn {
