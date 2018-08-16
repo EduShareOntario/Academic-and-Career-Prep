@@ -17,7 +17,7 @@ class ClientFormsController {
   consentForm(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function() {
+        requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function(currentUserID) {
           var consentForm = req.body.consentForm;
           var _id: string = req.params._id;
           sql.connect(db)
@@ -56,7 +56,7 @@ class ClientFormsController {
                       new sql.Request(connection)
                         .query("UPDATE Students SET editConsentPermission='false' WHERE userID = '" + _id + "'")
                         .then(function() {
-                          new ActivityService().reportActivity('Form Submitted', 'success', _id, 'Consent Form submitted by client.');
+                          new ActivityService().reportActivity('client', 'Form Submitted', 'success', _id, currentUserID, 'Consent Form submitted by client.');
                           res.send({ "success": "success" });
                         }).catch(function(err) {
                           res.send({ "error": "error" });
@@ -82,7 +82,7 @@ class ClientFormsController {
   getConsentById(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function() {
+        requiredAuth: ["Admin", "Staff", "Client", "Student"], done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -122,7 +122,7 @@ class ClientFormsController {
                   html: 'Client ' + client.firstName + ' ' + client.lastName + ' wants to edit their consent form.<br/> Please login to the clients page at: ' + site_settings.url + '/#/clients. Search for '+ client.firstName + ' ' + client.lastName + ' in the clients table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                 };
                 new MailService().sendMessage("Request to Edit Consent", mailOptions);
-                new ActivityService().reportActivity('Form Edit Request', 'success', _id, 'Client is requesting permission to edit their consent form.');
+                new ActivityService().reportActivity('client', 'Form Edit Request', 'success', _id, '', 'Client is requesting permission to edit their consent form.');
                 res.send({ status: "success" });
               }).catch(function(err) {
                 res.send({ status: "error" });
@@ -139,7 +139,7 @@ class ClientFormsController {
   grantConsentEditPermission(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var permission = req.body.permission;
           var client = req.body.client;
           console.log("Value: " + permission + ', ' + "UserID: " + client.userID );
@@ -162,7 +162,7 @@ class ClientFormsController {
                               text: '', // plain text body
                               html: 'You can now login at: ' + site_settings.url + ' and make changes to your consent form.'// html body
                             };
-                            new ActivityService().reportActivity('Permission Granted', 'success', client.userID, 'Client has been granted permission to edit their consent form.');
+                            new ActivityService().reportActivity('client', 'Permission Granted', 'success', client.userID, currentUserID, 'Client has been granted permission to edit their consent form.');
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
                             res.send({result: "granted"});
                           }).catch(function(err) {
@@ -192,7 +192,7 @@ class ClientFormsController {
   getLearningStyleById(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -216,7 +216,7 @@ class ClientFormsController {
   learningStyleForm(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var learningStyleForm = req.body.learningStyleForm;
           var _id: string = req.params._id;
           sql.connect(db)
@@ -232,7 +232,7 @@ class ClientFormsController {
                   new sql.Request()
                     .query("UPDATE Clients SET learningStyle= 'false' WHERE userID = '" + _id + "'")
                     .then(function() {
-                      new ActivityService().reportActivity('Form Submitted', 'success', _id, 'Learning style submitted by client.');
+                      new ActivityService().reportActivity('client', 'Form Submitted', 'success', _id, currentUserID, 'Learning style submitted by client.');
                       res.send({ "success": "success" });
                     }).catch(function(err) {
                       res.send({ "error": "error" });
@@ -254,7 +254,7 @@ class ClientFormsController {
   getAllFormsByID(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {

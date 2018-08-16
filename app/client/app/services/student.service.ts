@@ -135,7 +135,7 @@ export class StudentService {
     return this.http
       .post(url, info, options)
       .toPromise()
-      .then(response => response.json().data)
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Course enroll"));
   }
 

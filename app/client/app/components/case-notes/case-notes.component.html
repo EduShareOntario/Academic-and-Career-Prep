@@ -1,51 +1,39 @@
 <div class="caseNotes">
-  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Case Notes</strong></h1>
-  <hr>
-  <div *ngIf="!data">
-    <div class="cs-loader">
-      <div class="cs-loader-inner">
-        <label>	L</label>
-        <label>	O</label>
-        <label>	A</label>
-        <label>	D</label>
-        <label>	I</label>
-        <label>	N</label>
-        <label>	G</label>
-        <label>	.</label>
-        <label>	.</label>
-        <label>	.</label>
-      </div>
-    </div>
+  <div class="spacer"></div>
+  <div class="inner_header">
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Case Notes</strong></h1>
   </div>
   <div class="row" *ngIf="data">
-    <div class="col-md-6">
-      <h2>Students</h2>
+    <div class="col-md-4">
+      <h2>Students/Clients</h2>
       <hr>
-      <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
+      <input placeholder="Filter by student/client name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="data | userFilter : filterQuery" [responsive]="true">
           <p-column field="studentNumber" header="Number" [sortable]="true" [style]="{'width': '120px'}"></p-column>
           <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-          <p-column header="Action" [style]="{'width': '150px'}">
+          <p-column header="Action" [style]="{'width': '60px'}">
             <template let-data="rowData" pTemplate="body">
-              <button class="btn btn-primary" (click)="showCaseNotes(data)"><i class="fa fa-eye" aria-hidden="true"></i> View Notes</button>
+              <button class="dropToggleButton" (click)="showCaseNotes(data)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
             </template>
           </p-column>
       </p-dataTable>
     </div>
 
-    <div *ngIf="notesView" class="col-md-6">
+    <div *ngIf="notesView" class="col-md-8">
       <h2>Case Notes for {{notesView.firstName + " " + notesView.lastName}}</h2>
       <hr>
-      <div>
-        <label for="caseNote">New Case Note:</label>
-        <textarea class="form-control" rows="3" name="caseNote" [(ngModel)]="note"></textarea>
-        <button class="btn btn-success" style="float: right; margin: 5px" (click)="saveNote(notesView.studentID)" title="Save note"><i class="fa fa-floppy-o " aria-hidden="true"></i> Save Note</button>
+      <div class="createNote">
+        <textarea class="form-control" rows="2" name="caseNote" [(ngModel)]="note" placeholder="New case note..."></textarea>
+        <button class="greenButton" style="float: right; margin: 5px" (click)="saveNote(notesView.userID)" title="Save note"><i class="fa fa-floppy-o " aria-hidden="true"></i> Submit</button>
       </div>
-      <hr style="clear:both">
-      <div>
-          <ul class="notesList">
-            <li *ngFor="let noteItem of notes"><b>{{noteItem.dateTime | date}}:</b> {{noteItem.caseNote}} <button class="btn-danger deleteNote" (click)="deleteAlert(noteItem.caseNoteID)" title="Delete note"><i class="fa fa-trash-o"></i></button></li>
-          </ul>
+      <div style="clear:both"></div>
+      <div class="notesList well" *ngFor="let noteItem of notes">
+        <em id="noteDate">{{noteItem.dateTime | date}}</em>
+        <div *ngIf="noteItem.facultyUser !== 'Automated Message'" id="postedBy"><span style="color:#004B87">{{ noteItem.facultyUser }}</span> wrote: </div>
+        <div *ngIf="noteItem.facultyUser === 'Automated Message'" id="postedBy"><span style="color:#FFCC14">{{ noteItem.facultyUser }}</span> states: </div>
+        <div style="clear:both"></div>
+        <div id="noteContent"><p>"{{noteItem.caseNote}}"</p></div>
+        <i class="fas fa-trash-alt" id="noteDelete" (click)="deleteAlert(noteItem.caseNoteID)" title="Delete note"></i>
       </div>
     </div>
   </div>

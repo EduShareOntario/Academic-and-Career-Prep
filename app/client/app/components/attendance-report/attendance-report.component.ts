@@ -19,7 +19,6 @@ export class AttendanceReportComponent implements OnInit {
   courses: Course[];
   students: Student[];
   totalAbsences: any;
-
   studentAttendanceView: boolean = false;
   student: any[];
   attendance: any[];
@@ -29,11 +28,8 @@ export class AttendanceReportComponent implements OnInit {
   totalAbsent: any;
   totalMadeContact: any;
   noAttendance: boolean = false;
-
   studentReport: boolean = false;
-
   timetables: any[];
-
   courseAttendanceView: boolean = false;
   course: any;
   classTimeStr: any;
@@ -42,7 +38,6 @@ export class AttendanceReportComponent implements OnInit {
   courseTimetables: any[];
   studentRecord: any[];
   noStudentsEnrolled: boolean = false;
-
   classAbsenceTotal: any;
   classPresenceTotal: any;
   classMadeContactTotal: any;

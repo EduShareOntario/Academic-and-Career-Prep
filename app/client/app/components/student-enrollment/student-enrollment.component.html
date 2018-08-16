@@ -1,21 +1,9 @@
 <div class="row">
-    <h2><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span> {{courseName}} Enrollment</h2>
-    <hr>
-    <div *ngIf="!students" class="cs-loader">
-        <div class="cs-loader-inner">
-            <label>	L</label>
-            <label>	O</label>
-            <label>	A</label>
-            <label>	D</label>
-            <label>	I</label>
-            <label>	N</label>
-            <label>	G</label>
-            <label>	.</label>
-            <label>	.</label>
-            <label>	.</label>
-        </div>
-    </div>
-    <div class="col-lg-8">
+  <div class="spacer"></div>
+  <div class="inner_header">
+    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span> {{courseName}} Enrollment</h1>
+  </div>
+    <div *ngIf="enrollMultiple" class="col-lg-8">
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
           <p-column field="studentNumber" header="Number" [sortable]="true" [style]="{'width': '120px'}"></p-column>
@@ -25,11 +13,32 @@
               <p *ngIf="data.enrolled" style="float:left;"><strong>* Student Already Enrolled</strong></p>
               <div *ngIf="!loading" class="input-group">
                 <!-- <button *ngIf="data.enrolled" type="button" class="btn btn-success courseComplete">Course Complete</button> -->
-                <button *ngIf="data.enrolled" type="button" (click)="checkEnrolled(data)" class="btn btn-danger remove">Drop</button>
+                <button *ngIf="data.enrolled" type="button" (click)="checkEnrolled(data)" class="deleteButton remove">Drop</button>
                 <div *ngIf="!data.enrolled">
                     <p-calendar [(ngModel)]="data.studentStartDate" dateFormat="dd/mm/yy" placeholder="Student Start Date"></p-calendar> -
                     <p-calendar [(ngModel)]="data.studentEndDate" dateFormat="dd/mm/yy"  placeholder="Student End Date"></p-calendar>
-                    <button type="button" (click)="checkEnrolled(data)" class="btn btn-success enroll">Enroll</button>
+                    <button type="button" (click)="checkEnrolled(data)" class="greenButton enroll">Enroll</button>
+                </div>
+              </div>
+            </template>
+          </p-column>
+      </p-dataTable>
+    </div>
+    <div *ngIf="!enrollMultiple && student" class="col-lg-8">
+      <p><strong>Student Name:</strong> {{student.firstName}} {{student.lastName}}</p>
+      <p-dataTable [value]="courses" [responsive]="true">
+          <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
+          <p-column field="courseType" header="Course Type" [sortable]="true"></p-column>
+          <p-column header="Action" [style]="{'width': '500px', 'overflow': 'visible'}">
+            <template let-data="rowData" pTemplate="body">
+              <p *ngIf="data.enrolled" style="float:left;"><strong>* Student Already Enrolled</strong></p>
+              <div *ngIf="!loading" class="input-group">
+                <!-- <button *ngIf="data.enrolled" type="button" class="btn btn-success courseComplete">Course Complete</button> -->
+                <button *ngIf="data.enrolled" type="button" (click)="checkEnrolled(data)" class="deleteButton remove">Drop</button>
+                <div *ngIf="!data.enrolled">
+                    <p-calendar [(ngModel)]="data.studentStartDate" dateFormat="dd/mm/yy" placeholder="Student Start Date"></p-calendar> -
+                    <p-calendar [(ngModel)]="data.studentEndDate" dateFormat="dd/mm/yy"  placeholder="Student End Date"></p-calendar>
+                    <button type="button" (click)="checkEnrolled(data)" class="greenButton enroll">Enroll</button>
                 </div>
               </div>
             </template>

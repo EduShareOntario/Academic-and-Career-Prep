@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentService } from "../../services/student.service";
+import { StaffService } from "../../services/staff.service";
 import { Student } from "../../models/student";
+import { User } from "../../models/user";
 declare var swal: any;
 
 @Component({
@@ -13,17 +15,23 @@ declare var swal: any;
 export class CaseNotesComponent implements OnInit {
   data: any[];
   notes: any[];
+  users: User[];
   notesView: Student;
   note: any;
   newNote: boolean;
   status: any;
   error: any;
 
-  constructor(private router: Router, private studentService: StudentService) {
+  constructor(private router: Router, private studentService: StudentService, private staffService: StaffService) {
 
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getStudents();
   }
 
@@ -39,12 +47,28 @@ export class CaseNotesComponent implements OnInit {
           for (let student of this.data) {
             student.fullName = student.firstName + " " + student.lastName;
           }
+          this.getUsers();
         }
       })
       .catch(error => this.error = error);
   }
 
-  saveNote(studentID) {
+  getUsers() {
+    this.staffService
+    .getUsers()
+    .then(users => {
+      if ((users as any).result === 'error') {
+        this.users = null;
+        this.displayErrorAlert(users);
+      } else {
+        this.users = users;
+        swal.close();
+      }
+    })
+    .catch(error => this.error = error);
+  }
+
+  saveNote(userID) {
     if (this.note == null) {
       swal(
         'Empty Input',
@@ -53,15 +77,13 @@ export class CaseNotesComponent implements OnInit {
       );
     } else {
       this.studentService
-          .saveNewNote(this.note, studentID)
+          .saveNewNote(this.note, userID)
           .then(note => {
-            console.log(note);
             if ((note as any).result === 'error') {
               this.displayErrorAlert(note);
             } else if ((note as any).result === 'success') {
-              console.log("is work");
               this.note = '';
-              this.showNotes(studentID);
+              this.showNotes(userID);
             } else {
               swal(
                 'Error',
@@ -78,17 +100,25 @@ export class CaseNotesComponent implements OnInit {
 
   showCaseNotes(student: Student) {
     this.notesView = student;
-    this.showNotes(student.studentID);
+    this.showNotes(student.userID);
   }
 
-  showNotes(studentID) {
+  showNotes(userID) {
     this.studentService
-        .getNotes(studentID)
+        .getNotes(userID)
         .then(notes => {
           if ((notes as any).result === 'error') {
             this.displayErrorAlert(notes);
           } else {
             this.notes = notes;
+            for (let notes of this.notes) {
+              var facultyUser = this.users.filter(x => x.userID === notes.facultyID);
+              if (facultyUser[0] != null) {
+                notes.facultyUser = facultyUser[0].firstName + " " + facultyUser[0].lastName;
+              } else {
+                notes.facultyUser = 'Automated Message';
+              }
+            }
           }
         })
         .catch(error => console.log(error));

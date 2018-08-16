@@ -16,7 +16,7 @@ class ClientController {
   create(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var randomstring = Math.random().toString(36).slice(-8);
           randomstring = randomstring.charAt(0).toUpperCase() + randomstring.slice(1);
           var salt = bcrypt.genSaltSync(10);
@@ -165,7 +165,7 @@ class ClientController {
                                     new sql.Request(connection)
                                       .query("UPDATE Clients SET suitability= 'false' WHERE userID = '" + id[0].userID + "'")
                                       .then(function() {
-                                        new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
+                                        new ActivityService().reportActivity('client', 'New Client Created', 'success', id[0].userID, currentUserID, client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
                                         res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "", userID: id[0].userID });
                                       }).catch(function(err) {
                                         console.log("Update client " + err);
@@ -177,7 +177,7 @@ class ClientController {
                                   });
                               } else {
                                 console.log("Suitability not provided.");
-                                new ActivityService().reportActivity('New Client Created', 'success', id[0].userID,  client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
+                                new ActivityService().reportActivity('client', 'New Client Created', 'success', id[0].userID, currentUserID, client.firstName + ' ' + client.lastName + ' has been created as a new client user.');
                                 res.send({ result: "success", title: "Success!", msg: "Client has been created successfully!", serverMsg: "" });
                               }
                             }).catch(function(err) {
@@ -221,7 +221,7 @@ class ClientController {
   addSuitability(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           var suitabilityForm = req.body;
 
@@ -273,7 +273,7 @@ class ClientController {
                   new sql.Request(connection)
                     .query("UPDATE Clients SET suitability = 'false' WHERE userID = " + _id + "")
                     .then(function() {
-                      new ActivityService().reportActivity('Suitability Added', 'success', _id, 'Suitability has been created for client with user ID: ' + _id);
+                      new ActivityService().reportActivity('client', 'Suitability Added', 'success', _id, currentUserID, 'Suitability has been created for client with user ID: ' + _id);
                       res.send({ result: "success", title: "Success!", msg: "Client suitability has been initialized!", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Error - Update suitability: " + err);
@@ -298,7 +298,7 @@ class ClientController {
   updateBannerCamBool(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var client = req.body;
           sql.connect(db)
             .then(function(connection) {
@@ -325,7 +325,7 @@ class ClientController {
   updateGeneralInfo(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var client = req.body;
           var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           var emailValidation = re.test(client.email);
@@ -388,7 +388,7 @@ class ClientController {
                                 };
                                 new MailService().sendMessage("Client Username Update", mailOptions);
                               }
-                              new ActivityService().reportActivity('General Info Update', 'success', client.userID,  'General info for ' + client.fullName + ' has been updated.');
+                              new ActivityService().reportActivity('client', 'General Info Update', 'success', client.userID, currentUserID, 'General info for ' + client.fullName + ' has been updated.');
                               res.send({ result: "success", title: "Success!", msg: "Client general info updated!", serverMsg: "" });
                             }).catch(function(err) {
                               console.log("Error - Update user info: " + err);
@@ -419,7 +419,7 @@ class ClientController {
   updateSuitability(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var suitability = req.body;
           sql.connect(db)
             .then(function(connection) {
@@ -463,7 +463,7 @@ class ClientController {
               new sql.Request(connection)
                 .query(query)
                 .then(function(recordset) {
-                  new ActivityService().reportActivity('Suitability Update', 'success', suitability.suitabilityID,  'Suitability has been updated for client with user ID: ' + suitability.suitabilityID);
+                  new ActivityService().reportActivity('client', 'Suitability Update', 'success', suitability.suitabilityID, currentUserID, 'Suitability has been updated for client with user ID: ' + suitability.suitabilityID);
                   res.send({ result: "success", title: "Success!", msg: "Suitability updated.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Update suitability: " + err);
@@ -485,7 +485,7 @@ class ClientController {
   delete(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -495,7 +495,7 @@ class ClientController {
                   new sql.Request(connection)
                     .query("DELETE FROM Users WHERE userID = '" + _id + "'")
                     .then(function() {
-                      new ActivityService().reportActivity('Client Deleted', 'success', _id,  'Client with user ID ' + _id + ' has been deleted.');
+                      new ActivityService().reportActivity('client', 'Client Deleted', 'success', _id, currentUserID, 'Client with user ID ' + _id + ' has been deleted.');
                       res.send({ result: "success", title: "Success!", msg: "Client deleted.", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Error - Delete user with id " + _id + ": " + err);
@@ -521,7 +521,7 @@ class ClientController {
   removeFromTable(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -531,7 +531,7 @@ class ClientController {
                   new sql.Request(connection)
                     .query("UPDATE Users SET userType= 'Student' WHERE userID = '" + _id + "'")
                     .then(function() {
-                      new ActivityService().reportActivity('Client Transfered', 'success', _id,  'Client with id: ' + _id + ' has been transferred to the students table.');
+                      new ActivityService().reportActivity('client', 'Client Transfered', 'success', _id, currentUserID, 'Client with id: ' + _id + ' has been transferred to the students table.');
                       res.send({ result: "success", title: "Transfer Successful!", msg: "Client is now a student user.", serverMsg: "" });
                     }).catch(function(err) {
                       console.log("Update user userType " + err);
@@ -556,11 +556,11 @@ class ClientController {
   retrieve(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query('SELECT Clients.*, Users.email, Users.active from Clients Left JOIN Users ON Clients.userID = Users.userID')
+                .query('SELECT Clients.*, Users.email, Users.active from Clients Left JOIN Users ON Clients.userID = Users.userID ORDER BY firstName ASC')
                 .then(function(clients) {
                   new sql.Request(connection)
                     .query('SELECT * FROM SuitabilityForm')
@@ -616,7 +616,7 @@ class ClientController {
   findById(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Client"], done: function() {
+        requiredAuth: ["Admin", "Staff", "Client"], done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -643,7 +643,7 @@ class ClientController {
   addAssessmentResults(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff"], done: function() {
+        requiredAuth: ["Admin", "Staff"], done: function(currentUserID) {
           var assessmentResults = req.body;
           sql.connect(db)
             .then(function(connection) {
@@ -656,7 +656,7 @@ class ClientController {
               new sql.Request(connection)
                 .query("INSERT INTO AssessmentResults VALUES (" + assessmentResultsQuery + ")")
                 .then(function() {
-                  new ActivityService().reportActivity('Form Submitted', 'success', assessmentResults.userID, 'Assessment results added.');
+                  new ActivityService().reportActivity('client', 'Form Submitted', 'success', assessmentResults.userID, currentUserID, 'Assessment results added.');
                     res.send({ result: "success", title: "Results Submitted", msg: "Assessment results have been successfully submitted.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Add Assessment Results form : " + err);
@@ -677,14 +677,14 @@ class ClientController {
   editAssessmentResults(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff"], done: function() {
+        requiredAuth: ["Admin", "Staff"], done: function(currentUserID) {
           var assessmentResults = req.body;
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("UPDATE AssessmentResults SET readingComp1='" + assessmentResults.readingComp1 + "', readingComp2='" + assessmentResults.readingComp2 + "', readingComp3 ='" + assessmentResults.readingComp3 + "', numeracy='" + assessmentResults.numeracy + "', digital='" + assessmentResults.digital + "' WHERE assessmentID='" + assessmentResults.assessmentID + "'")
                 .then(function() {
-                  new ActivityService().reportActivity('Form Submitted', 'success', assessmentResults.userID, 'Assessment results updated.');
+                  new ActivityService().reportActivity('client', 'Form Submitted', 'success', assessmentResults.userID, currentUserID, 'Assessment results updated.');
                     res.send({ result: "success", title: "Results Updated", msg: "Assessment results have been successfully updated.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Update Assessment Results form : " + err);

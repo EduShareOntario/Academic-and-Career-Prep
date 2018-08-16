@@ -17,26 +17,6 @@
     white-space: nowrap;
 }
 
-.nextButton {
-  background-color: #DDDDDD;
-  min-width: 74px;
-  position: absolute;
-  top:-78px;
-  cursor:pointer;
-  color: black;
-  display: inline;
-  padding: 0 10 0 10;
-  border: 0px solid;
-  box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.1);
-}
-
-.nextButton:hover {
-  background-color: #004B87;
-  color:  #fff;
-  border: 0px solid;
-  transition: .2s;
-}
-
 .checkboxPadding {
   padding-left:15px;
 }
@@ -47,4 +27,22 @@
 
 .studentNumberInput {
   margin-top: 6px;
+}
+
+.nextButton {
+  text-align: center;
+  background-color: #64a70b;
+  position: absolute;
+  top: -89px;
+  width:98px;
+  cursor: pointer;
+  color: #fff;
+  display: inline;
+  padding: 5px 15px;
+  border: 0px solid;
+  transition: 0.2s ease;
+}
+
+.nextButton:hover {
+  transform: scale(1.1);
 }

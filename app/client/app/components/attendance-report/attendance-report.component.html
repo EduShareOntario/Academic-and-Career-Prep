@@ -1,25 +1,9 @@
 <div class="attendanceReport">
-  <div *ngIf="!data">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Attendance Report</strong></h1>
-    <hr>
-    <div class="cs-loader">
-      <div class="cs-loader-inner">
-        <label>	L</label>
-        <label>	O</label>
-        <label>	A</label>
-        <label>	D</label>
-        <label>	I</label>
-        <label>	N</label>
-        <label>	G</label>
-        <label>	.</label>
-        <label>	.</label>
-        <label>	.</label>
-      </div>
-    </div>
-  </div>
   <div class="row" *ngIf="data && studentReport">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Attendance Report (Student View)</strong></h1>
-    <hr>
+    <div class="spacer"></div>
+    <div class="inner_header">
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Attendance Report (Student View)</strong></h1>
+    </div>
     <div class="col-md-3">
       <h2>Students</h2>
       <p-inputSwitch onLabel="Course Report" offLabel="Student Report" [(ngModel)]="studentReport"></p-inputSwitch>
@@ -27,9 +11,9 @@
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '130px'}">
+        <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button class="btn btn-success" (click)="viewStudentReport(data, $event)">View Report</button>
+                  <button class="dropToggleButton" (click)="viewStudentReport(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>
@@ -85,8 +69,10 @@
     </div>
   </div>
   <div class="row" *ngIf="data && !studentReport">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Attendance Report (Course View)</strong></h1>
-    <hr>
+    <div class="spacer"></div>
+    <div class="inner_header">
+      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Attendance Report (Course View)</strong></h1>
+    </div>
     <div class="col-md-3">
       <h2>Courses</h2>
       <p-inputSwitch onLabel="Course Report" offLabel="Student Report" [(ngModel)]="studentReport"></p-inputSwitch>
@@ -94,9 +80,9 @@
       <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="courses | courseFilter : filterQuery" [responsive]="true">
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
-        <p-column header="Action" [style]="{'width': '130px'}">
+        <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button class="btn btn-primary" (click)="viewCourseReport(data, $event)">View Report</button>
+                  <button class="dropToggleButton" (click)="viewCourseReport(data, $event)"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>

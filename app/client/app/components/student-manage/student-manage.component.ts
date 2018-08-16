@@ -11,6 +11,7 @@ import { ClientService } from "../../services/client.service";
 import { CourseService } from "../../services/course.service";
 import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
+declare var saveAs: any;
 declare var swal: any;
 declare var FileSaver: any;
 
@@ -58,7 +59,7 @@ export class StudentManageComponent implements OnInit {
   barChartType: string = 'bar';
   barChartLegend: boolean = false;
   barChartData: any;
-  barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
+  barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F7CE3C", "#62A744"] }];
 
   files: any[];
   studentsFiles: any[];
@@ -74,8 +75,12 @@ export class StudentManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getStudents();
-    this.getFiles();
   }
 
   getStudents() {
@@ -90,6 +95,7 @@ export class StudentManageComponent implements OnInit {
           for (let student of this.students) {
             student.fullName = student.firstName + " " + student.lastName;
           }
+          this.getFiles();
         }
       })
       .catch(error => this.error = error);
