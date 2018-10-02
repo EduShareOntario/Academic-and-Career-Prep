@@ -1,41 +1,14 @@
 <div class="doNotPrint">
   <div class="spacer"></div>
-  <div *ngIf="!faculty" class="inner_header">
-    <h2>
-      <span style="cursor:pointer" (click)="goBack()">
-        <i class="far fa-arrow-alt-circle-left"></i>
-      </span>
-      <strong> My Timetable</strong>
-    </h2>
+  <div class="inner_header">
+    <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+    <h1 *ngIf="!faculty"><strong>My Timetable</strong></h1>
+    <h1 *ngIf="selectedStudent" style="display:inline-block;" ><strong>Viewing Timetable for </strong></h1>
+    <h1 *ngIf="!selectedStudent && faculty" style="display:inline-block;">
+      <strong>View Timetable for: </strong>
+      <p-dropdown *ngIf="faculty" [options]="students | studentToSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px', 'font-size':'24px'}" (onChange)="studentSelect()"></p-dropdown>
+    </h1>
     <button (click)="onPrint()" class="orangeButton" title="Print timetable"><i class="fa fa-print"></i> Print</button>
-  </div>
-  <div *ngIf="faculty" class="inner_header">
-    <h2 style="display:inline-block;">
-      <span style="cursor:pointer" (click)="goBack()">
-        <i class="far fa-arrow-alt-circle-left"></i>
-      </span>
-      <strong *ngIf="selectedStudent"> Viewing Timetable for </strong>
-      <strong *ngIf="!selectedStudent"> View Timetable for: </strong>
-      <p-dropdown *ngIf="faculty" [options]="students | studentToSelectItem" [(ngModel)]="selectedStudent" placeholder="Select a Student" [filter]="true" [style]="{'width':'350px'}" (onChange)="studentSelect()"></p-dropdown>
-    </h2>
-    <button (click)="onPrint()" class="orangeButton" title="Print timetable"><i class="fa fa-print"></i> Print</button>
-    <!-- <button class="searchTimetables btn btn-secondary" style="display:inline-block;float:right;" (click)="alert()" title="Search timetables"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
-  </div>
-  <hr>
-</div>
-
-<div *ngIf="!events" class="cs-loader doNotPrint">
-  <div class="cs-loader-inner">
-    <label>	L</label>
-    <label>	O</label>
-    <label>	A</label>
-    <label>	D</label>
-    <label>	I</label>
-    <label>	N</label>
-    <label>	G</label>
-    <label>	.</label>
-    <label>	.</label>
-    <label>	.</label>
   </div>
 </div>
 <p-schedule *ngIf="events" [events]="events" [editable]="false" [weekends]="false" [allDaySlot]="false" [options]="options"></p-schedule>

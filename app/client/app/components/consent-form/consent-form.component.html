@@ -1,9 +1,9 @@
-<div class="consentForm">
   <div class="spacer"></div>
   <div class="inner_header_form">
-    <span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left fa-3x"></i></span>
+    <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
     <h1><strong> Consent Form</strong></h1>
   </div>
+  <div class="consentForm">
   <div *ngIf="!loading">
     <div class="jumbotron col-md-8 col-md-offset-2">
       <div class="margin">
@@ -36,16 +36,14 @@
             <p style="width:100%;"></p>
           </ul>
         </div>
-
         <div class="form-group col-md-12">
           <h2 class="col-md-12" style="text-align:center"> Release of Information within Georgian College </h2>
           <b><em>  <p class="col-md-8 col-md-offset-2">
-                    I consent to the exchange of information with Georgian College faculty and staff.<br> <br> I agree that records of progress and attendance can be shared with the appropriate staff and faculty in the Academic and Career Preparation
-                    program for the duration of the time I am a student in this department.<br> <br> I consent to Academic & Career Preparation Program staff using my personal email account to send progress and attendance updates, program updates and
-                    any curriculum material that I may need from time to time.<br>
-                </p></em></b>
+            I consent to the exchange of information with Georgian College faculty and staff.<br> <br> I agree that records of progress and attendance can be shared with the appropriate staff and faculty in the Academic and Career Preparation
+            program for the duration of the time I am a student in this department.<br> <br> I consent to Academic & Career Preparation Program staff using my personal email account to send progress and attendance updates, program updates and
+            any curriculum material that I may need from time to time.<br>
+          </p></em></b>
         </div>
-
         <div class="form-group col-md-12">
           <h2 class="col-md-12" style="text-align:center">Release of information to outside agencies </h2>
           <b><em><p class="col-md-8 col-md-offset-2">I also authorize Academic and Career Preparation, Georgian College, to provide information concerning my academic status and progress to:</p></em></b>
@@ -77,7 +75,7 @@
             <h4 class="underline">Employment Services:</h4>
             <div style="padding-left:15px;">
               Agency Name: <input class="form-control" [disabled]="!editConsentPermission" [(ngModel)]="consentForm.esAgencyName" placeholder="Employment Serivce Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission"
-                [(ngModel)]="consentForm.esContactName" placeholder="Employment Serivce Contact Name" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esEmail" placeholder="Employment Serivce Email"
+              [(ngModel)]="consentForm.esContactName" placeholder="Employment Serivce Contact Name" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esEmail" placeholder="Employment Serivce Email"
               /> Contact Phone Number: <br />
               <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.esPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
@@ -87,9 +85,9 @@
             <h4 class="underline">Ontario Disability Support Program:</h4>
             <div style="padding-left:15px;">
               Agency Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspAgencyName" placeholder="ODSP Agency Name" /> Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspContactName"
-                placeholder="ODSP contactName" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspEmail" placeholder="ODSP Email" /> Contact Phone Number: <br />
+              placeholder="ODSP contactName" /> Contact Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspEmail" placeholder="ODSP Email" /> Contact Phone Number: <br />
               <p-inputMask mask="(999) 999-9999"
-                [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspPhone" placeholder="(999)999-9999"></p-inputMask>
+              [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.odspPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
           </div>
           <br />
@@ -97,44 +95,42 @@
             <h4 class="underline">Ontario Works:</h4>
             <div style="padding-left:15px;">
               Case Worker Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerName" placeholder="OW Case Worker Name" /> Case Worker Email: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission"
-                [(ngModel)]="consentForm.owCaseWorkerEmail" placeholder="OW Case Worker Email" /> Case Worker Phone Number: <br />
+              [(ngModel)]="consentForm.owCaseWorkerEmail" placeholder="OW Case Worker Email" /> Case Worker Phone Number: <br />
               <p-inputMask mask="(999) 999-9999" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.owCaseWorkerPhone" placeholder="(999)999-9999"></p-inputMask>
             </div>
           </div>
         </div>
-
         <div class="form-group col-md-8 col-md-offset-2">
           <h2 class="col-md-12" style="text-align:center">Other contact for follow up</h2>
           <b><em>  <p> If, during the first twelve months after I leave the program, I cannot be reached at the telephone number(s) and/or email address in my file,
-                   Georgian College staff may call the following person to get my current number and/or address:</p></em></b>
-          <div class="col-md-offset-3 col-md-6">
-            Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.contactName" placeholder="Contact Name" #contactName="ngModel" />
+            Georgian College staff may call the following person to get my current number and/or address:</p></em></b>
+            <div class="col-md-offset-3 col-md-6">
+              Contact Name: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.contactName" placeholder="Contact Name" #contactName="ngModel" />
+            </div>
+            <div class="col-md-offset-3 col-md-6">
+              Contact Phone Number: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.contactNum" placeholder="Phone Number" #contactNum="ngModel" />
+            </div>
           </div>
-          <div class="col-md-offset-3 col-md-6">
-            Contact Phone Number: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.contactNum" placeholder="Phone Number" #contactNum="ngModel" />
-          </div>
-        </div>
-
-        <div class="form-group col-md-8 col-md-offset-2">
-          <h2 class="col-md-12" style="text-align:center">Other literacy agencies</h2>
-          <b><em>  <p>I agree that my assessment and personal information may be forwarded to another literacy agency if I am to be referred
-                 to that agency for more appropriate literacy training.</p></em></b>
-          <div class="col-md-offset-3 col-md-6">
-            Signature: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.literacyAgencies" placeholder="Signature" />
-          </div>
-          <div class="col-md-offset-3 col-md-6">
-            Witness: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.literacyWitness" placeholder="Witness" />
-          </div>
-        </div>
-        <div class="col-md-12" style="margin-top:50px;margin-left:-15px;">
-          <div style="float:right" *ngIf="currentUser.userType === 'Client' && (completeConsentForm || editConsentPermission)">
-            <button (click)="saveConsent()" class="greenButton" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
-          </div>
-          <div style="float:right" *ngIf="currentUser.userType === 'Student' && editConsentPermission">
-            <button (click)="saveConsent()" class="greenButton" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
+          <div class="form-group col-md-8 col-md-offset-2">
+            <h2 class="col-md-12" style="text-align:center">Other literacy agencies</h2>
+            <b><em>  <p>I agree that my assessment and personal information may be forwarded to another literacy agency if I am to be referred
+              to that agency for more appropriate literacy training.</p></em></b>
+              <div class="col-md-offset-3 col-md-6">
+                Signature: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.literacyAgencies" placeholder="Signature" />
+              </div>
+              <div class="col-md-offset-3 col-md-6">
+                Witness: <input class="form-control" [disabled]="!completeConsentForm && !editConsentPermission" [(ngModel)]="consentForm.literacyWitness" placeholder="Witness" />
+              </div>
+            </div>
+            <div class="col-md-12" style="margin-top:50px;margin-left:-15px;">
+              <div style="float:right" *ngIf="currentUser.userType === 'Client' && (completeConsentForm || editConsentPermission)">
+                <button (click)="saveConsent()" class="greenButton" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
+              </div>
+              <div style="float:right" *ngIf="currentUser.userType === 'Student' && editConsentPermission">
+                <button (click)="saveConsent()" class="greenButton" title="Save consent"><h4><i class="fa fa-floppy-o" aria-hidden="true"></i> Submit</h4></button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>

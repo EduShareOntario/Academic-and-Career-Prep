@@ -26,7 +26,7 @@ export class FileUploadComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService, private studentService: StudentService, private clientService: ClientService) {
     this.uploader = new FileUploader({url: URL});
     this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
-        console.log("ImageUpload:uploaded:", item, status);
+        // console.log("ImageUpload:uploaded:", item, status);
     };
   }
 
@@ -46,14 +46,11 @@ export class FileUploadComponent implements OnInit {
       this.clientService
           .getClients()
           .then(clients => {
-            console.log(clients);
               this.clients = (clients as any).clients;
               for (let client of this.clients) {
-                console.log(client);
                 var info = { label: client.firstName + ' ' + client.lastName, value: client.userID };
                 this.users.push(info);
               }
-              console.log(this.users);
           })
           .catch(error => {
             // do something
@@ -61,7 +58,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   userSelect() {
-    console.log(this.selectedStudent);
     // this.uploader.setOptions({
     //   additionalParameter: { studentID: this.selectedStudent }
     // });

@@ -1,6 +1,7 @@
 <div class="spacer"></div>
 <div class="inner_header">
-  <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Files</strong></h1>
+  <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+  <h1><strong> Files</strong></h1>
   <button class="orangeButton" style="width:140px" (click)="addFile()" title="Add new file"><i class="fa fa-upload"></i> Upload File</button>
 </div>
 <div class="col-md-8" style="overflow:visible; position:relative;">
@@ -10,17 +11,17 @@
     <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
     <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
       <template let-data="rowData" pTemplate="body">
-                <div class="btn-group">
-                  <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
-                    <li><a (click)="deleteAlert(data)"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</a></li>
-                </ul>
-              </div>
-              </template>
+        <div class="btn-group">
+          <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+            <li><a (click)="deleteAlert(data)"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</a></li>
+        </ul>
+      </div>
+      </template>
     </p-column>
   </p-dataTable>
 </div>

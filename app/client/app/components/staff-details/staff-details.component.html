@@ -1,13 +1,10 @@
+<div class="spacer"></div>
+<div class="inner_header">
+  <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+  <h1 *ngIf="user && !newUser"><strong>Editing Details for {{user.firstName}} {{user.lastName}}</strong></h1>
+  <h1 *ngIf="user && newUser"><strong>Creating New User</strong></h1>
+</div>
 <div *ngIf="user" class="staffEdit row form-horizontal">
-  <div class="spacer"></div>
-  <div class="inner_header">
-    <div *ngIf="!newUser">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span> Editing Details for {{user.firstName}} {{user.lastName}}</h1>
-    </div>
-    <div *ngIf="newUser">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span> Creating New User</h1>
-    </div>
-  </div>
   <div class="col-md-8">
     <div class="form-group">
       <label class="col-md-4 control-label"><span *ngIf="newUser" style="color:red">*</span> Authorization Level: </label>

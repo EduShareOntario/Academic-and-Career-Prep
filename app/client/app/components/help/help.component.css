@@ -21,7 +21,7 @@ a:active, .selectedLink {
   padding: 10px;
   padding-left: 20px;
   cursor:pointer;
-  transition: 0.2s;
+  transition: 0.1s;
 }
 
 .help_topic:hover {
@@ -32,7 +32,7 @@ a:active, .selectedLink {
 .welcome_page_btn {
   padding: 10px;
   cursor:pointer;
-  transition: 0.2s;
+  transition: 0.1s;
 }
 
 .welcome_page_btn:hover {

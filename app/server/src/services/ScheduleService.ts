@@ -1,10 +1,11 @@
 const schedule = require('node-schedule');
 const MailService = require("./MailService");
+const ActivityService = require("./ActivityService");
 var sql = require('mssql');
 var config = require('../config');
 
 //runs every night at 7:30pm
-var attendanceCheck = schedule.scheduleJob('0 30 19 * * *', function() {
+var attendanceCheck = schedule.scheduleJob('0 36 16 * * *', function() {
 var date = new Date();
 var twoMissedClasses = 0, fourMissedClasses = 0;
 var student;
@@ -90,6 +91,7 @@ try {
                         .query(query)
                         .then(function(result) {
                           new MailService().sendMessage('Four Missed Classes', mailOptions);
+                          new ActivityService().reportActivity('scheduledEmails', 'Four Missed Classes', 'success', student.userID, '', student.firstName + ' ' + student.lastName + ' has missed four consecutive classes for the following course: ' + courseInfo[0].courseName);
                         }).catch(function(err) {
                           console.log("Update attendance records: " + err);
                         });
@@ -106,7 +108,7 @@ try {
                         var courseInfo = coursesResult.filter(x => x.courseID === course[i].courseID);
                         console.log("__________________________________________________________________________________________");
                         console.log("Two consecutive classes have been missed by: " + student.firstName + " " + student.lastName);
-                        console.log("Student ID: " + course[i].userID + " - " + course[i + 1].userID);
+                        console.log("Student ID: " + student.userID);
                         console.log("Dates: " + course[i].date + ' & ' + course[i + 1].date);
                         console.log("Course ID: " + course[i].courseID + " - " + course[i + 1].courseID);
                         console.log("Email: " + userInfo[0].email);
@@ -131,6 +133,7 @@ try {
                         .query(query)
                         .then(function(result) {
                           new MailService().sendMessage('Two Missed Classes', mailOptions);
+                          new ActivityService().reportActivity('scheduledEmails', 'Two Missed Classes', 'success', student.userID, '', student.firstName + ' ' + student.lastName + ' has missed two consecutive classes for the following course: ' + courseInfo[0].courseName);
                         }).catch(function(err) {
                           console.log("Select userID and email from all users " + err);
                         });

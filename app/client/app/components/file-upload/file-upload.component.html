@@ -1,14 +1,12 @@
+<div class="spacer"></div>
+<div class="inner_header">
+  <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+  <h1>
+    <strong>File Upload for: </strong>
+    <p-dropdown [options]="users" [(ngModel)]="selectedStudent" placeholder="Select a User" [filter]="true" [style]="{'width':'350px','font-size':'24px'}" (onChange)="userSelect()"></p-dropdown>
+  </h1>
+</div>
 <div class="row">
-  <div class="spacer"></div>
-  <div class="inner_header">
-    <h2>
-      <span style="cursor:pointer" (click)="goBack()">
-        <i class="far fa-arrow-alt-circle-left"></i>
-      </span>
-      <strong> File Upload for: </strong>
-      <p-dropdown [options]="users" [(ngModel)]="selectedStudent" placeholder="Select a User" [filter]="true" [style]="{'width':'350px'}" (onChange)="userSelect()"></p-dropdown>
-    </h2>
-  </div>
   <div *ngIf="selectedStudent">
     <div class="col-md-3">
       <h3>Select files</h3>
@@ -48,14 +46,14 @@
             </td>
             <td nowrap>
               <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-                              <span class="glyphicon glyphicon-upload"></span> Upload
-                          </button>
+                <span class="glyphicon glyphicon-upload"></span> Upload
+              </button>
               <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()" [disabled]="!item.isUploading">
-                              <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                          </button>
+                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+              </button>
               <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
-                              <span class="glyphicon glyphicon-trash"></span> Remove
-                          </button>
+                <span class="glyphicon glyphicon-trash"></span> Remove
+              </button>
             </td>
           </tr>
         </tbody>

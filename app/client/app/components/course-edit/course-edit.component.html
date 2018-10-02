@@ -1,8 +1,9 @@
 <div class="courseEdit form-horizontal row">
   <div class="spacer"></div>
   <div class="inner_header" >
-    <h1 *ngIf="!newCourse && course"><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span> Add New Course</h1>
-    <h1 *ngIf="newCourse"><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span> Edit Details for {{course.courseName}}</h1>
+    <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+    <h1 *ngIf="!newCourse && course"><strong>Add New Course</strong></h1>
+    <h1 *ngIf="newCourse"><strong>Edit Details for {{course.courseName}}</strong></h1>
     <button (click)="save()" class="greenButton"><i class="fa fa-save"></i> Submit</button>
   </div>
   <div class="col-md-4" *ngIf="course">
@@ -57,7 +58,7 @@
         <p-checkbox name="group1" value="Tue" label="Tuesday" [(ngModel)]="selectedDays" (onChange)="cb_onchange($event,'Tue')"></p-checkbox>
       </div>
       <div class="ui-g-2">
-        <p-checkbox name="group1" value="Wed" label="Wedsday" [(ngModel)]="selectedDays" (onChange)="cb_onchange($event,'Wed')"></p-checkbox>
+        <p-checkbox name="group1" value="Wed" label="Wednesday" [(ngModel)]="selectedDays" (onChange)="cb_onchange($event,'Wed')"></p-checkbox>
       </div>
       <div class="ui-g-2">
         <p-checkbox name="group1" value="Thu" label="Thursday" [(ngModel)]="selectedDays" (onChange)="cb_onchange($event,'Thu')"></p-checkbox>

@@ -35,7 +35,6 @@ export class FilesComponent {
         .then(files => {
           this.files = files;
           swal.close();
-          console.log(this.files);
         })
         .catch(error => error);
   }
@@ -45,10 +44,7 @@ export class FilesComponent {
     this.filesService
         .download(filename)
         .then(response => {
-          console.log(response);
           var blob = new Blob([response], {type: "application/pdf"});
-          //change download.pdf to the name of whatever you want your file to be
-          console.log(blob);
           saveAs(blob, file.filename);
         })
         .catch(error => error);

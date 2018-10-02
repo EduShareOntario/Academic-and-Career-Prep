@@ -1,7 +1,8 @@
 <div class="courseManage">
   <div class="spacer"></div>
   <div class="inner_header">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Manage Courses</strong></h1>
+    <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+    <h1><strong>Manage Courses</strong></h1>
     <button class="orangeButton" (click)="addCourse()"><i class="fa fa-plus"></i> Add Course</button>
     <button class="lightBlueButton" (click)="showCourseTypeForm()" title="Add new course type."><i class="fa fa-plus"></i> Add Type</button>
   </div>
