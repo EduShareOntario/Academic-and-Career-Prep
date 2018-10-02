@@ -184,7 +184,7 @@ class CourseController {
           sql.connect(db)
             .then(function() {
               sql.query
-                `INSERT INTO Course (courseName, professorId, campusId, classroom, classTimeStr,courseStart,courseEnd)
+                `INSERT INTO Course (courseName, courseType, professorId, campusId, classroom, classTimeStr, courseStart, courseEnd)
         VALUES(${course.courseName}, ${course.courseType}, ${course.professorId}, ${course.campusId}, ${course.classroom}, ${course.classTimeStr},
           ${course.courseStart},${course.courseEnd})`
                 .then(function(result) {

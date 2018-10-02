@@ -399,7 +399,11 @@
                             <option value="International Student">International Student</option>
                             <option value="Crown Ward">Crown Ward</option>
                             <option value="Second Career">Second Career</option>
+                            <option value="Other">Other</option>
                           </select>
+                          <div *ngIf="suitabilityForm.incomeSource === 'Other'">
+                            <input class="form-control" type="text" [(ngModel)]="suitabilityForm.incomeSourceOther" placeholder="Please specify..." />
+                          </div>
                         </div>
                       </div>
                       <div class="form-group margin">

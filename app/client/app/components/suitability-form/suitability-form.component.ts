@@ -57,6 +57,9 @@ export class SuitabilityFormComponent {
       private authService: AuthService) {
         this.client = new Client();
         this.suitabilityForm = new SuitabilityForm();
+        this.suitabilityForm.isValidAge = true;
+        this.suitabilityForm.availableDuringClass = true;
+        this.suitabilityForm.appropriateGoal = true;
         this.date = new Date();
         this.client.allowDetailedMessage = false;
         this.client.okayToText = false;

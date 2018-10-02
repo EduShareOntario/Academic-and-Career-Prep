@@ -538,11 +538,11 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.suitabilityForm = new SuitabilityForm();
     this.suitabilityForm.transcript = false;
-    this.suitabilityForm.appropriateGoal = false;
-    this.suitabilityForm.isValidAge = false;
+    this.suitabilityForm.appropriateGoal = true;
+    this.suitabilityForm.isValidAge = true;
     this.suitabilityForm.governmentID = false;
     this.suitabilityForm.schoolRegistration = false;
-    this.suitabilityForm.availableDuringClass = false;
+    this.suitabilityForm.availableDuringClass = true;
     this.suitabilityForm.factorHealth = false;
     this.suitabilityForm.factorInstructions = false;
     this.suitabilityForm.factorCommunication = false;

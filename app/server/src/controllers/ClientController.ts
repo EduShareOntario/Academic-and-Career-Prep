@@ -119,6 +119,9 @@ class ClientController {
                             }
                             new sql.Request().query("INSERT INTO Clients VALUES (" + clientQuery + ")").then(function() {
                               if (Object.keys(suitabilityForm).length != 0) {
+                                if (suitabilityForm.incomeSource === 'Other') {
+                                  suitabilityForm.incomeSource = suitabilityForm.incomeSourceOther;
+                                }
                                 var suitabilityFormQuery = "'" + id[0].userID
                                   + "', '" + suitabilityForm.transcript
                                   + "', '" + suitabilityForm.selectedCourseTypes
@@ -227,7 +230,9 @@ class ClientController {
 
           sql.connect(db)
             .then(function(connection) {
-
+              if (suitabilityForm.incomeSource === 'Other') {
+                suitabilityForm.incomeSource = suitabilityForm.incomeSourceOther;
+              }
               var suitabilityFormQuery = "'" + _id
                 + "', '" + suitabilityForm.transcript
                 + "', '" + suitabilityForm.selectedCourseTypes
