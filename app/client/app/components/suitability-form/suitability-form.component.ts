@@ -428,6 +428,21 @@ export class SuitabilityFormComponent {
           });
     }
 
+    onDateChange(birthdate : string ) {
+      var years = moment().diff(birthdate, 'years');
+      if (years >= 16 && years <= 18) {
+        this.suitabilityForm.ageRange = "16-18 years old";
+      } else if (years >= 19 && years <= 29) {
+        this.suitabilityForm.ageRange = "19-29 years old";
+      } else if (years >= 30 && years <= 44) {
+        this.suitabilityForm.ageRange = "30-44 years old";
+      } else if (years >= 45 && years <= 65) {
+        this.suitabilityForm.ageRange = "45-65 years old";
+      } else if (years > 65) {
+        this.suitabilityForm.ageRange = "65+ years old";
+      }
+    }
+
     displayErrorAlert(error) {
       swal(
         error.title,

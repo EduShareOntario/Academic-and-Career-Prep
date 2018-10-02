@@ -670,6 +670,13 @@ export class ClientStatusComponent implements OnInit {
     this.resetView();
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
+    if (this.suitabilityForm.incomeSource === "Other") {
+      this.suitabilityForm.incomeSource = "Other";
+    }
+    if (this.suitabilityForm.incomeSource.includes("Other - ")) {
+      this.suitabilityForm.incomeSourceOther = this.suitabilityForm.incomeSource.split("Other - ")[1];
+      this.suitabilityForm.incomeSource = "Other";
+    }
     this.selectedCourseTypes = [];
     if (this.suitabilityForm.selectedCourseTypes != null) {
       for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {

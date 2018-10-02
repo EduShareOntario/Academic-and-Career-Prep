@@ -119,8 +119,8 @@ class ClientController {
                             }
                             new sql.Request().query("INSERT INTO Clients VALUES (" + clientQuery + ")").then(function() {
                               if (Object.keys(suitabilityForm).length != 0) {
-                                if (suitabilityForm.incomeSource === 'Other') {
-                                  suitabilityForm.incomeSource = suitabilityForm.incomeSourceOther;
+                                if (suitabilityForm.incomeSource === 'Other' && suitabilityForm.incomeSourceOther != null) {
+                                  suitabilityForm.incomeSource = "Other - " + suitabilityForm.incomeSourceOther;
                                 }
                                 var suitabilityFormQuery = "'" + id[0].userID
                                   + "', '" + suitabilityForm.transcript
@@ -230,8 +230,8 @@ class ClientController {
 
           sql.connect(db)
             .then(function(connection) {
-              if (suitabilityForm.incomeSource === 'Other') {
-                suitabilityForm.incomeSource = suitabilityForm.incomeSourceOther;
+              if (suitabilityForm.incomeSource === 'Other' && suitabilityForm.incomeSourceOther != null) {
+                suitabilityForm.incomeSource = "Other - " + suitabilityForm.incomeSourceOther;
               }
               var suitabilityFormQuery = "'" + _id
                 + "', '" + suitabilityForm.transcript
@@ -428,6 +428,9 @@ class ClientController {
           var suitability = req.body;
           sql.connect(db)
             .then(function(connection) {
+              if (suitability.incomeSource === 'Other' && suitability.incomeSourceOther != null) {
+                suitability.incomeSource = "Other - " + suitability.incomeSourceOther;
+              }
               var query = "UPDATE SuitabilityForm SET transcript='" + suitability.transcript
                 + "', selectedCourseTypes='" + suitability.selectedCourseTypes
                 + "', goal='" + suitability.goal

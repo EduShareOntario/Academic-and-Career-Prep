@@ -265,18 +265,16 @@
                         <h3>Editing Suitability for {{ clientView.firstName }}</h3>
                         <hr>
                       </div>
-                      <label class="col-md-3 control-label">Course Interests: </label>
-                      <div class="col-md-9">
-                        <p-multiSelect [options]="courseTypes" [(ngModel)]="selectedCourseTypes" optionLabel="name"></p-multiSelect>
+                      <div class="col-md-12">
+                        <label class="text-nowrap control-label">Course Interests: </label>
+                        <p-multiSelect [options]="courseTypes" [(ngModel)]="selectedCourseTypes" optionLabel="name" class="col-md-12"></p-multiSelect>
                       </div>
-
-                      <label class="col-md-3 control-label">Goal: </label>
-                      <div class="col-md-9">
+                      <div class="col-md-12">
+                        <label class="text-nowrap control-label">Goal: </label>
                         <input class="form-control" type="text" [(ngModel)]="suitabilityForm.goal" />
                       </div>
-
-                      <label class="col-md-3 control-label">Transition Date: </label>
-                      <div class="col-md-9">
+                      <div class="col-md-12">
+                        <label class="text-nowrap control-label">Transition Date: </label>
                         <input class="form-control" type="date" [(ngModel)]="suitabilityForm.transitionDate" />
                       </div>
                       <div>
@@ -450,7 +448,7 @@
                           <button *ngIf="suitabilityForm.factorHealth === true" (click)="suitabilityForm.factorHealth = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorHealth === false || suitabilityForm.factorHealth === 'undefined' " (click)="suitabilityForm.factorHealth = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has health problems that may prevent client from working effectively
+                            Health problems that may prevent client from working effectively
                           </label>
                         </div>
 
@@ -458,7 +456,7 @@
                           <button *ngIf="suitabilityForm.factorInstructions === true" (click)="suitabilityForm.factorInstructions = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorInstructions === false || suitabilityForm.factorInstructions === 'undefined'" (click)="suitabilityForm.factorInstructions = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has difficulty understanding instructions
+                            Difficulty understanding instructions
                           </label>
                         </div>
 
@@ -466,7 +464,7 @@
                           <button *ngIf="suitabilityForm.factorCommunication === true" (click)="suitabilityForm.factorCommunication = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorCommunication === false || suitabilityForm.factorCommunication === 'undefined'" (click)="suitabilityForm.factorCommunication = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has difficulty communicating
+                            Difficulty communicating
                           </label>
                         </div>
 
@@ -474,7 +472,7 @@
                           <button *ngIf="suitabilityForm.factorLanguage === true" (click)="suitabilityForm.factorLanguage = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorLanguage === false || suitabilityForm.factorLanguage === 'undefined'" (click)="suitabilityForm.factorLanguage = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has language barrier
+                            Language barrier
                           </label>
                         </div>
 
@@ -482,7 +480,7 @@
                           <button *ngIf="suitabilityForm.factorComputer === true" (click)="suitabilityForm.factorComputer = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorComputer === false || suitabilityForm.factorComputer === 'undefined'" (click)="suitabilityForm.factorComputer = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has limited computer skills
+                            Limited computer skills
                           </label>
                         </div>
 
@@ -490,7 +488,7 @@
                           <button *ngIf="suitabilityForm.factorHousing === true" (click)="suitabilityForm.factorHousing = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorHousing === false || suitabilityForm.factorHousing === 'undefined'" (click)="suitabilityForm.factorHousing = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has housing instability
+                            Housing instability
                           </label>
                         </div>
 
@@ -506,7 +504,7 @@
                           <button *ngIf="suitabilityForm.factorDaycare === true" (click)="suitabilityForm.factorDaycare = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorDaycare === false || suitabilityForm.factorDaycare === 'undefined'" (click)="suitabilityForm.factorDaycare = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client does not have reliable daycare
+                            Does not have reliable daycare
                           </label>
                         </div>
 
@@ -514,7 +512,7 @@
                           <button *ngIf="suitabilityForm.factorInternet === true" (click)="suitabilityForm.factorInternet = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorInternet === false || suitabilityForm.factorInternet === 'undefined'" (click)="suitabilityForm.factorInternet = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client does not have phone/internet access
+                            Does not have phone/internet access
                           </label>
                         </div>
 
@@ -522,7 +520,7 @@
                           <button *ngIf="suitabilityForm.factorPersonal === true" (click)="suitabilityForm.factorPersonal = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorPersonal === false || suitabilityForm.factorPersonal === 'undefined'" (click)="suitabilityForm.factorPersonal = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client is going through difficulties in his/her personal life (legal, family, substance abuse, financial)
+                            Going through difficulties in his/her personal life (legal, family, substance abuse, financial)
                           </label>
                         </div>
                       </div>

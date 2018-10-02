@@ -13,7 +13,7 @@
               <label>Name: </label> {{clientName}}
             </div>
             <div class="col-md-12">
-              <label for="date">Date: </label> {{date | date: format}}
+              <label for="date">Today's Date: </label> {{date | date: format}}
               <input type="hidden" value="{{date | date: format}}" [(ngModel)]="consentForm.date" placeholder="DD/MM/YYYY" />
             </div>
           </div>
