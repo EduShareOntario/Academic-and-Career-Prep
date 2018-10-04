@@ -4,7 +4,7 @@ html, body {
 }
 
 .h1, .h2, .h3, h1, h2, h3 {
-  margin-top: 0px;
+  margin: 10px 0px;
 }
 
 .navbar {
@@ -24,8 +24,8 @@ html, body {
 }
 
 .well {
-  background-color: #FFF;
   border-radius: 0px;
+  padding: 20px;
 }
 
 .form-control {
@@ -124,65 +124,47 @@ li>a>i {
   transform: scale(1.1);
 }
 
-.greenButton {
+.greenButton,
+.greyButton,
+.orangeButton,
+.lightBlueButton,
+.nextButton {
   text-align: center;
-  background-color: #64a70b;
-  width:98px;
+  width: 98px;
+  height: 50px;
   cursor: pointer;
   color: #fff;
   display: inline;
-  padding: 10px 15px;
   border: 0px solid;
   transition: 0.1s ease;
 }
 
-.greenButton:hover {
+.greenButton:hover,
+.greyButton:hover,
+.orangeButton:hover,
+.lightBlueButton:hover,
+.nextButton:hover {
   transform: scale(1.1);
+}
+
+.nextButton {
+  background-color: #004B87;
+}
+
+.greenButton {
+  background-color: #64a70b;
 }
 
 .greyButton {
-  text-align: center;
   background-color: #333f48;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.1s ease;
-}
-
-.greyButton:hover {
-  transform: scale(1.1);
 }
 
 .orangeButton {
-  text-align: center;
   background-color: #EA7200;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.1s ease;
-}
-
-.orangeButton:hover {
-  transform: scale(1.1);
 }
 
 .lightBlueButton {
-  text-align: center;
   background-color: #00778b;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.1s ease;
-}
-
-.lightBlueButton:hover {
-  transform: scale(1.1);
 }
 
 .editButton {

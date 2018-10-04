@@ -3,6 +3,7 @@
   <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
   <h1><strong>Manage Staff</strong></h1>
   <button class="orangeButton" (click)="addUser()" title="Add new client"><i class="fa fa-plus"></i> Add Staff</button>
+  <button class="greyButton" (click)="runAttendanceCheck()" title="This will run a manual check of all student attendance" style="width: 200px;"><i class="fas fa-play-circle"></i> Attendance Check</button>
 </div>
 <div class="staff">
   <div class="row" *ngIf="users">

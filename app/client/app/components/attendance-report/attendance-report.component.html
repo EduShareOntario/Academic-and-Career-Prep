@@ -6,9 +6,8 @@
       <h1><strong> Attendance Report (Student View)</strong></h1>
     </div>
     <div class="col-md-3">
-      <h2>Students</h2>
       <p-inputSwitch onLabel="Course Report" offLabel="Student Report" [(ngModel)]="studentReport"></p-inputSwitch>
-      <hr>
+      <br/>
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
@@ -76,9 +75,8 @@
       <h1><strong>Attendance Report (Course View)</strong></h1>
     </div>
     <div class="col-md-3">
-      <h2>Courses</h2>
       <p-inputSwitch onLabel="Course Report" offLabel="Student Report" [(ngModel)]="studentReport"></p-inputSwitch>
-      <hr>
+      <br/>
       <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="courses | courseFilter : filterQuery" [responsive]="true">
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
@@ -99,14 +97,23 @@
       <div (click)="overallStatus($event)" class="statusButton" title="View overall status"><i class="fas fa-chart-pie fa-2x" aria-hidden="true"></i></div>
       <hr>
       <div class="col-md-12" style="text-align:center">
-        <div class="well col-md-4" (click)="filterStaff('total')">
-          <h2><strong style="color:red">{{ classAbsenceTotal }}</strong> Total Absences</h2>
+        <div class="col-md-4">
+          <div class="filter_status" (click)="filterAttendance('absence')">
+            <h2><strong style="color:red">{{ classAbsenceTotal }}</strong> Absences</h2>
+            <hr/>
+          </div>
         </div>
-        <div class="well col-md-4" (click)="filterStaff('total')">
-          <h2><strong style="color:green">{{ classPresenceTotal }}</strong> Total Presences</h2>
+        <div class="col-md-4">
+          <div class="filter_status" (click)="filterAttendance('presence')">
+            <h2><strong style="color:green">{{ classPresenceTotal }}</strong> Presences</h2>
+            <hr/>
+          </div>
         </div>
-        <div class="well col-md-4" (click)="filterStaff('total')">
-          <h2><strong style="color:#FFA500">{{ classMadeContactTotal }}</strong> Total Made Contact</h2>
+        <div class="col-md-4">
+          <div class="filter_status" (click)="filterAttendance('madeContact')">
+            <h2><strong style="color:#FFA500">{{ classMadeContactTotal }}</strong> Made Contact</h2>
+            <hr/>
+          </div>
         </div>
       </div>
       <table *ngIf="!noStudentsEnrolled" class="table table-striped">

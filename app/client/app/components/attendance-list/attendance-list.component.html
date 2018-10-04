@@ -18,7 +18,7 @@
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
         <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button type="button" (click)="doAttendance(data)" class="dropToggleButton"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+                  <button type="button" (click)="takeAttendance(data)" class="dropToggleButton"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>

@@ -4,6 +4,7 @@ import AuthController = require("../controllers/AuthController");
 const PRFService = require("../services/PRFService");
 const MailService = require("../services/MailService");
 const ActivityService = require("../services/ActivityService");
+const ScheduleService = require("../services/ScheduleService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
 const config = require('../config');
@@ -685,10 +686,10 @@ class StudentController {
               .then(function(connection) {
                 new sql.Request(connection)
                   .query(query)
-                  .then(function(recordset) {
+                  .then(function(result) {
                     // set schedule check on DB
                     new ActivityService().reportActivity('student', 'Attendance Submitted', 'success', currentUserID, attendance.instructorID, 'Instructor has submitted attendance for course with course ID of ' + attendance.courseID);
-                    res.send(recordset);
+                    res.send({ result: "success", title: "Success!", msg: "Attendance has been submitted.", serverMsg: "" });
                   }).catch(function(err) {
                     console.log("Error - Insert attendance: " + err);
                     res.send({ result: "error", title: "Error", msg: "There was an error inserting attendance for student.", serverMsg: err });
@@ -736,6 +737,11 @@ class StudentController {
       console.log("Error - Get all attendance: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error retrieving all student attendance records.", serverMsg: err });
     }
+  }
+
+  runScheduledEmails(req: express.Request, res: express.Response): void {
+    new ScheduleService().attendanceCheck();
+    res.send({ result: "success", title: "Attendance Check", msg: "Student attendance check has run successfully!", serverMsg: "" });
   }
 
   populatePRF(req: express.Request, res: express.Response): void {

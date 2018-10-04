@@ -24,6 +24,7 @@
     </div>
     <div class="col-md-12">
       <p-dataTable [value]="courses | courseFilter : filterQuery | campusFilter : selectedCampusId" [responsive]="true">
+        <p-column field="courseType" header="Course Type" [sortable]="true" [style]="{'width':'190px'}"></p-column>
         <p-column field="courseName" header="Course Name" [sortable]="true" [style]="{'width':'190px'}"></p-column>
         <p-column header="Instructor" [sortable]="true" [style]="{'text-align': 'center'}">
           <template let-data="rowData" pTemplate="body">
@@ -33,8 +34,16 @@
         </p-column>
         <p-column field="classroom" header="Classroom" [sortable]="true"></p-column>
         <p-column field="campusName" header="Campus" [sortable]="true"></p-column>
-        <p-column field="courseStart" header="Start Date" [sortable]="true"></p-column>
-        <p-column field="courseEnd" header="End Date" [sortable]="true"></p-column>
+        <p-column header="Start Date" [sortable]="true">
+          <template let-data="rowData" pTemplate="body">
+            <p>{{ data.courseStart | date}}</p>
+          </template>
+        </p-column>
+        <p-column header="End Date" [sortable]="true">
+          <template let-data="rowData" pTemplate="body">
+            <p>{{ data.courseEnd | date}}</p>
+          </template>
+        </p-column>
         <p-column header="Action" [style]="{'width': '149px'}">
           <template let-data="rowData" pTemplate="body">
             <div class="inline">

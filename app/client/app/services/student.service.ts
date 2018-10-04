@@ -88,6 +88,20 @@ export class StudentService {
           .catch(err => this.handleError(err, "Update General Info"));
   }
 
+  manualAttendanceCheck() {
+      // add authorization header with jwt token
+      let headers = new Headers({ authorization: this.authService.token });
+      let options = new RequestOptions({ headers: headers });
+
+      var url = 'api/students/attendance-check';
+
+      return this.http
+          .put(url, options)
+          .toPromise()
+          .then(response => response.json())
+          .catch(err => this.handleError(err, "Run attendance check"));
+  }
+
   requestEditConsent(): Promise<Student> {
     // get current user id from web token
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -160,7 +174,8 @@ export class StudentService {
 
     let url = `api/timetables`;
 
-    return this.http.get(url, options)
+    return this.http
+      .get(url, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get timetables"));
@@ -173,7 +188,8 @@ export class StudentService {
 
     let url = `api/timetables-course-id/${courseID}`;
 
-    return this.http.get(url, options)
+    return this.http
+      .get(url, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get timetables by course"));
@@ -185,7 +201,8 @@ export class StudentService {
     let options = new RequestOptions({ headers: headers });
 
     let url = `api/timetable/${userID}`;
-    return this.http.get(url, options).toPromise()
+    return this.http
+      .get(url, options).toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get events by id"));
   }
@@ -197,7 +214,8 @@ export class StudentService {
 
     let url = `api/get-students-id`;
 
-    return this.http.post(url, timetables, options)
+    return this.http
+      .post(url, timetables, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get students by id"));
@@ -225,7 +243,8 @@ export class StudentService {
 
     let url = `api/caseNotes/${studentID}`;
 
-    return this.http.get(url, options)
+    return this.http
+      .get(url, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Get notes"));
@@ -255,7 +274,7 @@ export class StudentService {
     return this.http
       .post(url, attendance, options)
       .toPromise()
-      .then(response => response)
+      .then(response => response.json())
       .catch(err => this.handleError(err, "Insert attendance"));
   }
 
@@ -263,7 +282,8 @@ export class StudentService {
     // add authorization header with jwt token
     let headers = new Headers({ authorization: this.authService.token });
     let options = new RequestOptions({ headers: headers });
-    return this.http.get('api/prf/' + id, options)
+    return this.http
+      .get('api/prf/' + id, options)
       .toPromise()
       .then(response => response.json())
       .catch(err => this.handleError(err, "Populate PRF"));

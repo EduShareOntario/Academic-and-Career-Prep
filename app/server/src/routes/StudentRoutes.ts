@@ -30,6 +30,7 @@ class StudentRoutes {
         router.delete("/caseNotes/:_id", controller.deleteNote);
         router.post("/attendance", controller.insertAttendance);
         router.get("/attendance-report", controller.getAllAttendance);
+        router.put("/students/attendance-check", controller.runScheduledEmails);
         router.get("/prf/:_id", controller.populatePRF);
         return router;
     }
