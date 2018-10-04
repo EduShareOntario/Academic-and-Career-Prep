@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-<div class="row">
-  <div class="doNotPrint">
-    <div class="spacer"></div>
-    <div class="col-md-10 inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Course Wait List</strong></h1>
-      <button class="orangeButton" (click)="showWaitListForm()" title="Add new client"><i class="fa fa-plus"></i> Add</button>
-      <button class="lightBlueButton" (click)="onPrint()" title="Print timetable"><i class="fa fa-print"></i> Print</button>
-    </div>
-    <div *ngIf="showForm" class="addMenu well">
-      <span title="Close" class="closeMenu" (click)="closeMenu()"><i class="fa fa-times"></i></span>
-      <h4>Add User to Wait List</h4>
-      <p-dropdown [options]="users | studentToSelectItem" [(ngModel)]="selectedUser" placeholder="Select a User" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
-      <p-dropdown [options]="courseTypes | courseTypeToSelectItem" [(ngModel)]="selectedCourseType" placeholder="Select a Course Type" [filter]="true" [style]="{'width':'350px','margin-bottom':'5px'}"></p-dropdown>
-      <button class="greenButton" style="float:right" (click)="addStudentToWaitList()" title="Add to wait list"><i class="fa fa-plus"></i> Submit</button>
-    </div>
-=======
 <div class="doNotPrint">
   <div class="spacer"></div>
   <div class="inner_header">
@@ -22,7 +5,6 @@
     <h1><strong>Course Wait List</strong></h1>
     <button class="orangeButton" (click)="showWaitListForm()" title="Add new client"><i class="fa fa-plus"></i> Add</button>
     <button class="lightBlueButton" (click)="onPrint()" title="Print timetable"><i class="fa fa-print"></i> Print</button>
->>>>>>> development
   </div>
 </div>
   <div class="row">
@@ -58,14 +40,9 @@
       </p-column>
       <p-column header="Action" styleClass="doNotPrint" [style]="{'width': '103px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-<<<<<<< HEAD
-          <i class="fa fa-university fa-2x enrollIcon" aria-hidden="true" (click)="gotoStudentEnrollment(data, $event)" title="Enroll {{ data.fullName }} in course type: {{ data.courseType }}"></i>
-          <i class="fas fa-trash-alt fa-2x deleteIcon" aria-hidden="true" (click)="removeFromWaitList(data, $event)" title="Remove {{ data.fullName }} from wait list for course type: {{ data.courseType }}"></i>
-=======
           <i *ngIf="data.userType != 'Client'" class="fa fa-university fa-2x enrollIcon doNotPrint" aria-hidden="true" (click)="gotoStudentEnrollment(data, $event)" title="Enroll {{ data.fullName }} in course type: {{ data.courseType }}"></i>
           <i *ngIf="data.userType == 'Client'" class="fa fa-university fa-2x enrollIcon doNotPrint" aria-hidden="true" title="Client needs to become a student before enrollment can happen." style="cursor:not-allowed; color:#EFF0F1"></i>
           <i class="fas fa-trash-alt fa-2x deleteIcon doNotPrint" aria-hidden="true" (click)="removeFromWaitList(data, $event)" title="Remove {{ data.fullName }} from wait list for course type: {{ data.courseType }}"></i>
->>>>>>> development
         </template>
       </p-column>
     </p-dataTable>
@@ -84,14 +61,10 @@
       </p-column>
       <p-column header="Action" [style]="{'width': '125px', 'text-align': 'center'}">
         <template let-data="rowData" pTemplate="body">
-<<<<<<< HEAD
-          <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
-=======
           <i *ngIf="data.userType != 'Client'" class="fa fa-university fa-2x enrollIcon doNotPrint" aria-hidden="true" (click)="gotoStudentEnrollment(data, $event)" title="Enroll {{ data.fullName }} in course type: {{ data.courseType }}"></i>
           <i *ngIf="data.userType == 'Client'" class="fa fa-university fa-2x enrollIcon doNotPrint" aria-hidden="true" title="Client needs to become a student before enrollment can happen." style="cursor:not-allowed; color:#EFF0F1"></i>
           <i class="fas fa-trash-alt fa-2x deleteIcon doNotPrint" aria-hidden="true" (click)="removeFromWaitList(data, $event)" title="Remove {{ data.fullName }} from wait list for course type: {{ viewingCourse.courseType }}"></i>
           <!-- <button class="enrollButton doNotPrint" (click)="gotoStudentEnrollment(viewingCourse, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button> -->
->>>>>>> development
         </template>
       </p-column>
     </p-dataTable>
