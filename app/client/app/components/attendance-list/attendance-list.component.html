@@ -1,16 +1,14 @@
-<div class="attendanceList">
-  <div class="spacer"></div>
-  <div class="inner_header">
-    <h2>
-    <span style="cursor:pointer" (click)="goBack()">
-      <i class="far fa-arrow-alt-circle-left"></i>
-    </span>
+<div class="spacer"></div>
+<div class="inner_header">
+  <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+  <h1>
     <strong *ngIf="!instructors"> Take Attendance </strong>
     <strong *ngIf="instructors && ! selectedInstructor"> Take Attendance for: </strong>
     <strong *ngIf="selectedInstructor"> Taking Attendance for: </strong>
-    <p-dropdown *ngIf="instructors" [options]="instructors | instructorToSelectItem" [(ngModel)]="selectedInstructor" placeholder="Select a Instructor" [filter]="true" [style]="{'width':'350px'}" (onChange)="instructorSelect()"></p-dropdown>
-  </h2>
-  </div>
+    <p-dropdown *ngIf="instructors" [options]="instructors | instructorToSelectItem" [(ngModel)]="selectedInstructor" placeholder="Select a Instructor" [filter]="true" [style]="{'width':'350px','font-size': '24px'}" (onChange)="instructorSelect()"></p-dropdown>
+  </h1>
+</div>
+<div class="attendanceList">
   <div class="row" *ngIf="data">
     <div class="col-md-3">
       <h2>My Courses</h2>
@@ -20,7 +18,7 @@
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
         <p-column header="Action" [style]="{'width': '60px'}">
           <template let-data="rowData" pTemplate="body">
-                  <button type="button" (click)="doAttendance(data)" class="dropToggleButton"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+                  <button type="button" (click)="takeAttendance(data)" class="dropToggleButton"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
                 </template>
         </p-column>
       </p-dataTable>

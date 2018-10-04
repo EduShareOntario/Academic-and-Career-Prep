@@ -29,6 +29,7 @@
   margin-top: 6px;
 }
 
+<<<<<<< HEAD
 .nextButton {
   text-align: center;
   background-color: #64a70b;
@@ -43,6 +44,8 @@
   transition: 0.2s ease;
 }
 
+=======
+>>>>>>> development
 .nextButton:hover {
   transform: scale(1.1);
 }

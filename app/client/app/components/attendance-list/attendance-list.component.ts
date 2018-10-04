@@ -125,7 +125,7 @@ export class AttendanceListComponent implements OnInit {
       .catch(error => console.log(error));
   }
 
-  doAttendance(course: Course) {
+  takeAttendance(course: Course) {
     this.attendanceDates = [];
     swal({
       title: 'Loading...',
@@ -244,12 +244,12 @@ export class AttendanceListComponent implements OnInit {
                 this.displayErrorAlert(result);
               } else if ((result as any).result === 'success') {
                 swal(
-                  'Attendance submitted!',
-                  '',
+                  result.title,
+                  result.msg,
                   'success'
                 );
                 this.attendanceView = false;
-                this.router.navigate(['/attendance-report']);
+                // this.router.navigate(['/attendance-report']);
               } else {
                 swal(
                   'Error',

@@ -6,6 +6,7 @@ import { SuitabilityForm } from "../../models/suitabilityForm";
 import { LearningStyleForm } from "../../models/learningStyleForm";
 import { AssessmentResults } from "../../models/assessmentResults";
 import { Router } from '@angular/router';
+import { StaffService } from "../../services/staff.service";
 import { StudentService } from "../../services/student.service";
 import { ClientService } from "../../services/client.service";
 import { CourseService } from "../../services/course.service";
@@ -23,6 +24,7 @@ declare var FileSaver: any;
 
 export class StudentManageComponent implements OnInit {
   students: Student[];
+  activity: any;
   error: any;
   studentInfoView: boolean = false;
   studentView: Student;
@@ -66,6 +68,7 @@ export class StudentManageComponent implements OnInit {
 
   constructor(private router: Router,
     private ngZone: NgZone,
+    private staffService: StaffService,
     private studentService: StudentService,
     private clientService: ClientService,
     private courseService: CourseService,
@@ -109,9 +112,24 @@ export class StudentManageComponent implements OnInit {
         for (let file of this.files) {
           file.userID = +file.userID;
         }
-        swal.close();
+        this.getSiteActivity();
       })
-      .catch(error => error);
+      .catch(error => this.error = error);
+  }
+
+  getSiteActivity() {
+    this.staffService
+      .getSiteActivity()
+      .then(results => {
+        if ((results as any).result === 'error') {
+          this.activity = null;
+          this.displayErrorAlert(results);
+        } else {
+          this.activity = results.filter(x => x.type === 'scheduledEmails');
+          swal.close();
+        }
+      })
+      .catch(error => this.error = error);
   }
 
   download(file) {

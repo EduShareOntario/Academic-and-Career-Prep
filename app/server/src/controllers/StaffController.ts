@@ -288,7 +288,7 @@ class StaffController {
   getSiteActivity(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function(currentUserID) {
+        requiredAuth: ["Admin", "Staff"], done: function(currentUserID) {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)

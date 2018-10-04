@@ -22,19 +22,21 @@ export class SuitabilityFormComponent {
     date: any;
     currentUser: any;
     navigated = false; // true if navigated here
-    showSection1 = true;
-    showSection2 = false;
-    showSection3 = false;
-    showSection4 = false;
-    showSection5 = false;
-    showSection6 = false;
+    // showSection1 = true;
+    // showSection2 = false;
+    // showSection3 = false;
+    // showSection4 = false;
+    // showSection5 = false;
+    // showSection6 = false;
+    //
+    // showSectionBtn1 = true;
+    // showSectionBtn2 = false;
+    // showSectionBtn3 = false;
+    // showSectionBtn4 = false;
+    // showSectionBtn5 = false;
+    // showSectionBtn6 = false;
 
-    showSectionBtn1 = true;
-    showSectionBtn2 = false;
-    showSectionBtn3 = false;
-    showSectionBtn4 = false;
-    showSectionBtn5 = false;
-    showSectionBtn6 = false;
+    selectedSection = 1;
 
     warning = false;
     partAPoints = 0;
@@ -57,6 +59,9 @@ export class SuitabilityFormComponent {
       private authService: AuthService) {
         this.client = new Client();
         this.suitabilityForm = new SuitabilityForm();
+        this.suitabilityForm.isValidAge = true;
+        this.suitabilityForm.availableDuringClass = true;
+        this.suitabilityForm.appropriateGoal = true;
         this.date = new Date();
         this.client.allowDetailedMessage = false;
         this.client.okayToText = false;
@@ -87,66 +92,66 @@ export class SuitabilityFormComponent {
       });
     }
 
-    clicked(item) {
-        switch (item) {
-            case 'section1':
-                this.showSection1 = true;
-                this.showSection2 = false;
-                this.showSection3 = false;
-                this.showSection4 = false;
-                this.showSection5 = false;
-                this.showSection6 = false;
-                break;
-            case 'section2':
-                this.showSection1 = false;
-                this.showSection2 = true;
-                this.showSection3 = false;
-                this.showSection4 = false;
-                this.showSection5 = false;
-                this.showSection6 = false;
-                break;
-            case 'section3':
-                this.showSection1 = false;
-                this.showSection2 = false;
-                this.showSection3 = true;
-                this.showSection4 = false;
-                this.showSection5 = false;
-                this.showSection6 = false;
-                break;
-            case 'section4':
-                this.showSection1 = false;
-                this.showSection2 = false;
-                this.showSection3 = false;
-                this.showSection4 = true;
-                this.showSection5 = false;
-                this.showSection6 = false;
-                break;
-            case 'section5':
-                this.showSection1 = false;
-                this.showSection2 = false;
-                this.showSection3 = false;
-                this.showSection4 = false;
-                this.showSection5 = true;
-                this.showSection6 = false;
-                break;
-            case 'section6':
-                this.showSection1 = false;
-                this.showSection2 = false;
-                this.showSection3 = false;
-                this.showSection4 = false;
-                this.showSection5 = false;
-                this.showSection6 = true;
-                this.tallyPoints();
-                break;
-            default:
-                this.showSection1 = true;
-                this.showSection2 = false;
-                this.showSection3 = false;
-                this.showSection4 = false;
-                this.showSection5 = false;
-                this.showSection6 = false;
-        }
-    }
+    // clicked(item) {
+    //     switch (item) {
+    //         case 'section1':
+    //             this.showSection1 = true;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section2':
+    //             this.showSection1 = false;
+    //             this.showSection2 = true;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section3':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = true;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section4':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = true;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section5':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = true;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section6':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = true;
+    //             this.tallyPoints();
+    //             break;
+    //         default:
+    //             this.showSection1 = true;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //     }
+    // }
 
     tallyPoints() {
         var factorPoints = 0;
@@ -222,31 +227,31 @@ export class SuitabilityFormComponent {
         if (this.totalPoints < 18) { this.warning = true; }
     }
 
-    next(event, nextSection) {
-        switch (nextSection) {
-            case 'section2':
-                this.showSectionBtn2 = true;
-                this.clicked(nextSection);
-                break;
-            case 'section3':
-                this.showSectionBtn3 = true;
-                this.clicked(nextSection);
-                break;
-            case 'section4':
-                this.showSectionBtn4 = true;
-                this.clicked(nextSection);
-                break;
-            case 'section5':
-                this.showSectionBtn5 = true;
-                this.clicked(nextSection);
-                break;
-            case 'section6':
-                this.showSectionBtn6 = true;
-                this.clicked(nextSection);
-                break;
-            default:
-        }
-    }
+    // next(event, nextSection) {
+    //     switch (nextSection) {
+    //         case 'section2':
+    //             this.showSectionBtn2 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section3':
+    //             this.showSectionBtn3 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section4':
+    //             this.showSectionBtn4 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section5':
+    //             this.showSectionBtn5 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section6':
+    //             this.showSectionBtn6 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         default:
+    //     }
+    // }
 
     validate() {
         if (this.client.firstName && this.client.lastName && this.client.campus) {
@@ -278,7 +283,7 @@ export class SuitabilityFormComponent {
                 "Please enter a student number or select 'No' for 'Attended Gerogian?'",
                 'warning'
             );
-            this.clicked('section1');
+            this.selectedSection = 1;
           }
           if (this.client.email == null || this.client.email === "") {
             if (this.client.campus === 'Barrie') {
@@ -300,7 +305,7 @@ export class SuitabilityFormComponent {
             }).then(isConfirm => {
               if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
                 this.client.email = "";
-                this.clicked('section1');
+                this.selectedSection = 1;
               } else if (isConfirm) {
                 this.checkSuitability();
               }
@@ -316,7 +321,7 @@ export class SuitabilityFormComponent {
               "Please complete the first three fields in the 'Client Info' section",
               'warning'
           );
-          this.clicked('section1');
+          this.selectedSection = 1;
         }
     }
 
@@ -333,7 +338,7 @@ export class SuitabilityFormComponent {
             allowOutsideClick: false
         }).then(isConfirm => {
           if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
-            this.clicked('section2');
+            this.selectedSection = 2;
           } else if (isConfirm) {
             this.saveClient();
           }
@@ -366,14 +371,14 @@ export class SuitabilityFormComponent {
                   'Please enter a different first and last name.',
                   'warning'
               );
-              this.clicked('section1');
+              this.selectedSection = 1;
             } else if (client.msg === "email in use") {
               swal(
                   'Email already in use',
                   'Please enter a different email.',
                   'warning'
               );
-              this.clicked('section1');
+              this.selectedSection = 1;
             } else if (client.msg === "incorrect email format") {
               if (this.client.email == null) {
                 swal.close();
@@ -384,7 +389,7 @@ export class SuitabilityFormComponent {
                     'Please enter a proper email.',
                     'warning'
                 );
-                this.clicked('section1');
+                this.selectedSection = 1;
               }
             }  else if (client.result === "success") {
               console.log(client.userID);
@@ -417,12 +422,27 @@ export class SuitabilityFormComponent {
                   'Something went wrong, please try again.',
                   'warning'
               );
-              this.clicked('section1');
+              this.selectedSection = 1;
             }
           })
           .catch(error => {
             console.log("Error " + error );
           });
+    }
+
+    onDateChange(birthdate : string ) {
+      var years = moment().diff(birthdate, 'years');
+      if (years >= 16 && years <= 18) {
+        this.suitabilityForm.ageRange = "16-18 years old";
+      } else if (years >= 19 && years <= 29) {
+        this.suitabilityForm.ageRange = "19-29 years old";
+      } else if (years >= 30 && years <= 44) {
+        this.suitabilityForm.ageRange = "30-44 years old";
+      } else if (years >= 45 && years <= 65) {
+        this.suitabilityForm.ageRange = "45-65 years old";
+      } else if (years > 65) {
+        this.suitabilityForm.ageRange = "65+ years old";
+      }
     }
 
     displayErrorAlert(error) {

@@ -538,11 +538,11 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.suitabilityForm = new SuitabilityForm();
     this.suitabilityForm.transcript = false;
-    this.suitabilityForm.appropriateGoal = false;
-    this.suitabilityForm.isValidAge = false;
+    this.suitabilityForm.appropriateGoal = true;
+    this.suitabilityForm.isValidAge = true;
     this.suitabilityForm.governmentID = false;
     this.suitabilityForm.schoolRegistration = false;
-    this.suitabilityForm.availableDuringClass = false;
+    this.suitabilityForm.availableDuringClass = true;
     this.suitabilityForm.factorHealth = false;
     this.suitabilityForm.factorInstructions = false;
     this.suitabilityForm.factorCommunication = false;
@@ -670,6 +670,13 @@ export class ClientStatusComponent implements OnInit {
     this.resetView();
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
+    if (this.suitabilityForm.incomeSource === "Other") {
+      this.suitabilityForm.incomeSource = "Other";
+    }
+    if (this.suitabilityForm.incomeSource.includes("Other - ")) {
+      this.suitabilityForm.incomeSourceOther = this.suitabilityForm.incomeSource.split("Other - ")[1];
+      this.suitabilityForm.incomeSource = "Other";
+    }
     this.selectedCourseTypes = [];
     if (this.suitabilityForm.selectedCourseTypes != null) {
       for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
