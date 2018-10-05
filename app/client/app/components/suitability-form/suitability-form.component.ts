@@ -255,8 +255,8 @@ export class SuitabilityFormComponent {
 
     validate() {
         if (this.client.firstName && this.client.lastName && this.client.campus) {
-          var birthday = new Date(this.client.birthday);
-          var birthdayFormat = moment(birthday).format('DD-MM-YYYY');
+          var birthdate = new Date(this.client.birthdate);
+          var birthdateFormat = moment(birthdate).format('DD-MM-YYYY');
           this.client.inquiryDate = this.date;
           if (this.phone1) {
             this.client.phone = this.client.phone + " Cell";

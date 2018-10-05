@@ -249,7 +249,7 @@ export class AttendanceListComponent implements OnInit {
                   'success'
                 );
                 this.attendanceView = false;
-                // this.router.navigate(['/attendance-report']);
+                this.router.navigate(['/attendance-report']);
               } else {
                 swal(
                   'Error',

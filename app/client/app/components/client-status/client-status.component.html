@@ -144,7 +144,9 @@
                         <label class="control-label">Student Number: </label>
                         <input class="form-control" type="text" [(ngModel)]="clientEdit.studentNumber" />
                         <label class="control-label">Email: </label>
-                        <input class="form-control" type="email" [(ngModel)]="clientEdit.email" /><br />
+                        <input class="form-control" type="email" [(ngModel)]="clientEdit.email" />
+                        <label class="control-label">Date of Birth: </label><br />
+                        <p-calendar [(ngModel)]="clientEdit.birthdate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar> <span style="margin-left:35px"></span> (DD/MM/YYYY)
                         <div class="well">
                           <label class="control-label">Phone: </label><br />
                           <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.phone" placeholder="(999) 999-9999"></p-inputMask>

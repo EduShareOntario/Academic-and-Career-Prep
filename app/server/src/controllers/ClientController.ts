@@ -96,7 +96,7 @@ class ClientController {
                               client.firstName + "', '" +
                               client.lastName + "', '" +
                               client.inquiryDate + "', '" +
-                              client.birthday + "', '" +
+                              client.birthdate + "', '" +
                               client.phone + "', '" +
                               client.allowDetailedMessage + "', '" +
                               client.okayToText + "', '" +
@@ -371,6 +371,7 @@ class ClientController {
                         + "', allowDetailedMessage ='" + client.allowDetailedMessage
                         + "', okayToText='" + client.okayToText
                         + "', alternateNumber='" + client.alternateNumber
+                        + "', birthdate='" + client.birthdate
                         + "', allowDetailedMessageAlternate='" + client.allowDetailedMessageAlternate
                         + "', okayToTextAlternate='" + client.okayToTextAlternate
                         + "', comments='" + client.comments
