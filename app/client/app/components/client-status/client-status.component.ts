@@ -15,6 +15,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 declare var swal: any;
 declare var saveAs: any;
 declare var FileSaver: any;
+declare var moment: any;
 
 @Component({
   selector: 'client-status',
@@ -538,11 +539,11 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.suitabilityForm = new SuitabilityForm();
     this.suitabilityForm.transcript = false;
-    this.suitabilityForm.appropriateGoal = false;
-    this.suitabilityForm.isValidAge = false;
+    this.suitabilityForm.appropriateGoal = true;
+    this.suitabilityForm.isValidAge = true;
     this.suitabilityForm.governmentID = false;
     this.suitabilityForm.schoolRegistration = false;
-    this.suitabilityForm.availableDuringClass = false;
+    this.suitabilityForm.availableDuringClass = true;
     this.suitabilityForm.factorHealth = false;
     this.suitabilityForm.factorInstructions = false;
     this.suitabilityForm.factorCommunication = false;
@@ -560,6 +561,12 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.clientEdit = client;
     var splitPhone = this.clientEdit.phone.split(' ');
+    if (this.clientEdit.birthdate === 'undefined') {
+      this.clientEdit.birthdate = '';
+    } else {
+      var birthdate = new Date(this.clientEdit.birthdate);
+      this.clientEdit.birthdate = moment(birthdate).format('DD/MM/YYYY');
+    }
     if (this.clientEdit.phone.indexOf('+1') !== -1) {
       this.long1 = true;
       this.clientEdit.phone = splitPhone[1] + " " + splitPhone[2];
@@ -670,6 +677,13 @@ export class ClientStatusComponent implements OnInit {
     this.resetView();
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
+    if (this.suitabilityForm.incomeSource === "Other") {
+      this.suitabilityForm.incomeSource = "Other";
+    }
+    if (this.suitabilityForm.incomeSource.includes("Other - ")) {
+      this.suitabilityForm.incomeSourceOther = this.suitabilityForm.incomeSource.split("Other - ")[1];
+      this.suitabilityForm.incomeSource = "Other";
+    }
     this.selectedCourseTypes = [];
     if (this.suitabilityForm.selectedCourseTypes != null) {
       for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {

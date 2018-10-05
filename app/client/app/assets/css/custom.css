@@ -3,6 +3,10 @@ html, body {
   margin: 0;
 }
 
+.h1, .h2, .h3, h1, h2, h3 {
+  margin: 10px 0px;
+}
+
 .navbar {
   border-radius: 0px;
 }
@@ -20,16 +24,12 @@ html, body {
 }
 
 .well {
-  background-color: #FFF;
   border-radius: 0px;
+  padding: 20px;
 }
 
 .form-control {
   border-radius: 0px;
-}
-
-.well {
-    background-color: #EFF0F1;
 }
 
 li>a>i {
@@ -47,7 +47,7 @@ li>a>i {
 .info_seperate {
   width: 100%;
   height: 1px;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #7DB1D5;
   margin-bottom: 10px;
 }
 
@@ -73,26 +73,25 @@ li>a>i {
   width: 100%;
   height: 94px;
   position: absolute;
+  padding: 0px;
   top: 150;
   left: 0;
+  display:flex;
+  justify-content: space-between;
 }
 
 .inner_header_form h1 {
   color:#333E48;
-  margin: 24px 86px 0px 0px;
   text-align:center;
-}
-
-.inner_header_form span {
-  color:#333E48;
-  margin: 24px 0px 0px 50px;
-  float:left;
+  margin: auto 0;
+  flex:1;
 }
 
 .inner_header h1 {
   color:#333E48;
-  margin: 24px 0px 0px 50px;
   float:left;
+  margin: auto 0;
+  flex:1;
 }
 
 .inner_header h2 {
@@ -101,96 +100,71 @@ li>a>i {
   float:left;
 }
 
-.inner_header button:nth-of-type(2) {
-  position: absolute;
-  top: 22px;
-  right: 190px;
-  float: right;
-  width:130px;
-  font-size: 13pt;
-}
-
-.inner_header button:nth-of-type(1) {
-  position: absolute;
-  top: 22px;
-  right: 50px;
-  float: right;
+.inner_header button {
+  height: 50px;
+  margin: auto 15px auto 0px;
   width:130px;
   font-size: 13pt;
 }
 
 .spacer {
-  height:105px;
+  height:120px;
+}
+
+.backButton {
+  float: left;
+  margin: auto 15px;
+  font-size: 3em;
+  color: #dddd;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.backButton:hover {
+  transform: scale(1.1);
+}
+
+.greenButton,
+.greyButton,
+.orangeButton,
+.lightBlueButton,
+.nextButton {
+  text-align: center;
+  width: 98px;
+  height: 50px;
+  cursor: pointer;
+  color: #fff;
+  display: inline;
+  border: 0px solid;
+  transition: 0.1s ease;
+}
+
+.greenButton:hover,
+.greyButton:hover,
+.orangeButton:hover,
+.lightBlueButton:hover,
+.nextButton:hover {
+  transform: scale(1.1);
+}
+
+.nextButton {
+  background-color: #004B87;
 }
 
 .greenButton {
-  text-align: center;
   background-color: #64a70b;
-  width:98px;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.2s ease;
-}
-
-.greenButton:hover {
-  transform: scale(1.1);
 }
 
 .greyButton {
-  text-align: center;
   background-color: #333f48;
-  position: absolute;
-  top: -89px;
-  width:98px;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.2s ease;
-}
-
-.greyButton:hover {
-  transform: scale(1.1);
 }
 
 .orangeButton {
-  text-align: center;
   background-color: #EA7200;
-  position: absolute;
-  top: -89px;
-  width:98px;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.2s ease;
-}
-
-.orangeButton:hover {
-  transform: scale(1.1);
 }
 
 .lightBlueButton {
-  text-align: center;
   background-color: #00778b;
-  position: absolute;
-  top: -89px;
-  width:98px;
-  cursor: pointer;
-  color: #fff;
-  display: inline;
-  padding: 10px 15px;
-  border: 0px solid;
-  transition: 0.2s ease;
-}
-
-.lightBlueButton:hover {
-  transform: scale(1.1);
 }
 
 .editButton {
@@ -202,7 +176,7 @@ li>a>i {
   color: #fff;
   display: inline;
   border: 0px solid;
-  transition: 0.2s ease;
+  transition: 0.1s ease;
 }
 
 .editButton:hover {
@@ -218,7 +192,7 @@ li>a>i {
   color: #fff;
   display: inline;
   border: 0px solid;
-  transition: 0.2s ease;
+  transition: 0.1s ease;
 }
 
 .deleteButton:hover {
@@ -234,7 +208,7 @@ li>a>i {
   color: #fff;
   display: inline;
   border: 0px solid;
-  transition: 0.2s ease;
+  transition: 0.1s ease;
 }
 
 .enrollButton:hover {
@@ -250,7 +224,7 @@ li>a>i {
   color: #fff;
   display: inline;
   border: 0px solid;
-  transition: 0.2s ease;
+  transition: 0.1s ease;
 }
 
 .dropToggleButton:hover {
@@ -366,16 +340,15 @@ li>a>i {
 
 .statusButton {
   position: absolute;
-  right: 20;
-  top: 20;
+  right: 20px;
+  top: 20px;
   cursor: pointer;
-  background-color: #fff;
   color: #004B87;
   display: inline;
   padding: 5px 15px;
   margin: 0 2 0 2;
   float: left;
-  transition: 0.2s ease;
+  transition: 0.1s;
 }
 
 .statusButton:hover {
@@ -401,7 +374,7 @@ li>a>i {
   float: left;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.1s;
 }
 
 .sectionButtons:hover {
@@ -411,7 +384,7 @@ li>a>i {
 
 .sectionBtnGroup {
   margin-bottom: 40px;
-  transition: 0.2s ease;
+  transition: 0.1s;
 }
 
 .sectionBtnGroup>li:focus, .sectionBtnGroup>li:hover {
@@ -440,13 +413,13 @@ li>a>i {
   box-shadow: 5px 5px 20px #3333;
   z-index: 1;
   right:50px;
-  transition: all 0.2s ease-in;
+  transition: all 0.1s;
 }
 
 .closeMenu {
   cursor: pointer;
   float:right;
-  transition: 0.2s ease-in;
+  transition: 0.1s;
 }
 
 .closeMenu:hover {

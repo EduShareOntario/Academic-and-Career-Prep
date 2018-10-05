@@ -77,7 +77,7 @@ class StaffController {
                                   };
                                   new MailService().sendMessage("Welcome Staff", mailOptions);
                                 }
-                                new ActivityService().reportActivity('staff', staff.userType + ' User Created', 'success', id[0].userID, currentUserID, req.body.firstName + ' ' + req.body.lastName + ' has been created as a new' + staff.userType + ' user. (Notify: ' + staff.notify + ')');
+                                new ActivityService().reportActivity('staff', staff.userType + ' User Created', 'success', id[0].userID, currentUserID, `${req.body.firstName} ${req.body.lastName} as been created as a new '${staff.userType}' user. (Notify: ${staff.notify})`);
                                 res.send({ result: "success", title: "New User Created!", msg: "Staff user has been successfully created!", serverMsg: "" });
                               }).catch(function(err) {
                                 console.log("insert staff " + err);
@@ -288,7 +288,7 @@ class StaffController {
   getSiteActivity(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function(currentUserID) {
+        requiredAuth: ["Admin", "Staff"], done: function(currentUserID) {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)

@@ -10,7 +10,7 @@ export class Client {
     fullName: string;
     firstName: string;
     lastName: string;
-    birthday: string;
+    birthdate: string;
     email: string;
     phone: string;
     okayToText: boolean;

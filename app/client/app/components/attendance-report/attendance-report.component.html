@@ -2,12 +2,12 @@
   <div class="row" *ngIf="data && studentReport">
     <div class="spacer"></div>
     <div class="inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Attendance Report (Student View)</strong></h1>
+      <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+      <h1><strong> Attendance Report (Student View)</strong></h1>
     </div>
     <div class="col-md-3">
-      <h2>Students</h2>
       <p-inputSwitch onLabel="Course Report" offLabel="Student Report" [(ngModel)]="studentReport"></p-inputSwitch>
-      <hr>
+      <br/>
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
@@ -25,7 +25,7 @@
     </div>
     <div *ngIf="studentAttendanceView" class="col-md-9">
       <h2>Report for {{ student.firstName }}</h2>
-      <div (click)="overallStatus($event)" class="statusButton" title="View overall status"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+      <div (click)="overallStatus($event)" class="statusButton" title="View overall status"><i class="fas fa-chart-pie fa-2x" aria-hidden="true"></i></div>
       <hr>
       <div class="col-md-12" style="text-align:center; margin-bottom:25px;">
         <div class="col-md-4">
@@ -71,12 +71,12 @@
   <div class="row" *ngIf="data && !studentReport">
     <div class="spacer"></div>
     <div class="inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Attendance Report (Course View)</strong></h1>
+      <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+      <h1><strong>Attendance Report (Course View)</strong></h1>
     </div>
     <div class="col-md-3">
-      <h2>Courses</h2>
       <p-inputSwitch onLabel="Course Report" offLabel="Student Report" [(ngModel)]="studentReport"></p-inputSwitch>
-      <hr>
+      <br/>
       <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="courses | courseFilter : filterQuery" [responsive]="true">
         <p-column field="courseName" header="Name" [sortable]="true"></p-column>
@@ -94,17 +94,26 @@
     </div>
     <div *ngIf="courseAttendanceView" class="col-md-9">
       <h2>{{ course.courseName }} Report</h2>
-      <div (click)="overallStatus($event)" class="statusButton" title="View overall status"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+      <div (click)="overallStatus($event)" class="statusButton" title="View overall status"><i class="fas fa-chart-pie fa-2x" aria-hidden="true"></i></div>
       <hr>
       <div class="col-md-12" style="text-align:center">
-        <div class="well col-md-4" (click)="filterStaff('total')">
-          <h2><strong style="color:red">{{ classAbsenceTotal }}</strong> Total Absences</h2>
+        <div class="col-md-4">
+          <div class="filter_status" (click)="filterAttendance('absence')">
+            <h2><strong style="color:red">{{ classAbsenceTotal }}</strong> Absences</h2>
+            <hr/>
+          </div>
         </div>
-        <div class="well col-md-4" (click)="filterStaff('total')">
-          <h2><strong style="color:green">{{ classPresenceTotal }}</strong> Total Presences</h2>
+        <div class="col-md-4">
+          <div class="filter_status" (click)="filterAttendance('presence')">
+            <h2><strong style="color:green">{{ classPresenceTotal }}</strong> Presences</h2>
+            <hr/>
+          </div>
         </div>
-        <div class="well col-md-4" (click)="filterStaff('total')">
-          <h2><strong style="color:#FFA500">{{ classMadeContactTotal }}</strong> Total Made Contact</h2>
+        <div class="col-md-4">
+          <div class="filter_status" (click)="filterAttendance('madeContact')">
+            <h2><strong style="color:#FFA500">{{ classMadeContactTotal }}</strong> Made Contact</h2>
+            <hr/>
+          </div>
         </div>
       </div>
       <table *ngIf="!noStudentsEnrolled" class="table table-striped">

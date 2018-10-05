@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StaffService } from "../../services/staff.service";
+import { StudentService } from "../../services/student.service";
 import { User } from "../../models/user";
 import { Router } from '@angular/router';
 declare var swal: any;
@@ -21,7 +22,7 @@ export class StaffManageComponent implements OnInit {
     staffNumber: any;
     instructorNumber: any;
 
-    constructor(private router: Router, private staffService: StaffService) {
+    constructor(private router: Router, private staffService: StaffService, private studentService: StudentService) {
 
     }
 
@@ -49,6 +50,23 @@ export class StaffManageComponent implements OnInit {
               this.usersBackup = this.users;
               this.usersLength = users.length;
               this.updateStats();
+            }
+          })
+          .catch(error => this.error = error);
+    }
+
+    runAttendanceCheck() {
+        this.studentService
+          .manualAttendanceCheck()
+          .then(result => {
+            if ((result as any).result === "error") {
+              this.displayErrorAlert((result as any));
+            } else {
+              swal(
+                  result.title,
+                  result.msg,
+                  'success'
+              );
             }
           })
           .catch(error => this.error = error);

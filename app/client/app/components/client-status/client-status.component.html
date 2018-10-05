@@ -2,12 +2,11 @@
   <div class="row" *ngIf="data">
     <div class="spacer"></div>
     <div class="col-md-11 inner_header">
-      <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Manage Clients</strong></h1>
+      <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+      <h1><strong>Manage Clients</strong></h1>
       <button class="orangeButton" (click)="addClient()" title="Add new client"><i class="fa fa-plus"></i> New Client</button>
     </div>
     <div class="col-md-7">
-      <h2>Clients</h2>
-      <hr>
       <div class="error" *ngIf="error">{{error}}</div>
       <input placeholder="Filter by client name" class="form-control" [(ngModel)]="filterQuery" />
       <div style="overflow:visible; position:relative;">
@@ -61,20 +60,19 @@
     </div>
     <div class="col-md-5 sticky">
       <div *ngIf="statusReport">
-        <h2>Status Report</h2>
-        <hr>
         <div class="well">
           <div style="margin-bottom:100px;">
             <div style="font-size:1.5em;text-align:center;width:30%;float:left">Total clients<br />
-              <span style="font-size:1.3em;color:#333F48">{{ clientTotal }}</span>
+              <span style="font-size:1.3em;color:#004B87">{{ clientTotal }}</span>
             </div>
             <div style="font-size:1.5em;text-align:center;width:70%;float:left">Current Default Password <br />
-              <span style="font-size:1.3em;color:#333F48">Georgian2018
+              <span style="font-size:1.3em;color:#004B87">Georgian2018
                 <!-- <button class="btn btn-warning btn-xs" style="height:auto;padding:5px 5px;margin-bottom:6px;" (click)="editDefaultPass()" title="Edit Default Pass">
                 <i class="fas fa-pencil-alt fa-lg"></i></button> -->
               </span>
             </div>
           </div>
+          <hr>
           <div style="display: block">
             <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [colors]="doughnutChartColors" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
             </canvas>
@@ -82,10 +80,10 @@
         </div>
       </div>
       <div *ngIf="clientView">
-        <h2>Information for {{clientView.firstName + " " + clientView.lastName}}</h2>
-        <div (click)="showStatusReport()" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
-        <hr>
         <div class="well">
+          <h2>{{clientView.firstName + " " + clientView.lastName}}</h2>
+          <div (click)="showStatusReport()" class="statusButton" title="View status report"><i class="fas fa-chart-pie fa-2x" aria-hidden="true"></i></div>
+          <hr>
           <ul class="sectionBtnGroup col-sm-12">
             <li class="sectionButtons" [ngClass]="{active_tab: showGeneral || showGeneralInfoEdit}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
               <h4>General Info</h4></li>
@@ -103,33 +101,34 @@
                       <br />
                       <div class="form-group">
                         <h3>Viewing General Info for {{ clientView.firstName }} <i class="fas fa-pencil-alt editIcon" (click)="editGeneralInfo(clientView)" aria-hidden="true" title="Edit general info for {{ clientView.firstName }}"></i></h3>
+                        <hr>
                         <label class="control-label">id: </label> {{clientView.userID}}
                         <div class="info_seperate"></div>
-                        <label class="control-label">Inquiry Date: </label> {{clientView.inquiryDate | date}}
+                        <label class="control-label">Inquiry Date:</label><span *ngIf="clientView.inquiryDate !== 'undefined'"> {{clientView.inquiryDate | date}}</span>
                         <div class="info_seperate"></div>
-                        <label class="control-label">Student Number: </label> {{clientView.studentNumber}}
+                        <label class="control-label">Student Number:</label> {{clientView.studentNumber}}
                         <div class="info_seperate"></div>
-                        <label class="control-label">First Name: </label> {{clientView.firstName}}
+                        <label class="control-label">First Name:</label> {{clientView.firstName}}
                         <div class="info_seperate"></div>
-                        <label class="control-label">Last Name: </label> {{clientView.lastName}}
+                        <label class="control-label">Last Name:</label> {{clientView.lastName}}
                         <div class="info_seperate"></div>
-                        <label *ngIf="clientView.birthdate" class="control-label">Birth Date: </label> {{clientView.birthdate}}
+                        <label class="control-label">Birth Date:</label><span *ngIf="clientView.birthdate !== 'undefined'"> {{clientView.birthdate | date}}</span>
                         <div class="info_seperate"></div>
-                        <label class="control-label">Email: </label> {{clientView.email}}
+                        <label class="control-label">Email:</label> {{clientView.email}}
                         <div class="info_seperate"></div>
-                        <label class="control-label">Phone: </label> {{clientView.phone}}
+                        <label class="control-label">Phone:</label> {{clientView.phone}}
                         <div class="info_seperate"></div>
-                        <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToText}}
+                        <label class="control-label" style="margin-left:15px">- Okay to Text?:</label> {{clientView.okayToText}}
                         <div class="info_seperate"></div>
-                        <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessage}}
+                        <label class="control-label" style="margin-left:15px">- Detailed Message?:</label> {{clientView.allowDetailedMessage}}
                         <div class="info_seperate"></div>
                         <label class="control-label">Alternate Phone: </label> {{clientView.alternateNumber}}
                         <div class="info_seperate"></div>
-                        <label class="control-label" style="margin-left:15px">- Okay to Text?: </label> {{clientView.okayToTextAlternate}}
+                        <label class="control-label" style="margin-left:15px">- Okay to Text?:</label> {{clientView.okayToTextAlternate}}
                         <div class="info_seperate"></div>
-                        <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{clientView.allowDetailedMessageAlternate}}
+                        <label class="control-label" style="margin-left:15px">- Detailed Message?:</label> {{clientView.allowDetailedMessageAlternate}}
                         <div class="info_seperate"></div>
-                        <label class="control-label">Comments: </label> {{clientView.comments}}
+                        <label class="control-label">Comments:</label> {{clientView.comments}}
                         <div class="info_seperate"></div>
                       </div>
                     </div>
@@ -145,7 +144,9 @@
                         <label class="control-label">Student Number: </label>
                         <input class="form-control" type="text" [(ngModel)]="clientEdit.studentNumber" />
                         <label class="control-label">Email: </label>
-                        <input class="form-control" type="email" [(ngModel)]="clientEdit.email" /><br />
+                        <input class="form-control" type="email" [(ngModel)]="clientEdit.email" />
+                        <label class="control-label">Date of Birth: </label><br />
+                        <p-calendar [(ngModel)]="clientEdit.birthdate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar> <span style="margin-left:35px"></span> (DD/MM/YYYY)
                         <div class="well">
                           <label class="control-label">Phone: </label><br />
                           <p-inputMask mask="(999) 999-9999" [(ngModel)]="clientEdit.phone" placeholder="(999) 999-9999"></p-inputMask>
@@ -177,6 +178,7 @@
                       <br />
                       <div class="form-group">
                         <h3>Viewing Suitability Info for {{ clientView.firstName }}  <i class="fas fa-pencil-alt editIcon" (click)="editSuitability(clientView)" aria-hidden="true" title="Edit suitability info for {{ clientView.firstName }}"></i></h3>
+                        <hr>
                         <label class="control-label">Transcript: </label> {{suitabilityView.transcript}}
                         <div class="info_seperate"></div>
                         <label class="control-label">Course Interests: </label> {{suitabilityView.selectedCourseTypes}}
@@ -263,18 +265,16 @@
                         <h3>Editing Suitability for {{ clientView.firstName }}</h3>
                         <hr>
                       </div>
-                      <label class="col-md-3 control-label">Course Interests: </label>
-                      <div class="col-md-9">
-                        <p-multiSelect [options]="courseTypes" [(ngModel)]="selectedCourseTypes" optionLabel="name"></p-multiSelect>
+                      <div class="col-md-12">
+                        <label class="text-nowrap control-label">Course Interests: </label>
+                        <p-multiSelect [options]="courseTypes" [(ngModel)]="selectedCourseTypes" optionLabel="name" class="col-md-12"></p-multiSelect>
                       </div>
-
-                      <label class="col-md-3 control-label">Goal: </label>
-                      <div class="col-md-9">
+                      <div class="col-md-12">
+                        <label class="text-nowrap control-label">Goal: </label>
                         <input class="form-control" type="text" [(ngModel)]="suitabilityForm.goal" />
                       </div>
-
-                      <label class="col-md-3 control-label">Transition Date: </label>
-                      <div class="col-md-9">
+                      <div class="col-md-12">
+                        <label class="text-nowrap control-label">Transition Date: </label>
                         <input class="form-control" type="date" [(ngModel)]="suitabilityForm.transitionDate" />
                       </div>
                       <div>
@@ -397,7 +397,11 @@
                             <option value="International Student">International Student</option>
                             <option value="Crown Ward">Crown Ward</option>
                             <option value="Second Career">Second Career</option>
+                            <option value="Other">Other</option>
                           </select>
+                          <div *ngIf="suitabilityForm.incomeSource === 'Other'">
+                            <input class="form-control" type="text" [(ngModel)]="suitabilityForm.incomeSourceOther" placeholder="Please specify..." />
+                          </div>
                         </div>
                       </div>
                       <div class="form-group margin">
@@ -444,7 +448,7 @@
                           <button *ngIf="suitabilityForm.factorHealth === true" (click)="suitabilityForm.factorHealth = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorHealth === false || suitabilityForm.factorHealth === 'undefined' " (click)="suitabilityForm.factorHealth = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has health problems that may prevent client from working effectively
+                            Health problems that may prevent client from working effectively
                           </label>
                         </div>
 
@@ -452,7 +456,7 @@
                           <button *ngIf="suitabilityForm.factorInstructions === true" (click)="suitabilityForm.factorInstructions = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorInstructions === false || suitabilityForm.factorInstructions === 'undefined'" (click)="suitabilityForm.factorInstructions = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has difficulty understanding instructions
+                            Difficulty understanding instructions
                           </label>
                         </div>
 
@@ -460,7 +464,7 @@
                           <button *ngIf="suitabilityForm.factorCommunication === true" (click)="suitabilityForm.factorCommunication = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorCommunication === false || suitabilityForm.factorCommunication === 'undefined'" (click)="suitabilityForm.factorCommunication = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has difficulty communicating
+                            Difficulty communicating
                           </label>
                         </div>
 
@@ -468,7 +472,7 @@
                           <button *ngIf="suitabilityForm.factorLanguage === true" (click)="suitabilityForm.factorLanguage = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorLanguage === false || suitabilityForm.factorLanguage === 'undefined'" (click)="suitabilityForm.factorLanguage = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has language barrier
+                            Language barrier
                           </label>
                         </div>
 
@@ -476,7 +480,7 @@
                           <button *ngIf="suitabilityForm.factorComputer === true" (click)="suitabilityForm.factorComputer = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorComputer === false || suitabilityForm.factorComputer === 'undefined'" (click)="suitabilityForm.factorComputer = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has limited computer skills
+                            Limited computer skills
                           </label>
                         </div>
 
@@ -484,7 +488,7 @@
                           <button *ngIf="suitabilityForm.factorHousing === true" (click)="suitabilityForm.factorHousing = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorHousing === false || suitabilityForm.factorHousing === 'undefined'" (click)="suitabilityForm.factorHousing = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client has housing instability
+                            Housing instability
                           </label>
                         </div>
 
@@ -500,7 +504,7 @@
                           <button *ngIf="suitabilityForm.factorDaycare === true" (click)="suitabilityForm.factorDaycare = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorDaycare === false || suitabilityForm.factorDaycare === 'undefined'" (click)="suitabilityForm.factorDaycare = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client does not have reliable daycare
+                            Does not have reliable daycare
                           </label>
                         </div>
 
@@ -508,7 +512,7 @@
                           <button *ngIf="suitabilityForm.factorInternet === true" (click)="suitabilityForm.factorInternet = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorInternet === false || suitabilityForm.factorInternet === 'undefined'" (click)="suitabilityForm.factorInternet = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client does not have phone/internet access
+                            Does not have phone/internet access
                           </label>
                         </div>
 
@@ -516,7 +520,7 @@
                           <button *ngIf="suitabilityForm.factorPersonal === true" (click)="suitabilityForm.factorPersonal = false" class="btn btn-success booleanBtn">Yes</button>
                           <button *ngIf="suitabilityForm.factorPersonal === false || suitabilityForm.factorPersonal === 'undefined'" (click)="suitabilityForm.factorPersonal = true" class="btn btn-warning booleanBtn">No</button>
                           <label class="control-label">
-                            Client is going through difficulties in his/her personal life (legal, family, substance abuse, financial)
+                            Going through difficulties in his/her personal life (legal, family, substance abuse, financial)
                           </label>
                         </div>
                       </div>
@@ -594,7 +598,7 @@
                     </div>
                     <div *ngIf="showConsent" class="">
                       <h3>Viewing Consent Info for {{ clientView.firstName }}</h3>
-                      <br />
+                      <hr>
                       <div class="form-group">
                         <div *ngIf="clientView.editConsentRequest">
                           <strong><h3>{{clientView.firstName}} is requesting to edit: </h3></strong>
@@ -658,7 +662,7 @@
                     </div>
                     <div *ngIf="showLearningStyle">
                       <h3>Viewing Learning Style for {{ clientView.firstName }}</h3>
-                      <br />
+                      <hr>
                       <p><strong>{{clientView.firstName}} learns best by: </strong>{{ learningStyleView.learnBy }}</p>
                       <div>
                         <div style="display: block">
@@ -687,6 +691,7 @@
                     </div>
                     <div *ngIf="showFiles">
                       <h3>Viewing Files for {{ clientView.firstName }} <i class="fa fa-plus addIcon" (click)="addFile()" aria-hidden="true" title="Upload new file for {{ clientView.firstName }}"></i></h3>
+                      <hr>
                       <div style="overflow:visible; position:relative;">
                         <p-dataTable [value]="clientFiles | userFilter : filterQuery" [responsive]="true">
                           <p-column field="userID" header="UserID" [sortable]="true"></p-column>

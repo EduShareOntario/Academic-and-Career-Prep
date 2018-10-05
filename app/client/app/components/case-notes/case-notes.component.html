@@ -1,8 +1,9 @@
+<div class="spacer"></div>
+<div class="inner_header">
+  <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+  <h1><strong>Case Notes</strong></h1>
+</div>
 <div class="caseNotes">
-  <div class="spacer"></div>
-  <div class="inner_header">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span><strong> Case Notes</strong></h1>
-  </div>
   <div class="row" *ngIf="data">
     <div class="col-md-4">
       <h2>Students/Clients</h2>
@@ -27,7 +28,7 @@
         <button class="greenButton" style="float: right; margin: 5px" (click)="saveNote(notesView.userID)" title="Save note"><i class="fa fa-floppy-o " aria-hidden="true"></i> Submit</button>
       </div>
       <div style="clear:both"></div>
-      <div class="notesList well" *ngFor="let noteItem of notes">
+      <div class="notesList" *ngFor="let noteItem of notes">
         <em id="noteDate">{{noteItem.dateTime | date}}</em>
         <div *ngIf="noteItem.facultyUser !== 'Automated Message'" id="postedBy"><span style="color:#004B87">{{ noteItem.facultyUser }}</span> wrote: </div>
         <div *ngIf="noteItem.facultyUser === 'Automated Message'" id="postedBy"><span style="color:#FFCC14">{{ noteItem.facultyUser }}</span> states: </div>

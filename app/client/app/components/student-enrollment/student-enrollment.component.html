@@ -1,9 +1,10 @@
+<div class="spacer"></div>
+<div class="inner_header">
+  <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+  <h1>{{courseName}} Enrollment</h1>
+</div>
 <div class="row">
-  <div class="spacer"></div>
-  <div class="inner_header">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="far fa-arrow-alt-circle-left"></i></span> {{courseName}} Enrollment</h1>
-  </div>
-    <div *ngIf="enrollMultiple" class="col-lg-8">
+  <div *ngIf="enrollMultiple" class="col-lg-8">
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
           <p-column field="studentNumber" header="Number" [sortable]="true" [style]="{'width': '120px'}"></p-column>
