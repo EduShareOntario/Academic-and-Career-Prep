@@ -11,7 +11,6 @@ export class Client {
     firstName: string;
     lastName: string;
     birthdate: string;
-    placeholderBirthdate: string;
     email: string;
     phone: string;
     okayToText: boolean;

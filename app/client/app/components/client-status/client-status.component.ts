@@ -561,12 +561,6 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.clientEdit = client;
     var splitPhone = this.clientEdit.phone.split(' ');
-    // if (this.clientEdit.birthdate === 'undefined' || this.clientEdit.birthdate === 'Invalid date') {
-    //   this.clientEdit.birthdate = '';
-    // } else {
-    //   var birthdate = new Date(this.clientEdit.birthdate);
-    //   this.clientEdit.birthdate = moment(birthdate).format('DD/MM/YYYY');
-    // }
     if (this.clientEdit.phone.indexOf('+1') !== -1) {
       this.long1 = true;
       this.clientEdit.phone = splitPhone[1] + " " + splitPhone[2];
