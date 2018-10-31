@@ -658,7 +658,9 @@ export class ClientStatusComponent implements OnInit {
           );
           this.clientView.email = this.currentClientEmail;
         } else if ((result as any).result === 'success') {
-          this.showStatusReport();
+          //this.showStatusReport();
+          this.showGeneralInfoEdit = false;
+          this.showGeneral = true;
           swal(
             'Success!',
             'Client information has been updated!',

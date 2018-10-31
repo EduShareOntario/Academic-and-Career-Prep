@@ -84,6 +84,7 @@ export class StudentManageComponent implements OnInit {
     });
     swal.showLoading();
     this.getStudents();
+    this.getFiles();
   }
 
   getStudents() {
@@ -98,7 +99,6 @@ export class StudentManageComponent implements OnInit {
           for (let student of this.students) {
             student.fullName = student.firstName + " " + student.lastName;
           }
-          this.getFiles();
         }
       })
       .catch(error => this.error = error);
@@ -455,6 +455,7 @@ export class StudentManageComponent implements OnInit {
           this.getStudents();
           this.showGeneralInfoEdit = false;
           this.showGeneral = true;
+          this.studentInfoView = true;
         } else {
           swal(
             'Error',
