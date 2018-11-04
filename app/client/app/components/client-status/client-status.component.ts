@@ -320,12 +320,6 @@ export class ClientStatusComponent implements OnInit {
 
     var consentForms = this.getConsentFormByUserID(client.userID);
     this.clientConsentForms = consentForms;
-    // this.clientConsentForms.sort(function compare(a, b) {
-    //   var dateA = new Date(a.date.getTime());
-    //   var dateB = new Date(b.date.getTime());
-    //   return dateA - dateB;
-    // });
-    //this.consentView = consentForms[0];
 
     var learningStyleForm = this.getLearningStyleFormByFilter(client.userID);
     this.learningStyleView = learningStyleForm[0];
@@ -515,7 +509,6 @@ export class ClientStatusComponent implements OnInit {
             'Client record has been transfered to the student table.',
             'success'
           );
-          //this.router.navigate(['/students']);
           this.clientTotal = this.data.length;
         } else {
           swal(
@@ -605,8 +598,6 @@ export class ClientStatusComponent implements OnInit {
       title: 'Updating...'
     });
     swal.showLoading();
-    // var birthdate = new Date(this.clientEdit.birthdate);
-    // this.clientEdit.birthdate = moment(birthdate).format('MM/DD/YYYY');
     var phoneSplit = this.clientEdit.phone.split(' ');
     this.clientEdit.phone = phoneSplit[0] + " " + phoneSplit[1];
     if (this.phone1 === true) {
@@ -652,7 +643,6 @@ export class ClientStatusComponent implements OnInit {
           );
           this.clientView.email = this.currentClientEmail;
         } else if ((result as any).result === 'success') {
-          //this.showStatusReport();
           this.showGeneralInfoEdit = false;
           this.showGeneral = true;
           swal(
@@ -746,8 +736,6 @@ export class ClientStatusComponent implements OnInit {
           } else if ((result as any).result === 'success') {
             this.getClients();
             this.showStatusReport();
-            // var updatedClient = this.allClients.filter(x => x.userID === this.clientView.userID);
-            // this.showClientView(updatedClient[0]);
             this.document.body.scrollTop = 0;
             swal(
               'Success!',
