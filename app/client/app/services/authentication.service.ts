@@ -52,10 +52,14 @@ export class AuthService {
     }
 
     logout(): void {
-        // clear token remove user from local storage to log user out
-        this.token = null;
-        localStorage.removeItem('currentUser');
-        this.loggedUser.next(null);
+      // clear token remove user from local storage to log user out
+      this.token = null;
+      localStorage.removeItem('currentUser');
+      this.loggedUser.next(null);
+    }
+
+    authUser():void {
+
     }
 
     resetPassword(userID: number, password: string) {

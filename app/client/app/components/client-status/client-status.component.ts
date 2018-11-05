@@ -320,12 +320,6 @@ export class ClientStatusComponent implements OnInit {
 
     var consentForms = this.getConsentFormByUserID(client.userID);
     this.clientConsentForms = consentForms;
-    // this.clientConsentForms.sort(function compare(a, b) {
-    //   var dateA = new Date(a.date.getTime());
-    //   var dateB = new Date(b.date.getTime());
-    //   return dateA - dateB;
-    // });
-    //this.consentView = consentForms[0];
 
     var learningStyleForm = this.getLearningStyleFormByFilter(client.userID);
     this.learningStyleView = learningStyleForm[0];
@@ -515,7 +509,6 @@ export class ClientStatusComponent implements OnInit {
             'Client record has been transfered to the student table.',
             'success'
           );
-          //this.router.navigate(['/students']);
           this.clientTotal = this.data.length;
         } else {
           swal(
@@ -561,12 +554,6 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.clientEdit = client;
     var splitPhone = this.clientEdit.phone.split(' ');
-    if (this.clientEdit.birthdate === 'undefined') {
-      this.clientEdit.birthdate = '';
-    } else {
-      var birthdate = new Date(this.clientEdit.birthdate);
-      this.clientEdit.birthdate = moment(birthdate).format('DD/MM/YYYY');
-    }
     if (this.clientEdit.phone.indexOf('+1') !== -1) {
       this.long1 = true;
       this.clientEdit.phone = splitPhone[1] + " " + splitPhone[2];
@@ -656,7 +643,8 @@ export class ClientStatusComponent implements OnInit {
           );
           this.clientView.email = this.currentClientEmail;
         } else if ((result as any).result === 'success') {
-          this.showStatusReport();
+          this.showGeneralInfoEdit = false;
+          this.showGeneral = true;
           swal(
             'Success!',
             'Client information has been updated!',
@@ -748,8 +736,6 @@ export class ClientStatusComponent implements OnInit {
           } else if ((result as any).result === 'success') {
             this.getClients();
             this.showStatusReport();
-            // var updatedClient = this.allClients.filter(x => x.userID === this.clientView.userID);
-            // this.showClientView(updatedClient[0]);
             this.document.body.scrollTop = 0;
             swal(
               'Success!',
@@ -979,11 +965,20 @@ export class ClientStatusComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

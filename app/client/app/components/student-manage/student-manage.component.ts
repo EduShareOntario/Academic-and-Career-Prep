@@ -84,6 +84,7 @@ export class StudentManageComponent implements OnInit {
     });
     swal.showLoading();
     this.getStudents();
+    this.getFiles();
   }
 
   getStudents() {
@@ -98,7 +99,6 @@ export class StudentManageComponent implements OnInit {
           for (let student of this.students) {
             student.fullName = student.firstName + " " + student.lastName;
           }
-          this.getFiles();
         }
       })
       .catch(error => this.error = error);
@@ -455,6 +455,7 @@ export class StudentManageComponent implements OnInit {
           this.getStudents();
           this.showGeneralInfoEdit = false;
           this.showGeneral = true;
+          this.studentInfoView = true;
         } else {
           swal(
             'Error',
@@ -578,11 +579,20 @@ export class StudentManageComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {
