@@ -19,9 +19,7 @@ export class LearningStyleComponent {
   totalHearingPoints: number;
   totalDoingPoints: number;
   learnBy: any;
-  doubleChoice: any;
-  tripleChoice: any;
-  showThreeChoices: boolean = false;
+  multiChoice: any;
   currentUser: any;
   submitVisible: boolean = true;
 
@@ -99,30 +97,15 @@ export class LearningStyleComponent {
   }
 
   saveLearningStyle() {
-    if (!this.learnBy && !this.doubleChoice) {
+    if (!this.learnBy && !this.multiChoice) {
       swal(
           'Incomplete form',
           'Please fill out the form',
           'warning'
       );
-    } else if (this.tripleChoice) {
+    } else if (this.multiChoice) {
       swal({
-          title: 'You learn best by  ' + this.tripleChoice.firstChoice + ' and ' + this.tripleChoice.secondChoice + ' and ' + this.tripleChoice.thirdChoice,
-          text: "Is this correct?",
-          type: 'question',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          allowOutsideClick: false,
-          confirmButtonText: 'Yes!'
-      }).then(isConfirm => {
-        this.showThreeChoices = true;
-      }).catch(error => {
-        console.log(error);
-      });
-    } else if (this.doubleChoice) {
-      swal({
-          title: 'You learn best by ' + this.doubleChoice.firstChoice + ' and ' + this.doubleChoice.secondChoice,
+          title: 'You learn best by ' + this.multiChoice.firstChoice + ' and ' + this.multiChoice.secondChoice + '',
           text: "Is this correct?",
           type: 'question',
           showCancelButton: true,
@@ -142,11 +125,11 @@ export class LearningStyleComponent {
               confirmButtonColor: '#3085d6',
               cancelButtonColor: '#3085d6',
               allowOutsideClick: false,
-              cancelButtonText: this.doubleChoice.firstChoice,
-              confirmButtonText: this.doubleChoice.secondChoice
+              cancelButtonText: this.multiChoice.firstChoice,
+              confirmButtonText: this.multiChoice.secondChoice
           }).then(isConfirm => {
             if (isConfirm) {
-              this.learningStyleForm.learnBy = this.doubleChoice.secondChoice;
+              this.learningStyleForm.learnBy = this.multiChoice.secondChoice;
               this.clientService
                   .saveLearningStyle(this.learningStyleForm)
                   .then(client => {
@@ -155,7 +138,7 @@ export class LearningStyleComponent {
                   .catch(error => this.error = error);
             }
           }).catch(error => {
-            this.learningStyleForm.learnBy  = this.doubleChoice.firstChoice;
+            this.learningStyleForm.learnBy  = this.multiChoice.firstChoice;
             this.clientService
                 .saveLearningStyle(this.learningStyleForm)
                 .then(client => {
@@ -196,16 +179,6 @@ export class LearningStyleComponent {
 
   }
 
-  choosePreference(preference) {
-    this.learningStyleForm.learnBy = preference;
-    this.clientService
-        .saveLearningStyle(this.learningStyleForm)
-        .then(client => {
-            this.router.navigate(['/dashboard']);
-        })
-        .catch(error => this.error = error);
-  }
-
   tallyPoints() {
     var seeingPoints = 0;
     var hearingPoints = 0;
@@ -242,43 +215,29 @@ export class LearningStyleComponent {
     this.learningStyleForm.doing = this.totalDoingPoints;
 
     if (this.totalSeeingPoints > this.totalHearingPoints && this.totalSeeingPoints > this.totalDoingPoints) {
-      this.doubleChoice = null;
-      this.tripleChoice = null;
+      this.multiChoice = null;
       this.learnBy = "Seeing";
     } else if (this.totalHearingPoints > this.totalSeeingPoints && this.totalHearingPoints > this.totalDoingPoints) {
-      this.doubleChoice = null;
-      this.tripleChoice = null;
+      this.multiChoice = null;
       this.learnBy = "Hearing";
     } else if (this.totalDoingPoints > this.totalHearingPoints && this.totalDoingPoints > this.totalSeeingPoints) {
-      this.doubleChoice = null;
-      this.tripleChoice = null;
+      this.multiChoice = null;
       this.learnBy = "Doing";
-    } else if ((this.totalDoingPoints === this.totalSeeingPoints) && (this.totalHearingPoints === this.totalSeeingPoints)) {
-      this.learnBy = null;
-      this.doubleChoice = null;
-      this.tripleChoice = {
-        firstChoice: 'Seeing',
-        secondChoice: 'Doing',
-        thirdChoice: 'Hearing'
-      };
     } else if (this.totalDoingPoints === this.totalSeeingPoints) {
       this.learnBy = null;
-      this.tripleChoice = null;
-      this.doubleChoice = {
+      this.multiChoice = {
         firstChoice: 'Doing',
         secondChoice: 'Seeing'
       };
     } else if (this.totalDoingPoints === this.totalHearingPoints) {
       this.learnBy = null;
-      this.tripleChoice = null;
-      this.doubleChoice = {
+      this.multiChoice = {
         firstChoice: 'Doing',
         secondChoice: 'Hearing'
       };
     } else if (this.totalSeeingPoints === this.totalHearingPoints) {
       this.learnBy = null;
-      this.tripleChoice = null;
-      this.doubleChoice = {
+      this.multiChoice = {
         firstChoice: 'Seeing',
         secondChoice: 'Hearing'
       };

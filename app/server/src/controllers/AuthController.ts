@@ -26,8 +26,7 @@ class AuthController {
         if (user.length > 0) {
           if (bcrypt.compareSync(_password, user[0].password)) {
             new ActivityService().reportActivity('user', user[0].userType + ' Login', 'success', '', user[0].userID, _username + ' was successfully logged in.');
-            // expires in 12 hours
-            var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff", {expiresIn: 60*60*12});
+            var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff");
             var statusToken = { status: 200, body: { token: token, userID: user[0].userID, username: user[0].username, userType: user[0].userType, active: user[0].active } };
             response = JSON.stringify(statusToken);
           } else {
@@ -55,17 +54,10 @@ class AuthController {
       if (req.headers && req.headers.authorization) {
         jwt.verify(req.headers.authorization, 'f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff', function(err, decoded) {
           if (err) {
-            if (err.name === 'TokenExpiredError') {
-              var msg = "Session expired";
-            } else {
-              var msg = "There was an error in your request. Please try logging in again.";
-            }
-            console.log("Error - Authenticate user (Token Verification Error): " + err);
-            return res.send({ result: "error", title: "Auth Error", msg: msg, serverMsg: "" });
+            return res.send({ error: "There was an error" });
           } else {
             if (decoded === null || Object.keys(decoded).length === 0) {
-              console.log("Error - Authenticate user (No values in token): " + err);
-              return res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
+              return res.send({ error: "No values in token" });
             }
           }
           sql.connect(db).then(pool => {
@@ -75,7 +67,7 @@ class AuthController {
           }).then(user => {
               var hasSome = data.requiredAuth.some(function(v) {
                 return user[0].userType.indexOf(v) >= 0;
-              });
+              })
               if (hasSome) {
                 try {
                   data.done(decoded.userid);
@@ -84,21 +76,19 @@ class AuthController {
                   throw "There was an issue in the logic done after the authentication"; // This will throw to catch on line 83
                 }
               } else {
-                console.log("Error - Authenticate user (userID in token not found in DB): " + err);
-                res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
+                res.send({ status: '403' });
               }
             }).catch(function(err) {
-              console.log("Error - Authenticate user (Select Query): " + err);
-              res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
+              console.log("Error - Authenticate user: " + err);
+              res.send({ result: "error", title: "Error", msg: "There was an error with your request.", serverMsg: "" });
             });
         });
       } else {
-        console.log("Error - Authenticate user: No Headers.");
-        res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
+        res.send({ error: "No auth header" });
       }
     } catch (err) {
-      console.log("Error - Authenticate user (Catch): " + err);
-      res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
+      console.log("Error - Authenticate user: " + err);
+      res.send({ result: "error", title: "Error", msg: "There was an error authenticating the current user.", serverMsg: "" });
     }
   }
 
