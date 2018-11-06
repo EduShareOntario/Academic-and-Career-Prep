@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from "../../models/User";
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { StaffService } from "../../services/staff.service";
 declare var swal: any;
 
@@ -19,7 +19,7 @@ export class StaffDetailsComponent implements OnInit {
   fselected: any[] = [];
   id: any;
 
-  constructor(private router: Router, private staffService: StaffService, private route: ActivatedRoute) {
+  constructor(private staffService: StaffService, private route: ActivatedRoute) {
 
   }
 
@@ -162,20 +162,11 @@ export class StaffDetailsComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    if (error.title === "Auth Error") {
-      this.router.navigate(['/login']);
-      swal(
-        error.title,
-        error.msg,
-        'info'
-      );
-    } else {
-      swal(
+    swal(
         error.title,
         error.msg,
         'error'
-      );
-    }
+    );
   }
 
   goBack() {

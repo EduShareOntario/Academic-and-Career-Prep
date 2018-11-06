@@ -22,6 +22,20 @@ export class SuitabilityFormComponent {
     date: any;
     currentUser: any;
     navigated = false; // true if navigated here
+    // showSection1 = true;
+    // showSection2 = false;
+    // showSection3 = false;
+    // showSection4 = false;
+    // showSection5 = false;
+    // showSection6 = false;
+    //
+    // showSectionBtn1 = true;
+    // showSectionBtn2 = false;
+    // showSectionBtn3 = false;
+    // showSectionBtn4 = false;
+    // showSectionBtn5 = false;
+    // showSectionBtn6 = false;
+
     selectedSection = 1;
 
     warning = false;
@@ -77,6 +91,67 @@ export class SuitabilityFormComponent {
         }
       });
     }
+
+    // clicked(item) {
+    //     switch (item) {
+    //         case 'section1':
+    //             this.showSection1 = true;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section2':
+    //             this.showSection1 = false;
+    //             this.showSection2 = true;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section3':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = true;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section4':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = true;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section5':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = true;
+    //             this.showSection6 = false;
+    //             break;
+    //         case 'section6':
+    //             this.showSection1 = false;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = true;
+    //             this.tallyPoints();
+    //             break;
+    //         default:
+    //             this.showSection1 = true;
+    //             this.showSection2 = false;
+    //             this.showSection3 = false;
+    //             this.showSection4 = false;
+    //             this.showSection5 = false;
+    //             this.showSection6 = false;
+    //     }
+    // }
 
     tallyPoints() {
         var factorPoints = 0;
@@ -152,10 +227,36 @@ export class SuitabilityFormComponent {
         if (this.totalPoints < 18) { this.warning = true; }
     }
 
+    // next(event, nextSection) {
+    //     switch (nextSection) {
+    //         case 'section2':
+    //             this.showSectionBtn2 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section3':
+    //             this.showSectionBtn3 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section4':
+    //             this.showSectionBtn4 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section5':
+    //             this.showSectionBtn5 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         case 'section6':
+    //             this.showSectionBtn6 = true;
+    //             this.clicked(nextSection);
+    //             break;
+    //         default:
+    //     }
+    // }
+
     validate() {
         if (this.client.firstName && this.client.lastName && this.client.campus) {
           var birthdate = new Date(this.client.birthdate);
-          this.client.birthdate = moment(birthdate).format('DD/MM/YYYY');
+          var birthdateFormat = moment(birthdate).format('DD-MM-YYYY');
           this.client.inquiryDate = this.date;
           if (this.phone1) {
             this.client.phone = this.client.phone + " Cell";
@@ -291,6 +392,7 @@ export class SuitabilityFormComponent {
                 this.selectedSection = 1;
               }
             }  else if (client.result === "success") {
+              console.log(client.userID);
               var CurrentDate = moment().format();
               if (this.selectedCourseTypes.toString() !== '') {
               for (let courseType of this.selectedCourseTypes) {
@@ -344,20 +446,11 @@ export class SuitabilityFormComponent {
     }
 
     displayErrorAlert(error) {
-      if (error.title === "Auth Error") {
-        this.router.navigate(['/login']);
-        swal(
-          error.title,
-          error.msg,
-          'info'
-        );
-      } else {
-        swal(
-          error.title,
-          error.msg,
-          'error'
-        );
-      }
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
     }
 
     goBack() {

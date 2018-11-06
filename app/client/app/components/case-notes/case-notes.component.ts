@@ -165,20 +165,11 @@ export class CaseNotesComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    if (error.title === "Auth Error") {
-      this.router.navigate(['/login']);
-      swal(
-        error.title,
-        error.msg,
-        'info'
-      );
-    } else {
-      swal(
-        error.title,
-        error.msg,
-        'error'
-      );
-    }
+    swal(
+      error.title,
+      error.msg,
+      'error'
+    );
   }
 
   goBack() {

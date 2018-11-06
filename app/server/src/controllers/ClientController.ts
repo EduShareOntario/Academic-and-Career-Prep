@@ -1,7 +1,6 @@
 import express = require("express");
 import jwt = require('jsonwebtoken');
 import bcrypt = require('bcrypt');
-import moment = require("moment");
 import AuthController = require("../controllers/AuthController");
 const MailService = require("../services/MailService");
 const ActivityService = require("../services/ActivityService");
@@ -351,7 +350,6 @@ class ClientController {
                     client.username = client.firstName + client.lastName;
                     client.username = client.username.toLowerCase();
                     client.username = client.username.replace(/\s+/g, '');
-
                     for (let record of users) {
                       if (record.username === client.username) {
                         validated = false;
@@ -377,7 +375,7 @@ class ClientController {
                         + "', allowDetailedMessageAlternate='" + client.allowDetailedMessageAlternate
                         + "', okayToTextAlternate='" + client.okayToTextAlternate
                         + "', comments='" + client.comments
-                        + "' WHERE clientID = '" + client.clientID + "'";
+                        + "' WHERE clientID = '" + client.clientID + "'"
                       new sql.Request(connection)
                         .query(clientsQuery)
                         .then(function(clientsResult) {
