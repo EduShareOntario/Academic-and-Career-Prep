@@ -18,35 +18,31 @@ class AuthController {
       var _password: string = req.body.password;
       var response;
 
-      sql.connect(db)
-        .then(function(connection) {
-          sql.query
-            `SELECT * FROM Users WHERE username = ${_username}`
-            .then(function(user) {
-              if (user.length > 0) {
-                if (bcrypt.compareSync(_password, user[0].password)) {
-                  new ActivityService().reportActivity(user[0].userType + ' Login', 'success', user[0].userID, _username + ' was successfully logged in.');
-                  var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff");
-                  var statusToken = { status: 200, body: { token: token, userID: user[0].userID, username: user[0].username, userType: user[0].userType, active: user[0].active } };
-                  response = JSON.stringify(statusToken);
-                } else {
-                  new ActivityService().reportActivity(user[0].userType + ' Login', 'fail', user[0].userID, _username + ' attempted to log in but entered the wrong password.');
-                  response = false;
-                }
-              } else {
-                new ActivityService().reportActivity('Login', 'fail', '', 'Attempted login as: ' + _username + '. This username does not exist.');
-                response = false;
-              }
-              res.send(response);
-            }).catch(function(err) {
-              console.log("Error - Login: " + err);
-              res.send({ result: "error", title: "Error", msg: "There was an error logging in.", serverMsg: "" });
-            });
-        }).catch(function(err) {
-          console.log("DB Connection error - Login: " + err);
-          res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
-        });
-
+      sql.connect(db).then(pool => {
+        return pool.request()
+        .input('username', sql.VarChar(100), _username)
+        .query("SELECT * FROM Users WHERE username = @username")
+      }).then(user => {
+        if (user.length > 0) {
+          if (bcrypt.compareSync(_password, user[0].password)) {
+            new ActivityService().reportActivity('user', user[0].userType + ' Login', 'success', '', user[0].userID, _username + ' was successfully logged in.');
+            // expires in 12 hours
+            var token = jwt.sign({ userid: user[0].userID }, "f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff", {expiresIn: 60*60*12});
+            var statusToken = { status: 200, body: { token: token, userID: user[0].userID, username: user[0].username, userType: user[0].userType, active: user[0].active } };
+            response = JSON.stringify(statusToken);
+          } else {
+            new ActivityService().reportActivity('user', user[0].userType + ' Login', 'fail', '', user[0].userID, _username + ' attempted to log in but entered the wrong password.');
+            response = false;
+          }
+        } else {
+          new ActivityService().reportActivity('user', 'Login', 'fail', '', '', 'Attempted login as: ' + _username + '. This username does not exist.');
+          response = false;
+        }
+        res.send(response);
+      }).catch(function(err) {
+        console.log("Error - Login: " + err);
+        res.send({ result: "error", title: "Error", msg: "There was an error with your request.", serverMsg: "" });
+      });
     } catch (err) {
       console.log("Error - Login: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error logging in.", serverMsg: "" });
@@ -59,48 +55,50 @@ class AuthController {
       if (req.headers && req.headers.authorization) {
         jwt.verify(req.headers.authorization, 'f9b574a2fc0d77986cb7ebe21a0dea480f5f21931abfa5cf329a45ecc0c8e1ff', function(err, decoded) {
           if (err) {
-            return res.send({ error: "There was an error" });
+            if (err.name === 'TokenExpiredError') {
+              var msg = "Session expired";
+            } else {
+              var msg = "There was an error in your request. Please try logging in again.";
+            }
+            console.log("Error - Authenticate user (Token Verification Error): " + err);
+            return res.send({ result: "error", title: "Auth Error", msg: msg, serverMsg: "" });
           } else {
             if (decoded === null || Object.keys(decoded).length === 0) {
-              return res.send({ error: "No values in token" });
+              console.log("Error - Authenticate user (No values in token): " + err);
+              return res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
             }
           }
-          var _id = decoded.userid;
-
-          sql.connect(db)
-            .then(function(connection) {
-              new sql.Request(connection)
-                .query(`SELECT * FROM Users WHERE userID = ${_id}`)
-                .then(function(user) {
-                  var hasSome = data.requiredAuth.some(function(v) {
-                    return user[0].userType.indexOf(v) >= 0;
-                  })
-                  if (hasSome) {
-                    try {
-                      data.done();
-                    } catch (err) {
-                      console.log(err.stack);
-                      throw "There was an issue in the logic done after the authentication"; // This will throw to catch on line 83
-                    }
-                  } else {
-                    res.send({ status: '403' });
-                  }
-                }).catch(function(err) {
-                  console.log("Error - Get user by id: " + err);
-                  res.send({ result: "error", title: "Error", msg: "There was an error authenticating the current user.", serverMsg: "" });
-                });
+          sql.connect(db).then(pool => {
+            return pool.request()
+            .input('userID', sql.Int(), decoded.userid)
+            .query("SELECT * FROM Users WHERE userID = @userID")
+          }).then(user => {
+              var hasSome = data.requiredAuth.some(function(v) {
+                return user[0].userType.indexOf(v) >= 0;
+              });
+              if (hasSome) {
+                try {
+                  data.done(decoded.userid);
+                } catch (err) {
+                  console.log(err.stack);
+                  throw "There was an issue in the logic done after the authentication"; // This will throw to catch on line 83
+                }
+              } else {
+                console.log("Error - Authenticate user (userID in token not found in DB): " + err);
+                res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
+              }
             }).catch(function(err) {
-              console.log("DB Connection error - Authenticate user: " + err);
-              res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: err });
+              console.log("Error - Authenticate user (Select Query): " + err);
+              res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
             });
-
         });
       } else {
-        res.send({ error: "No auth header" });
+        console.log("Error - Authenticate user: No Headers.");
+        res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
       }
     } catch (err) {
-      console.log("Error - Authenticate user: " + err);
-      res.send({ result: "error", title: "Error", msg: "There was an error authenticating the current user.", serverMsg: "" });
+      console.log("Error - Authenticate user (Catch): " + err);
+      res.send({ result: "error", title: "Auth Error", msg: "There was an error in your request. Please try logging in again.", serverMsg: "" });
     }
   }
 
@@ -112,20 +110,17 @@ class AuthController {
       // Hash the password with the salt
       _password = bcrypt.hashSync(_password, salt);
 
-      sql.connect(db)
-        .then(function(connection) {
-          sql.query
-            `UPDATE Users SET password=${_password}, active='true' WHERE userID = ${_userID}`
-            .then(function(recordset) {
-              res.send({ result: "success", title: "Success!", msg: "Please log in using your new password.", serverMsg: "" });
-            }).catch(function(err) {
-              console.log("Update user password " + err);
-              res.send({ result: "error", title: "Error", msg: "There was an error resetting your password.", serverMsg: "" });
-            });
-        }).catch(function(err) {
-          console.log(err);
-          res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: "" });
-        });
+      sql.connect(db).then(pool => {
+        return pool.request()
+        .input('password', sql.VarChar(250), _password)
+        .input('userID', sql.Int(), _userID)
+        .query("UPDATE Users SET password = @password, active = 'true' WHERE userID = @userID")
+      }).then(result => {
+          res.send({ result: "success", title: "Success!", msg: "Please log in using your new password.", serverMsg: "" });
+      }).catch(function(err) {
+        console.log(err);
+        res.send({ result: "error", title: "Error", msg: "There was an error with your request.", serverMsg: err.message });
+      });
 
     } catch (err) {
       console.log("Error - Reset password: " + err);
@@ -146,38 +141,33 @@ class AuthController {
       if (!emailValidation) {
         res.send({ result: "invalid", title: "Invalid", msg: "Please enter a proper email address. (example@email.com)", serverMsg: "" })
       } else {
-        sql.connect(db)
-          .then(function(connection) {
-            new sql.Request(connection)
-              .query(`UPDATE Users SET password = '${_password}', active = 'false' WHERE email = '${_email}'`)
-              .then(function(result) {
-                console.log(result);
-                if (result != null) {
-                  // setup email data with unicode symbols
-                  let mailOptions = {
-                    from: mail.user, // sender address
-                    to: _email, // list of receivers
-                    subject: 'Password Reset', // Subject line
-                    text: '', // plain text body
-                    html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + ' <br /><br /> Thankyou'// html body
-                  };
-                  new ActivityService().reportActivity('Request Password Reset', 'success', '', 'Password reset accepted. Instructions for login sent to ' + _email + '.');
-                  new MailService().sendMessage(" Reset Password", mailOptions);
-                } else {
-                  new ActivityService().reportActivity('Request Password Reset', 'fail', '', 'Could not find user with email ' + _email + '.');
-                }
-                res.send({ result: "success", title: "Success!", msg: "Check your email for reset instructions.", serverMsg: "" });
-              }).catch(function(err) {
-                console.log("Update user password " + err);
-                res.send({ result: "error", title: "Error", msg: "There was an error requesting password reset.", serverMsg: "" });
-              });
+          sql.connect(db).then(pool => {
+            return pool.request()
+            .input('password', sql.VarChar(250), _password)
+            .input('email', sql.VarChar(100), _email)
+            .query("UPDATE Users SET password = @password, active = 'false' WHERE email = @email; SELECT @@rowcount as 'RowsAffected'")
+          }).then(result => {
+            console.dir(result);
+            if (result != null) {
+              // setup email data with unicode symbols
+              let mailOptions = {
+                from: mail.user, // sender address
+                to: _email, // list of receivers
+                subject: 'Password Reset', // Subject line
+                text: '', // plain text body
+                html: 'Here is your new temporary password: <b>' + randomstring + '</b><br /> Please login at ' + site_settings.url + ' <br /><br /> Thankyou'// html body
+              };
+              new ActivityService().reportActivity('user', 'Request Password Reset', 'success', '', '', 'Password reset accepted. Instructions for login sent to ' + _email + '.');
+              new MailService().sendMessage(" Reset Password", mailOptions);
+            } else {
+              new ActivityService().reportActivity('user', 'Request Password Reset', 'fail', '', '', 'Could not find user with email ' + _email + '.');
+            }
+            res.send({ result: "success", title: "Success!", msg: "Check your email for reset instructions.", serverMsg: "" });
           }).catch(function(err) {
             console.log(err);
-            res.send({ result: "error", title: "Connection Error", msg: "There was an error connecting to the database.", serverMsg: "" });
+            res.send({ result: "error", title: "Error", msg: "There was an error with your request.", serverMsg: err.message });
           });
       }
-
-
     } catch (err) {
       console.log("Error - Request password reset: " + err);
       res.send({ result: "error", title: "Error", msg: "There was an error requesting password reset.", serverMsg: "" });

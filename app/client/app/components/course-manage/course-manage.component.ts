@@ -19,6 +19,8 @@ export class CourseManageComponent implements OnInit {
   Campus: string[];
   campusId: any;
   professors: any[] = [];
+  courseType: string;
+  showForm: boolean = false;
   //dropdown
   campuses: SelectItem[] = [{ label: ' -- All --', value: '' }];
   selectedCampusId: string;
@@ -27,6 +29,11 @@ export class CourseManageComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getInstructors();
     this.getCampuses();
     this.getCourses();
@@ -72,6 +79,7 @@ export class CourseManageComponent implements OnInit {
             item.courseEnd = moment(item.courseEnd).utcOffset(60).format('YYYY-MM-DD');
           });
           this.courses = res;
+          swal.close();
         }
       })
       .catch(error => this.error = error);
@@ -138,12 +146,62 @@ export class CourseManageComponent implements OnInit {
     this.campusId = this.Campus.indexOf(cam) + 1;
   }
 
+  showCourseTypeForm() {
+    this.showForm = true;
+  }
+
+  addCourseType() {
+   if (this.courseType == null) {
+      swal(
+        'Invalid Input',
+        'Please enter a name for the new course type.',
+        'warning'
+      );
+    } else {
+      swal({
+        title: 'Saving...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
+      this.showForm = false;
+      this.CourseService
+        .addToCourseTypes(this.courseType)
+        .then(result => {
+          if ((result as any).result === 'error') {
+            this.displayErrorAlert(result);
+          } else if ((result as any).result === 'success')  {
+            swal.close();
+          } else {
+            swal(
+              'Error',
+              'Something went wrong while adding new course type.',
+              'error'
+            );
+          }
+        })
+        .catch(error => console.log("Error - Add new course type: " + error));
+    }
+  }
+
+  closeMenu() {
+    this.showForm = false;
+  }
+
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

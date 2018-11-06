@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Course } from "../../models/course";
 import { Student } from "../../models/Student";
 import { CourseService } from "../../services/course.service";
@@ -15,25 +14,45 @@ declare var moment: any;
 })
 
 export class StudentEnrollmentComponent implements OnInit {
+  studentTimetables: any[];
+  loading: boolean = true;
+  tempTimetableArry: any[] = [];
+  enrollMultiple: boolean;
+  // if enrolling multiple students
   students: Student[];
   courseID: any;
   instructorID: any;
   courseName: any;
-  studentTimetables: any[];
-  loading: boolean = true;
-  tempTimetableArry: any[] = [];
+  // if enrolling specific student
+  student: Student[];
+  courseType: any;
+  studentID: any;
+  courses: any[];
 
-  constructor(private studentService: StudentService, private courseService: CourseService, private route: ActivatedRoute) {
+  constructor(private router: Router, private studentService: StudentService, private courseService: CourseService, private route: ActivatedRoute) {
 
   }
 
   ngOnInit() {
-    this.route.params.forEach((params: Params) => {
-      this.courseID = params['courseID'];
-      this.instructorID = params['instructorID'];
-      this.courseName = params['courseName'];
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
     });
-    this.getStudents();
+    swal.showLoading();
+    this.route.params.forEach((params: Params) => {
+      if (params['courseID'] && params['instructorID'] && params['courseName']) {
+        this.enrollMultiple = true;
+        this.courseID = params['courseID'];
+        this.instructorID = params['instructorID'];
+        this.courseName = params['courseName'];
+        this.getStudents();
+      } else if (params['courseType'] && params['studentID']) {
+        this.enrollMultiple = false;
+        this.courseType = params['courseType'];
+        this.studentID = params['studentID'];
+        this.getStudentById(this.studentID);
+      }
+    });
   }
 
   getStudents() {
@@ -53,6 +72,35 @@ export class StudentEnrollmentComponent implements OnInit {
       }).catch(error => error);
   }
 
+  getStudentById(id) {
+    this.studentService
+      .getStudent(id)
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.student = null;
+          this.displayErrorAlert(result);
+        } else {
+          this.student = result;
+          this.getCourses();
+        }
+      }).catch(error => error);
+  }
+
+  getCourses() {
+    this.courseService
+      .getCourses()
+      .then(result => {
+        if ((result as any).result === 'error') {
+          this.displayErrorAlert(result);
+        } else {
+          this.courses = result;
+          this.courses = this.courses.filter(x => x.courseType === this.courseType);
+          this.getTimetables();
+        }
+      })
+      .catch(error => error);
+  }
+
   getTimetables() {
     this.studentService
       .getTimetables()
@@ -68,22 +116,37 @@ export class StudentEnrollmentComponent implements OnInit {
   }
 
   compareTimetables() {
-    for (let student of this.students) {
-      var timetable = this.studentTimetables.filter(x => x.userID === student.userID);
-      for (let item of timetable) {
-        var itemCourseID = item.courseID.toString();
-        if (itemCourseID === this.courseID) {
-          student.enrolled = true;
+    if (this.students == null) {
+      for (let course of this.courses) {
+        var timetable = this.studentTimetables.filter(x => x.userID === (this.student as any).userID);
+        for (let item of timetable) {
+          var itemCourseID = item.courseID;
+          if (itemCourseID === course.courseID) {
+            course.enrolled = true;
+          } else {
+            course.enrolled = false;
+          }
+        }
+      }
+    } else {
+      for (let student of this.students) {
+        var timetable = this.studentTimetables.filter(x => x.userID === student.userID);
+        for (let item of timetable) {
+          var itemCourseID = item.courseID.toString();
+          if (itemCourseID === this.courseID) {
+            student.enrolled = true;
+          }
         }
       }
     }
     this.loading = false;
+    swal.close();
   }
 
-  checkEnrolled(student: Student) {
-    if (student.enrolled) {
+  checkEnrolled(data) {
+    if (this.students == null && data.enrolled) {
       swal({
-        title: 'Remove ' + student.firstName + ' ' + student.lastName + ' from ' + this.courseName + '?',
+        title: 'Remove ' + data.firstName + ' ' + data.lastName + ' from ' + this.courseName + '?',
         text: "",
         type: 'warning',
         showCancelButton: true,
@@ -94,41 +157,69 @@ export class StudentEnrollmentComponent implements OnInit {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
           console.log(isConfirm.dismiss);
         } else if (isConfirm) {
-          this.drop(student);
+          this.drop(data);
         }
       }).catch(error => {
         console.log(error);
       });
     } else {
-      this.enroll(student);
+      this.enroll(data);
     }
   }
 
-  enroll(student: Student) {
-    var startDate = moment(student.studentStartDate, "DDD MMM YYYY h:mm:ss LT").isValid();
-    var endDate = moment(student.studentEndDate, "DDD MMM YYYY h:mm:ss LT").isValid();
+  enroll(data) {
+    var startDate = moment(data.studentStartDate, "DDD MMM YYYY h:mm:ss LT").isValid();
+    var endDate = moment(data.studentEndDate, "DDD MMM YYYY h:mm:ss LT").isValid();
     if (startDate && endDate) {
-      this.studentService
-        .courseEnroll(student.userID, student.studentStartDate, student.studentEndDate, this.courseID, this.instructorID)
-        .then(result => {
-          if ((result as any).result === 'error') {
-            this.displayErrorAlert(result);
-          } else if ((result as any).result === 'success') {
-            student.enrolled = true;
-            swal(
-              this.courseName,
-              '' + student.firstName + ' ' + student.lastName + ' has been succesfully enrolled.',
-              'success'
-            );
-          } else {
-            swal(
-              'Error',
-              'Something went wrong while enrolling student.',
-              'error'
-            );
-          }
-        })
-        .catch(error => error);
+      if (this.students != null) {
+        this.studentService
+          .courseEnroll(data.userID, data.studentStartDate, data.studentEndDate, this.courseID, this.instructorID)
+          .then(result => {
+            if ((result as any).result === 'error') {
+              this.displayErrorAlert(result);
+            } else if ((result as any).result === 'success') {
+              data.enrolled = true;
+              swal(
+                this.courseName,
+                '' + data.firstName + ' ' + data.lastName + ' has been succesfully enrolled.',
+                'success'
+              );
+            } else {
+              swal(
+                'Error',
+                'Something went wrong while enrolling student.',
+                'error'
+              );
+            }
+          })
+          .catch(error => error);
+      } else {
+        this.studentService
+          .courseEnroll((this.student as any).userID, data.studentStartDate, data.studentEndDate, data.courseID, data.professorId)
+          .then(result => {
+            if ((result as any).result === 'error') {
+              this.displayErrorAlert(result);
+            } else if ((result as any).result === 'success') {
+              this.courseService
+                .removeFromWaitList((this.student as any).userID, data.courseType)
+                .then(result => {
+                  data.enrolled = true;
+                  swal(
+                    data.courseName,
+                    '' + (this.student as any).firstName + ' ' + (this.student as any).lastName + ' has been succesfully enrolled.',
+                    'success'
+                  );
+                }).catch(error => error);
+            } else {
+              swal(
+                'Error',
+                'Something went wrong while enrolling student.',
+                'error'
+              );
+            }
+          })
+          .catch(error => error);
+      }
     } else {
       swal(
         'Whoops',
@@ -158,11 +249,20 @@ export class StudentEnrollmentComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

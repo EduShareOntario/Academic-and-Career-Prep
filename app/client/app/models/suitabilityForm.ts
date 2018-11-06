@@ -18,6 +18,7 @@ export class SuitabilityForm {
   inProgramBefore: string;
   employment: string;
   incomeSource: string;
+  incomeSourceOther: string;
   ageRange: string;
   hoursPerWeek: string;
   workHistory: string;

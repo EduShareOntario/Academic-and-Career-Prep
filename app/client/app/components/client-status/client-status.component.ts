@@ -13,7 +13,9 @@ import { AuthService } from "../../services/authentication.service";
 import { FilesService } from "../../services/files.service";
 import { DOCUMENT } from '@angular/platform-browser';
 declare var swal: any;
+declare var saveAs: any;
 declare var FileSaver: any;
+declare var moment: any;
 
 @Component({
   selector: 'client-status',
@@ -71,7 +73,7 @@ export class ClientStatusComponent implements OnInit {
   doughnutChartLabels: string[];
   doughnutChartData: number[];
   doughnutChartType: string;
-  doughnutChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#309EFF", "#2AD308"] }];
+  doughnutChartColors: any[] = [{ backgroundColor: ["#E32F26", "#F7CE3C", "#76C4D5", "#62A744"] }];
   stage1: any;
   stage2: any;
   stage3: any;
@@ -89,7 +91,7 @@ export class ClientStatusComponent implements OnInit {
   barChartType: string = 'bar';
   barChartLegend: boolean = false;
   barChartData: any;
-  barChartColors: any[] = [{ backgroundColor: ["#FF4207", "#F8E903", "#2AD308"] }];
+  barChartColors: any[] = [{ backgroundColor: ["#E32F26", "#F7CE3C", "#62A744"] }];
 
   courseTypes: any[] = [];
   selectedCourseTypes: any[] = [];
@@ -106,8 +108,12 @@ export class ClientStatusComponent implements OnInit {
   }
 
   ngOnInit() {
+    swal({
+      title: 'Loading...',
+      allowOutsideClick: false
+    });
+    swal.showLoading();
     this.getClients();
-    this.getFiles();
     // get course types
     this.courseService.getCourseTypes()
     .then((result) => {
@@ -163,6 +169,7 @@ export class ClientStatusComponent implements OnInit {
     this.doughnutChartData = [this.stage1.length, this.stage2.length, this.stage3.length, this.stage4.length];
     this.doughnutChartType = 'doughnut';
     this.addSuitability = false;
+    this.getFiles();
   }
 
   getFiles() {
@@ -256,7 +263,7 @@ export class ClientStatusComponent implements OnInit {
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      cancelButtonColor: '#E32F26',
       confirmButtonText: 'Yes, delete it!'
     }).then(isConfirm => {
       if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -313,12 +320,6 @@ export class ClientStatusComponent implements OnInit {
 
     var consentForms = this.getConsentFormByUserID(client.userID);
     this.clientConsentForms = consentForms;
-    // this.clientConsentForms.sort(function compare(a, b) {
-    //   var dateA = new Date(a.date.getTime());
-    //   var dateB = new Date(b.date.getTime());
-    //   return dateA - dateB;
-    // });
-    //this.consentView = consentForms[0];
 
     var learningStyleForm = this.getLearningStyleFormByFilter(client.userID);
     this.learningStyleView = learningStyleForm[0];
@@ -408,7 +409,7 @@ export class ClientStatusComponent implements OnInit {
         showCancelButton: true,
         animation: "slide-from-top",
         confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        cancelButtonColor: '#E32F26',
         confirmButtonText: 'Save'
       }).then(isConfirm => {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -434,7 +435,7 @@ export class ClientStatusComponent implements OnInit {
       showCancelButton: true,
       animation: "slide-from-top",
       confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      cancelButtonColor: '#E32F26',
       confirmButtonText: 'Save'
     }).then(isConfirm => {
       if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -458,7 +459,7 @@ export class ClientStatusComponent implements OnInit {
         type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        cancelButtonColor: '#E32F26',
         confirmButtonText: 'Yes, transfer!'
       }).then(isConfirm => {
         if (isConfirm.dismiss === "cancel" || isConfirm.dismiss === "overlay") {
@@ -508,7 +509,6 @@ export class ClientStatusComponent implements OnInit {
             'Client record has been transfered to the student table.',
             'success'
           );
-          //this.router.navigate(['/students']);
           this.clientTotal = this.data.length;
         } else {
           swal(
@@ -532,11 +532,11 @@ export class ClientStatusComponent implements OnInit {
     this.statusReport = false;
     this.suitabilityForm = new SuitabilityForm();
     this.suitabilityForm.transcript = false;
-    this.suitabilityForm.appropriateGoal = false;
-    this.suitabilityForm.isValidAge = false;
+    this.suitabilityForm.appropriateGoal = true;
+    this.suitabilityForm.isValidAge = true;
     this.suitabilityForm.governmentID = false;
     this.suitabilityForm.schoolRegistration = false;
-    this.suitabilityForm.availableDuringClass = false;
+    this.suitabilityForm.availableDuringClass = true;
     this.suitabilityForm.factorHealth = false;
     this.suitabilityForm.factorInstructions = false;
     this.suitabilityForm.factorCommunication = false;
@@ -643,7 +643,8 @@ export class ClientStatusComponent implements OnInit {
           );
           this.clientView.email = this.currentClientEmail;
         } else if ((result as any).result === 'success') {
-          this.showStatusReport();
+          this.showGeneralInfoEdit = false;
+          this.showGeneral = true;
           swal(
             'Success!',
             'Client information has been updated!',
@@ -664,11 +665,19 @@ export class ClientStatusComponent implements OnInit {
     this.resetView();
     this.showSuitabilityEdit = true;
     this.suitabilityForm = this.getSuitabilityFormByFilter(client.userID)[0];
-    this.selectedCourseTypes = [];
-    for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
-      this.selectedCourseTypes.push(item);
+    if (this.suitabilityForm.incomeSource === "Other") {
+      this.suitabilityForm.incomeSource = "Other";
     }
-
+    if (this.suitabilityForm.incomeSource.includes("Other - ")) {
+      this.suitabilityForm.incomeSourceOther = this.suitabilityForm.incomeSource.split("Other - ")[1];
+      this.suitabilityForm.incomeSource = "Other";
+    }
+    this.selectedCourseTypes = [];
+    if (this.suitabilityForm.selectedCourseTypes != null) {
+      for (let item of this.suitabilityForm.selectedCourseTypes.split(',')) {
+        this.selectedCourseTypes.push(item);
+      }
+    }
     var keys = Object.keys(this.suitabilityForm);
     for (var i = 0; i < keys.length; i++) {
       if (typeof this.suitabilityForm[keys[i]] === "string") {
@@ -727,8 +736,6 @@ export class ClientStatusComponent implements OnInit {
           } else if ((result as any).result === 'success') {
             this.getClients();
             this.showStatusReport();
-            // var updatedClient = this.allClients.filter(x => x.userID === this.clientView.userID);
-            // this.showClientView(updatedClient[0]);
             this.document.body.scrollTop = 0;
             swal(
               'Success!',
@@ -958,11 +965,20 @@ export class ClientStatusComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

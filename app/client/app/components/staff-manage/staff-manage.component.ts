@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StaffService } from "../../services/staff.service";
+import { StudentService } from "../../services/student.service";
 import { User } from "../../models/user";
 import { Router } from '@angular/router';
 declare var swal: any;
@@ -21,12 +22,17 @@ export class StaffManageComponent implements OnInit {
     staffNumber: any;
     instructorNumber: any;
 
-    constructor(private router: Router, private staffService: StaffService) {
+    constructor(private router: Router, private staffService: StaffService, private studentService: StudentService) {
 
     }
 
     ngOnInit() {
-        this.getUsers();
+      swal({
+        title: 'Loading...',
+        allowOutsideClick: false
+      });
+      swal.showLoading();
+      this.getUsers();
     }
 
     getUsers() {
@@ -44,6 +50,23 @@ export class StaffManageComponent implements OnInit {
               this.usersBackup = this.users;
               this.usersLength = users.length;
               this.updateStats();
+            }
+          })
+          .catch(error => this.error = error);
+    }
+
+    runAttendanceCheck() {
+        this.studentService
+          .manualAttendanceCheck()
+          .then(result => {
+            if ((result as any).result === "error") {
+              this.displayErrorAlert((result as any));
+            } else {
+              swal(
+                  result.title,
+                  result.msg,
+                  'success'
+              );
             }
           })
           .catch(error => this.error = error);
@@ -113,6 +136,7 @@ export class StaffManageComponent implements OnInit {
       this.staffNumber = this.staffNumber.length;
       this.instructorNumber = this.users.filter(x => x.userType.indexOf("Instructor") !== -1);
       this.instructorNumber = this.instructorNumber.length;
+      swal.close();
     }
 
     filterStaff(userType) {
@@ -125,11 +149,20 @@ export class StaffManageComponent implements OnInit {
     }
 
     displayErrorAlert(error) {
-      swal(
+      if (error.title === "Auth Error") {
+        this.router.navigate(['/login']);
+        swal(
+          error.title,
+          error.msg,
+          'info'
+        );
+      } else {
+        swal(
           error.title,
           error.msg,
           'error'
-      );
+        );
+      }
     }
 
     goBack() {

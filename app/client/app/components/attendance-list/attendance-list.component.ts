@@ -125,7 +125,7 @@ export class AttendanceListComponent implements OnInit {
       .catch(error => console.log(error));
   }
 
-  doAttendance(course: Course) {
+  takeAttendance(course: Course) {
     this.attendanceDates = [];
     swal({
       title: 'Loading...',
@@ -244,8 +244,8 @@ export class AttendanceListComponent implements OnInit {
                 this.displayErrorAlert(result);
               } else if ((result as any).result === 'success') {
                 swal(
-                  'Attendance submitted!',
-                  '',
+                  result.title,
+                  result.msg,
                   'success'
                 );
                 this.attendanceView = false;
@@ -274,11 +274,20 @@ export class AttendanceListComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

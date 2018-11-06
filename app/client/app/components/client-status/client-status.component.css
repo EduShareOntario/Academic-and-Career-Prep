@@ -2,21 +2,17 @@
   font-family: Avenir, Calibri, Minion;
 }
 
+.well {
+  position: relative;
+}
+
 .dropdown-menu {
   top: -150%;
   left: 115%;
 }
 
-.addClient {
-  position: absolute;
-  top: 25;
-  right: 15;
-  float: right;
-  min-width: 0px
-}
-
 .sticky {
-  top: 260px;
+  top: 280px;
   bottom:0;
   position:fixed;
   overflow-y:scroll;
@@ -25,15 +21,17 @@
 }
 
 ::-webkit-scrollbar {
-display: none;
+  display: none;
 }
 
 .element {
+  overflow-y: scroll;
   -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
 }
 
 .deleteClient>a {
-  color: red;
+  color: #E32F26;
 }
 
 .element {
@@ -92,7 +90,7 @@ h2 {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  background-color: #EB3700;
+  background-color: #E32F26;
   margin: 0 auto;
 }
 
@@ -100,7 +98,7 @@ h2 {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  background-color: #F8E903;
+  background-color: #F7CE3C;
   margin: 0 auto;
 }
 
@@ -108,7 +106,7 @@ h2 {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  background-color: #309EFF;
+  background-color: #76C4D5;
   margin: 0 auto;
 }
 
@@ -116,7 +114,7 @@ h2 {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  background-color: #21C700;
+  background-color: #64A70B;
   margin: 0 auto;
 }
 

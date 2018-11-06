@@ -113,13 +113,22 @@ export class WaitListComponent implements OnInit {
              //student[0].fullName = student[0].firstName + " " + student[0].lastName;
              // student[0].courseID = course[0].courseID;
              // student[0].professorId = course[0].professorId;
-             user[0].courseName = item.courseType;
-             var userRecord = {
-               fullName: user[0].fullName,
-               courseType: item.courseType,
-               date: item.date
-             };
-             this.usersWaiting.push(userRecord);
+             if (user[0] != null) {
+               if (user[0].studentID != null) {
+                 var userType = "Student";
+               } else {
+                 var userType = "Client";
+               }
+               user[0].courseName = item.courseType;
+               var userRecord = {
+                 id: user[0].userID,
+                 userType: userType,
+                 fullName: user[0].fullName,
+                 courseType: item.courseType,
+                 date: item.date
+               };
+               this.usersWaiting.push(userRecord);
+             }
           }
           this.getTimetables();
         }
@@ -182,16 +191,25 @@ export class WaitListComponent implements OnInit {
     }
   }
 
+  removeFromWaitList(data) {
+    this.CourseService
+      .removeFromWaitList(data.id, data.courseType)
+      .then(result => {
+        this.getWaitList();
+        swal(
+          'Removed from ' + data.courseType,
+          '' + data.fullName + ' has been succesfully removed from the ' + data.courseType + ' wait list.',
+          'success'
+        );
+      }).catch(error => error);
+  }
+
   closeMenu() {
     this.showForm = false;
   }
 
-  gotoStudentEnrollment(course, data, event: any) {
-    if (course == null) {
-      course = this.courses.filter(x => x.courseName === data.courseName);
-      course = course[0];
-    }
-    this.router.navigate(['/student-enrollment', course.courseID, course.professorId, course.courseName]);
+  gotoStudentEnrollment(data, event: any) {
+    this.router.navigate(['/student-enrollment', data.courseType, data.id ]);
   }
 
   viewCourseWaitList(data) {
@@ -200,13 +218,22 @@ export class WaitListComponent implements OnInit {
     this.courseWaitList = this.waitList.filter(x => x.courseType === data.courseType);
     for (let item of this.courseWaitList) {
        var user = this.users.filter(x => x.userID === item.userID);
-       user[0].fullName = user[0].firstName + " " + user[0].lastName;
-       var userRecord = {
-         fullName: user[0].fullName,
-         date: item.date
-       };
-
-       this.usersWaiting.push(userRecord);
+       if (user[0] != null) {
+         user[0].fullName = user[0].firstName + " " + user[0].lastName;
+         if (user[0].studentID != null) {
+           var userType = "Student";
+         } else {
+           var userType = "Client";
+         }
+         var userRecord = {
+           id: user[0].userID,
+           fullName: user[0].fullName,
+           userType: userType,
+           courseType: item.courseType,
+           date: item.date
+         };
+         this.usersWaiting.push(userRecord);
+       }
     }
   }
 
@@ -215,11 +242,20 @@ export class WaitListComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

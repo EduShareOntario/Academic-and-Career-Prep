@@ -25,11 +25,12 @@ class StudentRoutes {
         router.get("/timetables", controller.getTimetables);
         router.get("/timetables-course-id/:_courseID", controller.getTimetablesByCourseId);
         router.get("/timetable/:userID", controller.getTimetablesByUserId);
-        router.post("/caseNotes/:_studentID", controller.createNote);
-        router.get("/caseNotes/:_studentID", controller.getNote);
+        router.post("/caseNotes/:_userID", controller.createNote);
+        router.get("/caseNotes/:_userID", controller.getNote);
         router.delete("/caseNotes/:_id", controller.deleteNote);
         router.post("/attendance", controller.insertAttendance);
         router.get("/attendance-report", controller.getAllAttendance);
+        router.put("/students/attendance-check", controller.runScheduledEmails);
         router.get("/prf/:_id", controller.populatePRF);
         return router;
     }

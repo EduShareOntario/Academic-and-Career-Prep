@@ -1,65 +1,63 @@
 <div class="courseManage">
-  <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Courses</strong></h1>
-  <hr>
-
-  <div *ngIf="!courses" class="cs-loader">
-      <div class="cs-loader-inner">
-          <label>	L</label>
-          <label>	O</label>
-          <label>	A</label>
-          <label>	D</label>
-          <label>	I</label>
-          <label>	N</label>
-          <label>	G</label>
-          <label>	.</label>
-          <label>	.</label>
-          <label>	.</label>
-      </div>
+  <div class="spacer"></div>
+  <div class="inner_header">
+    <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+    <h1><strong>Manage Courses</strong></h1>
+    <button class="orangeButton" (click)="addCourse()"><i class="fa fa-plus"></i> Add Course</button>
+    <button class="lightBlueButton" (click)="showCourseTypeForm()" title="Add new course type."><i class="fa fa-plus"></i> Add Type</button>
   </div>
-
-  <!-- front end  for courses-->
+  <div *ngIf="showForm" class="addMenu well">
+    <span title="Close" class="closeMenu" (click)="closeMenu()"><i class="fa fa-times"></i></span>
+    <h4>Add New Course Type</h4>
+    <input [(ngModel)]="courseType" class="form-control" placeholder="Enter name for new course type..." style="margin-bottom: 10px" />
+    <button class="greenButton" style="float:right" (click)="addCourseType()" title="Add new course type."><i class="fa fa-plus"></i> Submit</button>
+  </div>
   <div class="row">
-      <div class="col-md-12">
-          <div class="pull-left">
-              <label for="">Campus</label>
-              <p-dropdown [style]="{'width':'175px'}" [options]="campuses" [(ngModel)]="selectedCampusId"></p-dropdown>
-          </div>
-          <div class="col-md-4 col-sm-4 pull-left">
-              <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
-          </div>
-          <div class="pull-right">
-              <div class="padding">
-                  <button class="btn btn-success" (click)="addCourse()"><i class="fa fa-plus"></i> Add a Course</button>
-              </div>
-          </div>
+    <div class="col-md-12">
+      <div class="pull-left">
+        <label for="">Campus</label>
+        <p-dropdown [style]="{'width':'175px'}" [options]="campuses" [(ngModel)]="selectedCampusId"></p-dropdown>
       </div>
-      <div class="col-md-12">
-        <p-dataTable [value]="courses | courseFilter : filterQuery | campusFilter : selectedCampusId" [responsive]="true">
-            <p-column field="courseName" header="Course Name" [sortable]="true"></p-column>
-            <p-column header="Instructor" [sortable]="true"  [style]="{'text-align': 'center'}" >
-              <template let-data="rowData" pTemplate="body">
-                <p >{{ data.professorName }}</p>
-                <i  *ngIf="data.professorName == ' '" class="fa fa-exclamation-triangle fa-2x" title="This course does not have an instructor!" style="color:red;" aria-hidden="true"></i>
-              </template>
-            </p-column>
-            <p-column field="classroom" header="Classroom" [sortable]="true"></p-column>
-            <p-column field="campusName" header="Campus" [sortable]="true"></p-column>
-            <p-column field="courseStart" header="Start Date" [sortable]="true"></p-column>
-            <p-column field="courseEnd" header="End Date" [sortable]="true"></p-column>
-            <p-column header="Action" [style]="{'width': '281px'}">
-              <template let-data="rowData" pTemplate="body">
-                <div class="inline">
-                    <button class="btn btn-warning" (click)="gotoStudentEnrollment(data, $event)"><i class="fa fa-institution" aria-hidden="true"></i> Enroll</button>
-                </div>
-                <div class="inline">
-                    <button class="btn btn-primary" (click)="gotoEdit(data, $event)"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
-                </div>
-                <div class="inline">
-                    <button class="btn btn-danger" (click)="deleteAlert(data, $event)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                </div>
-              </template>
-            </p-column>
-        </p-dataTable>
+      <div class="col-md-4 col-sm-4 pull-left">
+        <input placeholder="Filter by course name" class="form-control" [(ngModel)]="filterQuery" />
       </div>
+    </div>
+    <div class="col-md-12">
+      <p-dataTable [value]="courses | courseFilter : filterQuery | campusFilter : selectedCampusId" [responsive]="true">
+        <p-column field="courseType" header="Course Type" [sortable]="true" [style]="{'width':'190px'}"></p-column>
+        <p-column field="courseName" header="Course Name" [sortable]="true" [style]="{'width':'190px'}"></p-column>
+        <p-column header="Instructor" [sortable]="true" [style]="{'text-align': 'center'}">
+          <template let-data="rowData" pTemplate="body">
+            <p>{{ data.professorName }}</p>
+            <span *ngIf="data.professorName == ' '"><i class="fa fa-exclamation-triangle fa-2x" title="This course does not have an instructor!" style="color:#E32F26;" aria-hidden="true"></i></span>
+          </template>
+        </p-column>
+        <p-column field="classroom" header="Classroom" [sortable]="true"></p-column>
+        <p-column field="campusName" header="Campus" [sortable]="true"></p-column>
+        <p-column header="Start Date" [sortable]="true">
+          <template let-data="rowData" pTemplate="body">
+            <p>{{ data.courseStart | date}}</p>
+          </template>
+        </p-column>
+        <p-column header="End Date" [sortable]="true">
+          <template let-data="rowData" pTemplate="body">
+            <p>{{ data.courseEnd | date}}</p>
+          </template>
+        </p-column>
+        <p-column header="Action" [style]="{'width': '149px'}">
+          <template let-data="rowData" pTemplate="body">
+            <div class="inline">
+                <i class="fa fa-university fa-2x enrollIcon" aria-hidden="true " (click)="gotoStudentEnrollment(data, $event)" title="Enroll Students"></i>
+            </div>
+            <div class="inline">
+                <i class="fas fa-pencil-alt fa-2x editIcon" aria-hidden="true" (click)="gotoEdit(data, $event)" title="Edit Course"></i>
+            </div>
+            <div class="inline">
+                <i class="fas fa-trash-alt fa-2x deleteIcon" aria-hidden="true" (click)="deleteAlert(data, $event)" title="Delete Course"></i>
+            </div>
+          </template>
+        </p-column>
+      </p-dataTable>
+    </div>
   </div>
 </div>

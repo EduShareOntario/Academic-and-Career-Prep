@@ -19,7 +19,6 @@ export class AttendanceReportComponent implements OnInit {
   courses: Course[];
   students: Student[];
   totalAbsences: any;
-
   studentAttendanceView: boolean = false;
   student: any[];
   attendance: any[];
@@ -29,11 +28,8 @@ export class AttendanceReportComponent implements OnInit {
   totalAbsent: any;
   totalMadeContact: any;
   noAttendance: boolean = false;
-
   studentReport: boolean = false;
-
   timetables: any[];
-
   courseAttendanceView: boolean = false;
   course: any;
   classTimeStr: any;
@@ -42,7 +38,6 @@ export class AttendanceReportComponent implements OnInit {
   courseTimetables: any[];
   studentRecord: any[];
   noStudentsEnrolled: boolean = false;
-
   classAbsenceTotal: any;
   classPresenceTotal: any;
   classMadeContactTotal: any;
@@ -227,11 +222,20 @@ export class AttendanceReportComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {

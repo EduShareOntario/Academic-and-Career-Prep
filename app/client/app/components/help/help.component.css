@@ -9,8 +9,10 @@ a {
 }
 
 a:active, .selectedLink {
-  background-color: #eee;
-  font-weight: bold;
+  background-color: #004B87;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .help_topic {
@@ -19,21 +21,21 @@ a:active, .selectedLink {
   padding: 10px;
   padding-left: 20px;
   cursor:pointer;
+  transition: 0.1s;
 }
 
 .help_topic:hover {
  transform: scale(1.05);
  box-shadow: 2px 2px 2px #eee;
- transition: 0.2s;
 }
 
 .welcome_page_btn {
   padding: 10px;
   cursor:pointer;
+  transition: 0.1s;
 }
 
 .welcome_page_btn:hover {
  transform: scale(1.05);
  box-shadow: 2px 2px 2px #eee;
- transition: 0.2s;
 }

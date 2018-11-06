@@ -5,3 +5,67 @@
 .padding {
   padding: 10 50 50 50;
 }
+
+.showThreeChoices{
+  background-color: rgba(0, 0, 0, 0.4);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: fixed;
+  padding: 10px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  z-index: 1060;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.showThreeChoicesPopup{
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #fff;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  border-radius: 0px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-align: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 500px;
+  padding: 20px;
+  background: rgb(255, 255, 255);
+  position: relative;
+  max-width: 100%;
+  margin:auto;
+}
+
+.showThreeChoicesButton {
+  border: 0;
+  border-radius: 3px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 500;
+  margin: 15px 5px 0;
+  padding: 10px 32px;
+  display:inline-block;
+  background-color: rgb(48, 133, 214);
+  border-left-color: rgb(48, 133, 214);
+  border-right-color: rgb(48, 133, 214);
+}

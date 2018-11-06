@@ -1,43 +1,31 @@
 <div class="students row">
-  <div class="col-md-11">
-    <h1><span style="cursor:pointer" (click)="goBack()"><i class="fa fa-arrow-circle-o-left"></i></span><strong> Manage Students</strong></h1>
-    <hr>
-  </div>
-  <div class="col-md-1" style="margin-top:20px">
-    <button class="btn btn-info" (click)="goToStudentArchive()" title="Student Archive"><i class="fa fa-archive" aria-hidden="true"></i> Archive</button>
-  </div>
-  <div class="" *ngIf="!students">
-    <div class="cs-loader">
-      <div class="cs-loader-inner">
-        <label>	L</label>
-        <label>	O</label>
-        <label>	A</label>
-        <label>	D</label>
-        <label>	I</label>
-        <label>	N</label>
-        <label>	G</label>
-        <label>	.</label>
-        <label>	.</label>
-        <label>	.</label>
-      </div>
-    </div>
+  <div class="spacer"></div>
+  <div class="col-md-11 inner_header">
+    <div (click)="goBack()" title="Back" class="backButton"><i class="far fa-arrow-alt-circle-left"></i></div>
+    <h1><strong> Manage Students</strong></h1>
+    <button class="orangeButton" (click)="goToStudentArchive()" title="Student Archive"><i class="fa fa-archive" aria-hidden="true"></i> Archive</button>
   </div>
   <div *ngIf="students">
     <div class="col-md-12">
       <div class="error" *ngIf="error">{{error}}</div>
     </div>
     <div class="col-md-7">
-      <h2>Students</h2>
-      <hr>
       <input placeholder="Filter by student name" class="form-control" [(ngModel)]="filterQuery" />
       <p-dataTable [value]="students | userFilter : filterQuery" [responsive]="true">
+        <p-column field="status" header="Status" [sortable]="true" [style]="{'width': '60px'}">
+          <template let-data="rowData" pTemplate="body">
+            <div *ngIf="data.status === 0"><a routerLink="/attendance-report" routerLinkActive="active" title=""><div class="greenStatus"></div></a></div>
+            <div *ngIf="data.status === 2"><a routerLink="/attendance-report" routerLinkActive="active" title="Two missed classes. Click to view student attendance."><div class="yellowStatus"></div></a></div>
+            <div *ngIf="data.status === 4"><a routerLink="/attendance-report" routerLinkActive="active" title="Four missed classes. Click to view student attendance."><div class="redStatus"></div></a></div>
+          </template>
+        </p-column>
         <p-column field="studentNumber" header="Student #" [sortable]="true" [style]="{'width': '115px'}"></p-column>
         <p-column field="fullName" header="Name" [sortable]="true"></p-column>
         <p-column field="email" header="Email" [sortable]="true"></p-column>
         <p-column header="Action" [style]="{'width': '60px', 'overflow': 'visible'}">
           <template let-data="rowData" pTemplate="body">
             <div class="btn-group">
-              <button type="button" class="dropToggle btn btn-danger dropdown-toggle" data-toggle="dropdown">
+              <button type="button" class="dropToggleButton" data-toggle="dropdown">
                 <i class="fa fa-caret-right" aria-hidden="true"></i>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
@@ -54,15 +42,22 @@
       </p-dataTable>
     </div>
     <div *ngIf="!studentInfoView && !studentCoursesView" class="col-md-5">
-      <h2>Status Report</h2>
-      <hr>
       <div class="well">
+        <h2>Status Report</h2>
+        <hr>
         <h2><strong>{{ students.length }}</strong> Total Students</h2>
+        <div>
+          <h3>Missed classes: </h3>
+          <p-dataTable [value]="activity" [responsive]="true">
+            <p-column field="action" header="Action" [sortable]="true" [style]="{'width': '150px'}"></p-column>
+            <p-column field="info" header="Info" [sortable]="true"></p-column>
+          </p-dataTable>
+        </div>
       </div>
     </div>
     <div *ngIf="studentCoursesView" class="col-md-5">
       <h2>Courses for {{studentCoursesView.firstName + " " + studentCoursesView.lastName}}</h2>
-      <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
+      <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fas fa-chart-pie fa-2x" aria-hidden="true"></i></div>
       <hr>
       <div>
         <h3>Currently enrolled in: </h3>
@@ -84,12 +79,12 @@
       </div>
     </div>
     <div *ngIf="studentInfoView" class="col-md-5">
-      <h2>Information for {{studentView.firstName + " " + studentView.lastName}}</h2>
-      <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fa fa-pie-chart fa-2x" aria-hidden="true"></i></div>
-      <hr>
       <div class="well">
+        <h2>{{studentView.firstName + " " + studentView.lastName}}</h2>
+        <div (click)="overallStatus($event)" class="statusButton" title="View status report"><i class="fas fa-chart-pie fa-2x" aria-hidden="true"></i></div>
+        <hr>
         <ul class="sectionBtnGroup col-sm-12">
-          <li class="sectionButtons" [ngClass]="{active_tab: showGeneral}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
+          <li class="sectionButtons" [ngClass]="{active_tab: showGeneral || showGeneralInfoEdit}" title="General Info" (click)="sectionBtnClicked($event, 'general')">
             <h4>General Info</h4></li>
             <li class="sectionButtons" *ngIf="!studentView.suitability" [ngClass]="{active_tab: showSuitability}" title="Suitability" (click)="sectionBtnClicked($event, 'suitability')">
               <h4>Suitability</h4></li>
@@ -103,14 +98,14 @@
                   <div *ngIf="showGeneral" class="infoPanel">
                     <br />
                     <div class="form-group">
-                      <h3>Viewing General Info for {{ studentView.firstName }}</h3>
-                      <button (click)="editGeneralInfo(studentView)" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button><br><br>
+                      <h3>Viewing General Info for {{ studentView.firstName }} <i class="fas fa-pencil-alt editIcon" (click)="editGeneralInfo(studentView)" aria-hidden="true" title="Edit general info for {{ studentView.firstName }}"></i></h3>
+                      <hr>
                       <!-- <label class="control-label">id: </label> {{studentView.userID}} <hr/> -->
-                      <label class="control-label">Inquiry Date: </label> {{studentView.inquiryDate | date}} <div class="info_seperate"></div>
+                      <label class="control-label">Inquiry Date:</label><span *ngIf="studentView.inquiryDate !== 'undefined'"> {{studentView.inquiryDate | date}}</span><div class="info_seperate"></div>
                       <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <div class="info_seperate"></div>
                       <label class="control-label">First Name: </label> {{studentView.firstName}} <div class="info_seperate"></div>
                       <label class="control-label">Last Name: </label> {{studentView.lastName}} <div class="info_seperate"></div>
-                      <label class="control-label">Birth Date: </label> {{studentView.birthdate }} <div class="info_seperate"></div>
+                      <label class="control-label">Birth Date (DD/MM/YYYY):</label><span *ngIf="studentView.birthdate !== null"> {{studentView.birthdate}}</span><div class="info_seperate"></div>
                       <label class="control-label">Email: </label> {{studentView.email}} <div class="info_seperate"></div>
                       <label class="control-label">Phone: </label> {{studentView.phone}} <div class="info_seperate"></div>
                       <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessage}} <div class="info_seperate"></div>
@@ -124,7 +119,7 @@
                   <div *ngIf="showGeneralInfoEdit">
                     <h3>Editing General Info for {{ studentEdit.firstName }}</h3>
                     <hr>
-                    <div class="form-group">
+                    <div>
                       <p><span style="color:red">* </span>Updating first or last name will automatically update this students username and notify them about the change.</p>
                       <label class="control-label">First Name: </label>
                       <input class="form-control" type="text" [(ngModel)]="studentEdit.firstName" />
@@ -157,16 +152,13 @@
                       </div>
                       <label class="control-label">Comments: </label>
                       <input class="form-control" type="text" [(ngModel)]="studentEdit.comments"/>
-                      <div class="form-group">
-                        <div class="col-sm-offset-10 col-sm-1">
-                          <button (click)="updateGeneralInfo()" class="btn btn-success" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>
-                        </div>
-                      </div>
+                      <button (click)="updateGeneralInfo()" class="greenButton" style="margin-top:20px; float:right;" title="Update Info"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>
+                      <div style="clear:both"></div>
                     </div>
                   </div>
                   <div *ngIf="showSuitability" class="infoPanel">
                     <h3>Viewing Suitability for {{ studentView.firstName }}</h3>
-                    <br />
+                    <hr>
                     <div class="form-group">
                       <label class="control-label">Transcript: </label> {{suitabilityView.transcript}} <div class="info_seperate"></div>
                       <label class="control-label">Course Interests: </label> {{suitabilityView.selectedCourseTypes}} <div class="info_seperate"></div>
@@ -209,7 +201,7 @@
                   </div>
                   <div *ngIf="showConsent" class="infoPanel">
                     <h3>Viewing Consent for {{ studentView.firstName }}</h3>
-                    <br />
+                    <hr>
                     <div class="form-group">
                       <div *ngIf="studentView.editConsentRequest">
                         <strong><h3>{{studentView.firstName}} is requesting to edit: </h3></strong>
@@ -255,25 +247,25 @@
                         <label class="control-label">Other: </label> {{consentView.other}} <div class="info_seperate"></div>
                         <label class="control-label">Contact Name: </label> {{consentView.contactName}} <div class="info_seperate"></div>
                         <label class="control-label">Contact Number: </label> {{consentView.contactNum}} <div class="info_seperate"></div>
-                        <label class="control-label">Literacy Agencies: </label> {{consentView.literacyAgencies}} <div class="info_seperate"></div>
-                        <label class="control-label">Literacy Witness: </label> {{consentView.literacyWitness}} <div class="info_seperate"></div>
+                        <label class="control-label">Signature: </label> {{consentView.literacyAgencies}} <div class="info_seperate"></div>
+                        <label class="control-label">Witness: </label> {{consentView.literacyWitness}} <div class="info_seperate"></div>
                       </div>
                     </div>
                   </div>
                   <div *ngIf="showLearningStyle" class="infoPanel">
                     <h3>Viewing Learning Style for {{ studentView.firstName }}</h3>
-                    <br />
+                    <hr>
                     <p><strong>{{ studentView.firstName }} learns best by: {{ learningStyleView.learnBy }}</strong></p>
                     <div class="form-group">
                       <div style="display: block">
-                        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+                        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
                       </div>
                     </div>
                   </div>
                   <div *ngIf="showAssessmentResults && assessmentResults">
                     <h3 *ngIf="editAssessment">Edit Assessment Results for {{ studentView.firstName }}</h3>
                     <h3 *ngIf="!editAssessment">Enter Assessment Results for {{ studentView.firstName }}</h3>
-                    <br />
+                    <hr>
                     <label class="control-label">Reading Comprehension Assessment #1: </label>
                     <input class="form-control" type="text" [(ngModel)]="assessmentResults.readingComp1" />
                     <label class="control-label">Reading Comprehension Assessment #2: </label>
@@ -285,16 +277,15 @@
                     <label class="control-label">Digital Assessment: </label>
                     <input class="form-control" type="text" [(ngModel)]="assessmentResults.digital" />
                     <br />
-                    <button *ngIf="editAssessment" class="btn btn-success marginBottomButton" (click)="editAssessmentResults(studentView.userID)" style="float:right" title="Edit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
-                    <button *ngIf="!editAssessment" class="btn btn-success marginBottomButton" (click)="addAssessmentResults(studentView.userID)" style="float:right" title="Add Assessment Results"><i class="fa fa-upload"></i> Submit</button>
+                    <button *ngIf="editAssessment" class="greenButton" (click)="editAssessmentResults(studentView.userID)" style="float:right" title="Edit Assessment Results"><i class="fa fa-upload"></i> Submit</button>
+                    <button *ngIf="!editAssessment" class="greenButton" (click)="addAssessmentResults(studentView.userID)" style="float:right" title="Add Assessment Results"><i class="fa fa-upload"></i> Submit</button>
                     <div style="clear:both"></div>
                   </div>
                   <div *ngIf="showFiles">
-                    <h3>Viewing Files for {{ studentView.firstName }}</h3>
-                    <button class="btn btn-success marginBottom" (click)="addFile()" title="Add new file"><i class="fa fa-upload"></i> Upload File</button>
+                    <h3>Viewing Files for {{ studentView.firstName }} <i class="fa fa-plus addIcon" (click)="addFile()" aria-hidden="true" title="Upload new file for {{ studentView.firstName }}"></i></h3>
+                    <hr>
                     <div style="overflow:visible; position:relative;">
                       <p-dataTable [value]="studentsFiles | userFilter : filterQuery" [responsive]="true">
-                        <p-column field="userID" header="UserID" [sortable]="true"></p-column>
                         <p-column field="filename" header="File Name" [sortable]="true"></p-column>
                         <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
                         <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">
@@ -306,7 +297,7 @@
                               </button>
                               <ul class="dropdown-menu" role="menu">
                                 <li><a (click)="download(data)"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
-                                <li><a (click)="deleteFileAlert(data)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                                <li><a (click)="deleteFileAlert(data)"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</a></li>
                               </ul>
                             </div>
                           </template>

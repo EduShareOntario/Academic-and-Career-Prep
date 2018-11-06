@@ -92,7 +92,7 @@ const appRoutes: Routes = [
     {
         path: 'course-edit/:id',
         component: CourseEditComponent,
-        canActivate: [AuthGuard, AdminGuard]
+        canActivate: [AuthGuard, StaffGuard]
     },
     {
         path: 'prf',
@@ -111,6 +111,11 @@ const appRoutes: Routes = [
     },
     {
         path: 'student-enrollment/:courseID/:instructorID/:courseName',
+        component: StudentEnrollmentComponent,
+        canActivate: [AuthGuard, StaffGuard]
+    },
+    {
+        path: 'student-enrollment/:courseType/:studentID',
         component: StudentEnrollmentComponent,
         canActivate: [AuthGuard, StaffGuard]
     },

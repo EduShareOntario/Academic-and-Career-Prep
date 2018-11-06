@@ -4,6 +4,7 @@ import AuthController = require("../controllers/AuthController");
 const PRFService = require("../services/PRFService");
 const MailService = require("../services/MailService");
 const ActivityService = require("../services/ActivityService");
+const ScheduleService = require("../services/ScheduleService");
 var sql = require('mssql');
 var auth = ["Admin", "Staff", "Instructor"];
 const config = require('../config');
@@ -16,7 +17,7 @@ class StudentController {
   create(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var student = req.body;
           sql.connect(db)
             .then(function(connection) {
@@ -35,7 +36,7 @@ class StudentController {
                 + student.okayToTextAlternate + "','"
                 + student.editConsentRequest + "','"
                 + student.editConsentPermission + "','"
-                + student.comments + "')")
+                + student.comments + "','0')")
                 .then(function() {
                   res.send({ result: "success", title: "New User Created!", msg: "Student user has been successfully created!", serverMsg: "" });
                 }).catch(function(err) {
@@ -57,7 +58,7 @@ class StudentController {
   updateGeneralInfo(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var student = req.body;
           var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           var emailValidation = re.test(student.email);
@@ -121,7 +122,7 @@ class StudentController {
                                 };
                                 new MailService().sendMessage("Student Username Update", mailOptions);
                               }
-                              new ActivityService().reportActivity('Student User Updated', 'success', student.userID, 'Student user has been updated.');
+                              new ActivityService().reportActivity('student', 'Student User Updated', 'success', student.userID, currentUserID, 'Student user has been updated.');
                               res.send({ result: "success", title: "Update Success!", msg: "Student user updated!", serverMsg: "" });
                             }).catch(function(err) {
                               console.log("Error - Update user: " + err);
@@ -189,7 +190,7 @@ class StudentController {
   archiveStudent(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var student = req.body;
           sql.connect(db)
             .then(function(connection) {
@@ -219,7 +220,7 @@ class StudentController {
                       new sql.Request(connection)
                         .query("DELETE FROM Users WHERE userID = '" + student.userID + "'")
                         .then(function() {
-                          new ActivityService().reportActivity('Student User Archived', 'success', "Student '" + firstName + " " + lastName + "' has been archived.");
+                          new ActivityService().reportActivity('student', 'Student User Archived', 'success', userID, currentUserID, "Student '" + firstName + " " + lastName + "' has been archived.");
                           res.send({ result: "success", title: "Student Archived", msg: "Student user has been successfully archived.", serverMsg: "" });
                         }).catch(function(err) {
                           console.log("Error - Archive user with id " + student.userID + ": " + err);
@@ -278,7 +279,7 @@ class StudentController {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query('SELECT Students.*, Users.email, Users.active FROM Students LEFT JOIN Users ON Students.userID = Users.UserID')
+                .query('SELECT Students.*, Users.email, Users.active FROM Students LEFT JOIN Users ON Students.userID = Users.UserID ORDER BY firstName ASC')
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
@@ -327,7 +328,7 @@ class StudentController {
   editConsentRequest(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Instructor", "Student", "Client"], done: function() {
+        requiredAuth: ["Admin", "Staff", "Instructor", "Student", "Client"], done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -345,7 +346,7 @@ class StudentController {
                         text: '', // plain text body
                         html: 'Student ' + student.firstName + ' ' + student.lastName + ' wants to edit their consent form.<br/> Please login to the students page at: ' + site_settings.url + '/#/students. Search for ' + student.firstName + ' ' + student.lastName + ' in the students table, select View Info from the dropdown then select Consent to grant or deny access.'// html body
                       };
-                      new ActivityService().reportActivity('Form Edit Request', 'success', _id, 'Student is requesting permission to edit their consent form.');
+                      new ActivityService().reportActivity('student', 'Form Edit Request', 'success', _id, currentUserID, 'Student is requesting permission to edit their consent form.');
                       new MailService().sendMessage("Request to Edit Consent", mailOptions);
                       res.send({ result: "success", title: "Request Sent", msg: "Your request to edit consent has been sent!", serverMsg: "" });
                     }).catch(function(err) {
@@ -371,7 +372,7 @@ class StudentController {
   grantConsentEditPermission(req: express.Request, res: express.Response) {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var permission = req.body.permission;
           var student = req.body.student;
           console.log("yaya");
@@ -395,7 +396,7 @@ class StudentController {
                               text: '', // plain text body
                               html: 'You can now login at: https://gcacademicprep.azurewebsites.net and make changes to your consent form.'// html body
                             };
-                            new ActivityService().reportActivity('Permission Granted', 'success', student.userID, 'Student has been granted permission to edit their consent form.');
+                            new ActivityService().reportActivity('student', 'Permission Granted', 'success', student.userID, currentUserID, 'Student has been granted permission to edit their consent form.');
                             new MailService().sendMessage("Consent Edit Request Granted", mailOptions);
                             res.send({ result: "granted", title: "Request Granted", msg: "Student has been granted access to edit their consent form.", serverMsg: "" });
                           }).catch(function(err) {
@@ -438,7 +439,7 @@ class StudentController {
           new sql.Request(connection)
             .query("INSERT INTO Timetables (userID,startDate,endDate,courseID,instructorID) VALUES ('" + _userID + "','" + _startDate + "','" + _endDate + "','" + _courseID + "','" + _instructorID + "')")
             .then(function() {
-              new ActivityService().reportActivity('Student Enrolled In Course', 'success', _userID, 'Student enrolled in course with course ID: ' + _courseID + '.');
+              new ActivityService().reportActivity('student', 'Student Enrolled In Course', 'success', _userID, '', 'Student enrolled in course with course ID: ' + _courseID + '.');
               res.send({ result: "success", title: "Student Enrolled", msg: "Student user has been added to course.", serverMsg: "" });
             }).catch(function(err) {
               console.log("Error - Insert into timetable: " + err);
@@ -463,7 +464,7 @@ class StudentController {
           new sql.Request(connection)
             .query("DELETE FROM Timetables WHERE userID = ('" + _userID + "') AND courseID = ('" + _courseID + "')")
             .then(function() {
-              new ActivityService().reportActivity('Student Removed From Course', 'success', _userID, 'Student removed from course with course ID: ' + _courseID + '.');
+              new ActivityService().reportActivity('student', 'Student Removed From Course', 'success', _userID, '', 'Student removed from course with course ID: ' + _courseID + '.');
               res.send({ result: "success", title: "Student Removed", msg: "Student has been removed from course.", serverMsg: "" });
             }).catch(function(err) {
               console.log("Error - Remove student from timetable: " + err);
@@ -482,7 +483,7 @@ class StudentController {
   getTimetables(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Instructor", "Admin", "Staff"], done: function() {
+        requiredAuth: ["Instructor", "Admin", "Staff"], done: function(currentUserID) {
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
@@ -508,7 +509,7 @@ class StudentController {
   getTimetablesByCourseId(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._courseID;
           sql.connect(db)
             .then(function(connection) {
@@ -535,7 +536,7 @@ class StudentController {
   getTimetablesByUserId(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Student", "Admin", "Staff", "Instructor"], done: function() {
+        requiredAuth: ["Student", "Admin", "Staff", "Instructor"], done: function(currentUserID) {
           var _id: string = req.params.userID;
           sql.connect(db)
             .then(function(connection) {
@@ -581,18 +582,17 @@ class StudentController {
   createNote(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
+        requiredAuth: ["Admin", "Staff", "Instructor"], done: function(currentUserID) {
           var caseNote = req.body.caseNote;
           var dateTime = req.body.dateTime;
-          var _id: string = req.params._studentID;
+          var _id: string = req.params._userID;
 
           sql.connect(db)
             .then(function(connection) {
-              console.log(dateTime);
               new sql.Request(connection)
-                .query("INSERT INTO CaseNotes VALUES ('" + _id + "', '" + caseNote + "', '" + dateTime + "')")
+                .query("INSERT INTO CaseNotes VALUES ('" + _id + "', '" + currentUserID + "', '" + caseNote + "', '" + dateTime + "')")
                 .then(function() {
-                  new ActivityService().reportActivity('New Student Note', 'success', _id, 'New student note submitted.');
+                  new ActivityService().reportActivity('note', 'New Student Note', 'success', _id, currentUserID, 'New student note submitted.');
                   res.send({ result: "success", title: "Note Created!", msg: "Note has been created for this student.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Insert new note " + err);
@@ -613,12 +613,12 @@ class StudentController {
   getNote(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
-          var _id: string = req.params._studentID;
+        requiredAuth: ["Admin", "Staff", "Instructor"], done: function(currentUserID) {
+          var _id: string = req.params._userID;
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
-                .query("SELECT *  FROM CaseNotes WHERE studentID = '" + _id + "' ORDER BY dateTime DESC")
+                .query("SELECT * FROM CaseNotes WHERE userID = '" + _id + "' ORDER BY dateTime DESC")
                 .then(function(recordset) {
                   res.send(recordset);
                 }).catch(function(err) {
@@ -640,14 +640,14 @@ class StudentController {
   deleteNote(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
               new sql.Request(connection)
                 .query("DELETE FROM caseNotes WHERE caseNoteID = '" + _id + "'")
                 .then(function() {
-                  new ActivityService().reportActivity('Student Note Deleted', 'success', '', 'A student note has been deleted.');
+                  new ActivityService().reportActivity('note', 'Student Note Deleted', 'success', '', currentUserID, 'A student note has been deleted.');
                   res.send({ result: "success", title: "Note Deleted", msg: "Note has been deleted for this student.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Delete student note: " + err);
@@ -668,7 +668,7 @@ class StudentController {
   insertAttendance(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: ["Admin", "Staff", "Instructor"], done: function() {
+        requiredAuth: ["Admin", "Staff", "Instructor"], done: function(currentUserID) {
           var attendance = req.body;
           var query = "INSERT INTO Attendance (courseID, date, userID, attendanceValue, twoMissedClassMsg, fourMissedClassMsg) VALUES ";
           var count = 0;
@@ -686,10 +686,10 @@ class StudentController {
               .then(function(connection) {
                 new sql.Request(connection)
                   .query(query)
-                  .then(function(recordset) {
+                  .then(function(result) {
                     // set schedule check on DB
-                    new ActivityService().reportActivity('Attendance Submitted', 'success', attendance.instructorID, 'Instructor has submitted attendance for course with course ID of ' + attendance.courseID);
-                    res.send(recordset);
+                    new ActivityService().reportActivity('student', 'Attendance Submitted', 'success', currentUserID, attendance.instructorID, 'Instructor has submitted attendance for course with course ID of ' + attendance.courseID);
+                    res.send({ result: "success", title: "Success!", msg: "Attendance has been submitted.", serverMsg: "" });
                   }).catch(function(err) {
                     console.log("Error - Insert attendance: " + err);
                     res.send({ result: "error", title: "Error", msg: "There was an error inserting attendance for student.", serverMsg: err });
@@ -739,10 +739,15 @@ class StudentController {
     }
   }
 
+  runScheduledEmails(req: express.Request, res: express.Response): void {
+    new ScheduleService().attendanceCheck();
+    res.send({ result: "success", title: "Attendance Check", msg: "Student attendance check has run successfully!", serverMsg: "" });
+  }
+
   populatePRF(req: express.Request, res: express.Response): void {
     try {
       new AuthController().authUser(req, res, {
-        requiredAuth: auth, done: function() {
+        requiredAuth: auth, done: function(currentUserID) {
           var _id: string = req.params._id;
           sql.connect(db)
             .then(function(connection) {
@@ -750,7 +755,7 @@ class StudentController {
                 .query("SELECT * FROM Users C INNER JOIN SuitabilityForm S ON C.userID = S.userID WHERE C.userID = '" + _id + "' AND S.userID = '" + _id + "'")
                 .then(function(recordset) {
                   new PRFService().populatePRF(recordset[0]);
-                  new ActivityService().reportActivity('PRF Populated', 'success', _id, 'PRF has been generated for student.');
+                  new ActivityService().reportActivity('student', 'PRF Populated', 'success', _id, currentUserID, 'PRF has been generated for student.');
                   res.send({ result: "success", title: "PRF Populated!", msg: "PRF form has been populated with student info.", serverMsg: "" });
                 }).catch(function(err) {
                   console.log("Error - Get client by id for prf: " + err);
