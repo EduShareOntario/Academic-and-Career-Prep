@@ -50,7 +50,6 @@
           <h3>Missed classes: </h3>
           <p-dataTable [value]="activity" [responsive]="true">
             <p-column field="action" header="Action" [sortable]="true" [style]="{'width': '150px'}"></p-column>
-            <p-column field="result" header="Result" [sortable]="true"></p-column>
             <p-column field="info" header="Info" [sortable]="true"></p-column>
           </p-dataTable>
         </div>
@@ -100,16 +99,13 @@
                     <br />
                     <div class="form-group">
                       <h3>Viewing General Info for {{ studentView.firstName }} <i class="fas fa-pencil-alt editIcon" (click)="editGeneralInfo(studentView)" aria-hidden="true" title="Edit general info for {{ studentView.firstName }}"></i></h3>
-<<<<<<< HEAD
-=======
                       <hr>
->>>>>>> development
                       <!-- <label class="control-label">id: </label> {{studentView.userID}} <hr/> -->
                       <label class="control-label">Inquiry Date:</label><span *ngIf="studentView.inquiryDate !== 'undefined'"> {{studentView.inquiryDate | date}}</span><div class="info_seperate"></div>
                       <label class="control-label">Student Number: </label> {{studentView.studentNumber}} <div class="info_seperate"></div>
                       <label class="control-label">First Name: </label> {{studentView.firstName}} <div class="info_seperate"></div>
                       <label class="control-label">Last Name: </label> {{studentView.lastName}} <div class="info_seperate"></div>
-                      <label class="control-label">Birth Date:</label><span *ngIf="studentView.birthdate !== 'undefined'"> {{studentView.birthdate | date}}</span><div class="info_seperate"></div>
+                      <label class="control-label">Birth Date (DD/MM/YYYY):</label><span *ngIf="studentView.birthdate !== null"> {{studentView.birthdate}}</span><div class="info_seperate"></div>
                       <label class="control-label">Email: </label> {{studentView.email}} <div class="info_seperate"></div>
                       <label class="control-label">Phone: </label> {{studentView.phone}} <div class="info_seperate"></div>
                       <label class="control-label" style="margin-left:15px">- Detailed Message?: </label> {{studentView.allowDetailedMessage}} <div class="info_seperate"></div>
@@ -262,7 +258,7 @@
                     <p><strong>{{ studentView.firstName }} learns best by: {{ learningStyleView.learnBy }}</strong></p>
                     <div class="form-group">
                       <div style="display: block">
-                        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+                        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
                       </div>
                     </div>
                   </div>
@@ -287,13 +283,9 @@
                   </div>
                   <div *ngIf="showFiles">
                     <h3>Viewing Files for {{ studentView.firstName }} <i class="fa fa-plus addIcon" (click)="addFile()" aria-hidden="true" title="Upload new file for {{ studentView.firstName }}"></i></h3>
-<<<<<<< HEAD
-=======
                     <hr>
->>>>>>> development
                     <div style="overflow:visible; position:relative;">
                       <p-dataTable [value]="studentsFiles | userFilter : filterQuery" [responsive]="true">
-                        <p-column field="userID" header="UserID" [sortable]="true"></p-column>
                         <p-column field="filename" header="File Name" [sortable]="true"></p-column>
                         <p-column field="date" header="Upload Date" [sortable]="true"></p-column>
                         <p-column header="Action" [style]="{'width': '60px','overflow': 'visible'}">

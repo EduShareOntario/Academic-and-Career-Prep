@@ -6,9 +6,9 @@ var config = require('../config');
 var executeType = "Manual";
 
 //runs every night at 7:30pm
-var timer = schedule.scheduleJob('0 36 16 * * *', function() {
+var timer = schedule.scheduleJob('0 31 21 * * *', function() {
   executeType = "Automatic";
-  this.attendanceCheck();
+  new ScheduleService().attendanceCheck();
 });
 
 class ScheduleService {

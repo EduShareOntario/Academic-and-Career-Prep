@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Course } from "../../models/course";
 import { Student } from "../../models/Student";
 import { CourseService } from "../../services/course.service";
@@ -30,7 +29,7 @@ export class StudentEnrollmentComponent implements OnInit {
   studentID: any;
   courses: any[];
 
-  constructor(private studentService: StudentService, private courseService: CourseService, private route: ActivatedRoute) {
+  constructor(private router: Router, private studentService: StudentService, private courseService: CourseService, private route: ActivatedRoute) {
 
   }
 
@@ -250,11 +249,20 @@ export class StudentEnrollmentComponent implements OnInit {
   }
 
   displayErrorAlert(error) {
-    swal(
-      error.title,
-      error.msg,
-      'error'
-    );
+    if (error.title === "Auth Error") {
+      this.router.navigate(['/login']);
+      swal(
+        error.title,
+        error.msg,
+        'info'
+      );
+    } else {
+      swal(
+        error.title,
+        error.msg,
+        'error'
+      );
+    }
   }
 
   goBack() {
