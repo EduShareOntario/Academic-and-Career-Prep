@@ -35,7 +35,7 @@
     "@angular/router": "~3.2.3",
     "@angular/upgrade": "^2.4.10",
     "angular2-datatable": "^0.6.0",
-    "bcrypt": "^1.0.2",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.17.1",
     "bootstrap": "^3.3.7",
     "bower": "1.8.2",
